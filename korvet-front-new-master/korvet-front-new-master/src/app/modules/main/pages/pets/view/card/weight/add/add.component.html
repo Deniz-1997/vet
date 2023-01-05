@@ -1,0 +1,17 @@
+<div class="fancybox-slide--html">
+  <div class="popup-wr">
+    <app-temperature-weight-add-form
+      (afterSubmitForm)="afterSubmit($event)"
+      (cancelForm)="cancel()"
+      [pet]="pet"
+      [type]="type"
+    >
+      <ng-container headTemplate>
+        <div class="popup-wr__head">
+          Добавить измерение веса
+        </div>
+      </ng-container>
+    </app-temperature-weight-add-form>
+    <app-button-close></app-button-close>
+  </div>
+</div>

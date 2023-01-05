@@ -1,0 +1,55 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name class="pb-2">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="icon" class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('icon')"
+              [options]="icons$"
+              [fields]="field"
+              [addFilter]="{subclass: 'ANIMAL'}"
+              [type]="crudType.ReferenceIcon"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col *ngIf="formGroup.controls.icon.value !== null" text="Просмотр" class="pb-2 mt-2">
+          <ng-template #colContent>
+            <app-icon-animal [type]="formGroup.controls.icon.value.code"></app-icon-animal>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>

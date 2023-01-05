@@ -1,0 +1,9 @@
+parameters:
+  webslon_auth.oauth_server: '%env(SECURITY_ADDRESS)%' #адрес сервера авторизации
+  webslon_auth.client_id: '%env(MICROSERVICE_CLIENT_ID)%'
+  webslon_auth.client_secret: '%env(MICROSERVICE_CLIENT_SECRET)%'
+  webslon_auth.scope: ~
+  webslon_auth.oauth2_success_login_route: 'webslon_api_homepage'
+  webslon_auth.oauth2_security_firewalls:
+    - 'documentation'
+    - 'simple_oauth_redirect'

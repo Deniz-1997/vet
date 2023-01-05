@@ -1,0 +1,363 @@
+<ng-container *ngIf="appointment.productItems?.length && appointment !== undefined" xmlns="http://www.w3.org/1999/html">
+  <div class="form-wr form-wr--mmin">
+    <div class="form-header">Оказанные услуги, лекарственные препараты, расходные материалы</div>
+
+    <div class="form-span form-span--6">
+      <span class="form-head">Наценка на услуги: </span>
+      <span *ngIf="appointment.isExtraCharge" class="form-txt"><strong>Вкл</strong></span>
+      <span *ngIf="!appointment.isExtraCharge" class="form-txt"><strong>Выкл</strong></span>
+      <span *ngIf="appointment.isExtraCharge" class="form-txt"><strong> / {{appointment.extraCharge}}%</strong></span>
+    </div>
+
+    <div *ngIf="appointment.productItems.length">
+      <div class="form__table form__table--txt delivery">
+        <table class="table-responsive-lg">
+          <tr>
+            <th class="th-service">Наименование</th>
+            <th class="th--center">Склад</th>
+            <th class="th--center">Дозировка/количество</th>
+            <th class="th--center">Цена</th>
+            <th *ngIf="appointment.isExtraCharge" class="th--center">Наценка на услуги</th>
+            <th class="th--center">
+              Сумма
+              <ng-container *ngIf="appointment.isExtraCharge"> с наценкой</ng-container>
+            </th>
+            <th></th>
+          </tr>
+
+          <ng-container *ngFor="let item of appointment.productItems; let i=index">
+            <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                          [ngTemplateOutlet]="productItemRow"></ng-container>
+            <ng-container *ngFor="let childItem of appointment.productItems[i]['children']; let j=index">
+              <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                            [ngTemplateOutlet]="productItemRow"></ng-container>
+            </ng-container>
+          </ng-container>
+
+        </table>
+      </div>
+      <div class="container-fluid delivery-grid">
+        <ng-container *ngFor="let item of appointment.productItems; let i=index">
+          <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                        [ngTemplateOutlet]="productItemRow2"></ng-container>
+          <ng-container *ngFor="let childItem of appointment.productItems[i]['children']; let j=index">
+            <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                          [ngTemplateOutlet]="productItemRow2"></ng-container>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="appointment.probeSamplings?.length">
+    <table class="table table-borderless mb-2 delivery">
+      <tr>
+        <td colspan="5">
+          <div class="form-header">Отбор проб</div>
+        </td>
+      </tr>
+      <tr>
+        <th>Дата и время</th>
+        <th>Тип пробы</th>
+        <th>Маркировка</th>
+        <th style="width:150px">Статус</th>
+        <th>Цена</th>
+      </tr>
+      <tr *ngFor="let item of appointment.probeSamplings">
+        <td><a (click)="probeSamplingModal(item)" class="form-span__lnk-btn">{{item.date}}</a></td>
+        <td>
+          <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].probe?.name}}</ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].code}}</ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="item.probeItems.length && item.probeItems[0].researchDocuments.length">{{item.probeItems[0].researchDocuments[0].status?.title}}</ng-container>
+        </td>
+        <td>
+          <ng-container>{{getProbeSamplingPrice(item) | price}}</ng-container>
+        </td>
+      </tr>
+    </table>
+    <div class="delivery-grid" *ngFor="let item of appointment.probeSamplings">
+      <div class="form-header">Отбор проб</div>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-md-3" class="pb-2 pb-md-0" text="Дата и время">
+            <ng-template>
+              <a (click)="probeSamplingModal(item)" class="lnk-open">{{item.date}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-3" text="Тип пробы">
+            <ng-template>
+              <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].probe?.name}}</ng-container>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0" text="Маркировка">
+            <ng-template>
+              <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].code}}</ng-container>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-2" text="Статус">
+            <ng-template>
+              <ng-container *ngIf="item.probeItems.length && item.probeItems[0].researchDocuments.length">{{item.probeItems[0].researchDocuments[0].status?.title}}</ng-container>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-2" class="pt-2  pt-md-0" text="Цена">
+            <ng-template>
+              <ng-container>{{getProbeSamplingPrice(item) | price}}</ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </div>
+  <div *ngIf="showFormTotal || (appointment.cashReceipt && appointment.cashReceipt.fiscal.state.code === 'DONE')"
+       class="form-wr container-fluid">
+    <div class="form-header form-header--inline">Итого:
+      <span>Позиций: {{appointment.productItems?.length + appointment.probeSamplings?.length}}</span>
+    </div>
+    <div class="form-total">
+      {{getProductItemSum().toString()|price}}
+    </div>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="6 col-lg-2"  titleName=paymentType>
+          <ng-template #colContent>
+            <strong
+              *ngIf="appointment.paymentType && appointment.paymentType.title">{{appointment.paymentType.title}}</strong>
+          </ng-template>
+        </app-col>
+        <app-col col="6 col-lg-2" titleName=paymentState>
+          <ng-template #colContent>
+            <strong>{{appointment.paymentState.title}}</strong>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-2" class="pt-2 pt-lg-0"  titleName=dateEndAppointment *ngIf="appointment.dateEnd">
+          <ng-template #colContent>
+            <strong>{{appointment.dateEnd}}</strong>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-6"  *ngIf="appointment.state.code === 'REGISTERED'
+                && (!appointment.cashReceipt || (appointment.cashReceipt && appointment.cashReceipt.fiscal.state.code !== 'DONE'))">
+          <ng-template #colContent>
+            <app-row>
+              <ng-template #rowContent>
+                <app-col col="12" class="pt-2 pt-lg-0 text-left text-lg-right">
+                  <ng-template #colContent>
+                    <ng-container *ngIf="appointment.id && appointment.productItems?.length">
+                      <a (click)="changeStatus('DRAFT') "
+                         *ngIf="appointment.state.code === 'REGISTERED'
+                && (!appointment.cashReceipt || (appointment.cashReceipt && appointment.cashReceipt.fiscal.state.code !== 'DONE'))
+                && authService.permissions('ROLE_BUTTON_DOCUMENT_EDIT')"
+                         class="btn btn-primary " role="button">Редактировать&nbsp;документ
+                      </a>
+                    </ng-container>
+                  </ng-template>
+                </app-col>
+                <app-col  col="2 col-lg-2" *ngIf="appointment.productItems?.length
+              && authService.permissions('ROLE_CASHIER')
+              && appointment.state.code === 'REGISTERED'
+              && !appointment.cashReceipt
+              && budget !== 0">
+                  <ng-template #colContent>
+                    <a (click)="onCreateReceipt()" class="float-right">
+                      <app-icon-print></app-icon-print><br>
+                      Создать <br>чек<br> ККМ
+                    </a>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-8" class="pt-2 pt-lg-0  text-right" *ngIf="['DRAFT', 'ERROR'].indexOf(appointment.state.code) >= 0
+                && authService.permissions('ROLE_BUTTON_APPOINTMENT_REGISTER')
+                && !appointment.cashReceipt">
+          <ng-template #colContent>
+            <ng-container *ngIf="appointment.id && appointment.productItems?.length">
+              <a (click)="dialogChangeStatus('REGISTERED')"
+                 *ngIf="['DRAFT', 'ERROR'].indexOf(appointment.state.code) >= 0
+                && authService.permissions('ROLE_BUTTON_APPOINTMENT_REGISTER')
+                && !appointment.cashReceipt"
+                 class="btn btn-primary " role="button">Завершить прием
+              </a>
+            </ng-container>
+          </ng-template>
+        </app-col>
+        <app-col col="6 col-lg-12" class="pt-2 pt-lg-0" *ngIf="appointment.cashReceipt">
+          <ng-template #colContent>
+            <app-row class="justify-content-start justify-content-lg-end">
+              <ng-template #rowContent>
+                <app-col col="12 col-lg-12" *ngIf="appointment.cashReceipt">
+                  <ng-template #colContent>
+                    <a [routerLink]="['/cash/cash-receipt/', appointment.cashReceipt.id]"
+                       class="float-left float-lg-right">
+                      Чек ККМ №{{appointment.cashReceipt.id}} <br>от {{appointment.cashReceipt.createdAt}}
+                    </a>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</ng-container>
+<ng-container *ngIf="appointmentLogs.length">
+  <div class="form-wr container-fluid">
+    <div class="form-header">История изменений</div>
+    <div class="form__table form__table--txt">
+      <table>
+        <tr>
+          <th class="th-service">Пользователь</th>
+          <th class="th--center">Статус</th>
+          <th class="th--center">Дата и время</th>
+        </tr>
+        <tr *ngFor="let item of appointmentLogs">
+          <td>
+            <div class="form-txt">
+              {{item.user.getFullName()|defaultValue}}
+            </div>
+          </td>
+          <td>
+            <div class="form-txt form-txt--center">
+              {{item.status.name}}
+            </div>
+          </td>
+          <td>
+            <div class="form-txt form-txt--center">
+              {{item.date}}
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</ng-container>
+<ng-template #productItemRow let-i="index" let-item="item" let-parent="parent">
+  <tr *ngIf="parent || !parent && !item.parent">
+    <td>
+      <div class="form-txt" style="display: flex;">
+        <div *ngIf="parent" style="height: 100%">
+          <i class="material-icons" style="margin-right: 4px">
+            subdirectory_arrow_right
+          </i>
+        </div>
+        <div style="width: 100%;">
+          <strong>{{item.product.name}}</strong>
+        </div>
+      </div>
+    </td>
+    <td class="td--center">
+      <div *ngIf="item && item.stock">
+        {{item.stock.name}}
+      </div>
+      <div *ngIf="item && !item.stock"> -</div>
+    </td>
+    <td>
+      <div class="form-txt form-txt--center">
+        <strong>{{item.quantity}}</strong> {{item.product.measurementUnits?.name ? item.product.measurementUnits?.name : 'шт.' }}
+      </div>
+    </td>
+    <td class="td--center">
+      <div class="form-txt form-txt--center">
+        <strong>{{item.price?.toString() | price}}</strong>
+      </div>
+    </td>
+    <td *ngIf="appointment.isExtraCharge">
+      <div class="form-txt form-txt--center">
+        <strong>
+          <ng-container
+            *ngIf="item.product.paymentObject.code === 'SERVICE' && appointment.isExtraCharge; else elseBlock">
+            {{ item.price * appointment.extraCharge / 100 | price }}
+          </ng-container>
+          <ng-template #elseBlock>
+            <span>-</span>
+          </ng-template>
+        </strong>
+      </div>
+    </td>
+    <td>
+      <div class="form-txt form-txt--center">
+        <strong>
+          <ng-container *ngIf="item.priceWithCharge; else elseBlock">
+            {{ item.priceWithCharge * item.quantity | price }}
+          </ng-container>
+          <ng-template #elseBlock>
+            {{ item.amount | price }}
+          </ng-template>
+        </strong>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+<ng-template #productItemRow2 let-i="index" let-item="item" let-parent="parent">
+  <div *ngIf="parent || !parent && !item.parent" class="pb-2" >
+    <app-row>
+      <ng-template #rowContent>
+        <app-col text="Наименование">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <div *ngIf="parent"  class="d-flex">
+                <i class="material-icons" style="margin-right: 4px">
+                  subdirectory_arrow_right
+                </i>
+              </div>
+              <div style="width: 100%;">
+                <strong>{{item.product.name}}</strong>
+              </div>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="border-bottom">
+      <ng-template #rowContent>
+        <app-col col="12 col-md-3" class="pb-2 pb-md-0" text="Склад">
+          <ng-template #colContent>
+            <div *ngIf="item && item.stock">
+              {{item.stock.name}}
+            </div>
+            <div *ngIf="item && !item.stock"> -</div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-md-3" text="Дозировка/Количество" >
+          <ng-template #colContent>
+            <strong>{{item.quantity}}</strong> {{item.product.measurementUnits?.name ? item.product.measurementUnits?.name : 'шт.' }}
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0" text="Цена">
+          <ng-template #colContent>
+            <strong>{{item.price?.toString() | price}}</strong>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-md-2"  text="Сумма">
+          <ng-template #colContent>
+            <strong>
+              <ng-container *ngIf="item.priceWithCharge; else elseBlock">
+                {{ item.priceWithCharge * item.quantity | price }}
+              </ng-container>
+              <ng-template #elseBlock>
+                {{ item.amount | price }}
+              </ng-template>
+            </strong>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-md-2" class="pt-2 pt-md-0" text="Наценка на услуги" *ngIf="appointment.isExtraCharge">
+          <ng-template #colContent>
+            <strong>
+              <ng-container
+                *ngIf="item.product.paymentObject.code === 'SERVICE' && appointment.isExtraCharge; else elseBlock">
+                {{ item.price * appointment.extraCharge / 100 | price }}
+              </ng-container>
+              <ng-template #elseBlock>
+                <span>-</span>
+              </ng-template>
+            </strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</ng-template>

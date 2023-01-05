@@ -1,0 +1,293 @@
+<div class="position-relative">
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="form-wr container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=name col="12 col-lg-12">
+            <ng-template #colContent>
+              <input [value]="formGroup.get('name').value | titleCaseName" class="inp-st" formControlName="name"
+                type="text" placeholder="ООО РАДУГА">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=legalForm col="12 col-lg-4">
+            <ng-template #colContent>
+              <app-ui-autocomplete [control]="formGroup.controls['legalForm']" [options]="legalForms$"
+                [type]="crudType.ReferenceOwnerLegalForm" [placeholder]="placeholder"></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+          <app-col titleName=juridicalAddress col="12 col-lg-8" formGroupName="legalEntity">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st" formControlName="juridicalAddress" type="text" placeholder="г. Москва, ул. Осенняя, д. 17 корп. 1 пом. I ком. 146">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=inn col="12 col-lg-4" class="pb-2 pb-lg-0">
+            <ng-template #colContent>
+              <input (change)="getMatches.emit(formGroup.value)" class="inp-st" formControlName="inn"
+                type="text" placeholder="7710152113">
+            </ng-template>
+          </app-col>
+          <app-col titleName=kpp col="12 col-lg-4"  formGroupName="legalEntity">
+            <ng-template #colContent>
+              <input [maskNumberMax]="9" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                formControlName="kpp" type="text" placeholder="779901099">
+            </ng-template>
+          </app-col>
+          <app-col titleName=ogrn col="12 col-lg-4" class="pt-2 pt-lg-0" formGroupName="legalEntity">
+            <ng-template #colContent>
+              <input [maskNumberMax]="13" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                formControlName="ogrn" type="text" placeholder="1177746126099">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=phone col="12 col-lg-4">
+            <ng-template #colContent>
+              <input appUiMaskPhone class="inp-st" formControlName="phone" type="text" placeholder="+79999999999">
+            </ng-template>
+          </app-col>
+          <app-col titleName=email col="12 col-lg-4" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="email" type="text" placeholder="info@mail.ru">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row class="align-items-center">
+        <ng-template #rowContent>
+          <app-col titleName=legalActualAddress col="12 col-sm-7 col-lg-8" formGroupName="address">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text" placeholder="Укажите фактический адрес">
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-sm-5 col-lg-4" class="pt-4" formGroupName="legalEntity">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input [dependControl]="formGroup.controls['address']['controls']['full']"
+                  [mainControl]="formGroup.controls['legalEntity']['controls']['juridicalAddress']" appSameField
+                  formControlName="factAddressIsJuridicalAddress" id="address-residence" type="checkbox">
+                <label for="address-residence">Совпадает с юридическим</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-12" class="pl-4">
+            <ng-template #colContent>
+              <app-ya-maps-field [coordinatesControl]="formGroup.controls['address']['controls']['coordinates']">
+              </app-ya-maps-field>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="form-header">Руководитель</div>
+      <fieldset formGroupName="legalEntity">
+        <fieldset formGroupName="head">
+          <fieldset formGroupName="fullName">
+            <app-row>
+              <ng-template #rowContent>
+                <app-col titleName=lastName col="12 col-lg-4" class="pb-2 pb-lg-0">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('legalEntity.head.fullName.lastName')"
+                      field='surname'
+                      placeholder='Иванов'
+                      parts='SURNAME'>
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+                <app-col  titleName=firstName col="12 col-lg-4">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('legalEntity.head.fullName.name')"
+                      field='name'
+                      parts='NAME'
+                      placeholder='Иван'
+                      (selectedGender)="getGender($event)">
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+                <app-col titleName=middleName col="12 col-lg-4" class="pt-2 pt-lg-0">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('legalEntity.head.fullName.middleName')"
+                      field='patronymic'
+                      placeholder='Иванович'
+                      parts='PATRONYMIC'>
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </fieldset>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=phone col="12 col-lg-4">
+                <ng-template #colContent>
+                  <input type="text" class="inp-st" formControlName="phone" placeholder="+79999999999" appUiMaskPhone>
+                </ng-template>
+              </app-col>
+              <app-col titleName=email col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <input type="text" class="inp-st" formControlName="email" placeholder="info@mail.ru">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=position col="12 col-lg-4">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="position" type="text" placeholder="Директор">
+                </ng-template>
+              </app-col>
+              <app-col titleName=responsibilitiesLegal col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="responsibilities" type="text" placeholder="Руководство компанией">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </fieldset>
+      </fieldset>
+      <div class="form-header">Контактные лица</div>
+      <ng-container *ngFor="let person of formGroup.controls['contactPersons']['controls']; let i = index;"
+        formArrayName="contactPersons">
+        <fieldset [formGroupName]="i">
+          <app-row formGroupName="person">
+            <ng-template #rowContent>
+              <app-col titleName=lastName col="12 col-lg-4" class="pb-2 pb-lg-0">
+                <ng-template #colContent>
+                  <app-dadata
+                    [control]="formGroup.get('contactPersons.'+ i +'.person.fullName.lastName')"
+                    field='surname'
+                    parts='SURNAME'
+                    placeholder='Иванов'
+                    (selectedGender)="getGenderContact($event)">
+                  </app-dadata>
+                </ng-template>
+              </app-col>
+              <app-col  titleName=firstName col="12 col-lg-4">
+                <ng-template #colContent>
+                  <app-dadata
+                    [control]="formGroup.get('contactPersons.'+ i +'.person.fullName.name')"
+                    field='name'
+                    placeholder='Иван'
+                    parts='NAME'>
+                  </app-dadata>
+                </ng-template>
+              </app-col>
+              <app-col titleName=middleName col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <app-dadata
+                    [control]="formGroup.get('contactPersons.'+ i +'.person.fullName.middleName')"
+                    field='patronymic'
+                    placeholder='Иванович'
+                    parts='PATRONYMIC'>
+                  </app-dadata>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row formGroupName="person">
+            <ng-template #rowContent>
+              <app-col titleName=phone col="12 col-lg-4">
+                <ng-template #colContent>
+                  <input appUiMaskPhone class="inp-st" formControlName="phone" type="text" placeholder="+79999999999">
+                </ng-template>
+              </app-col>
+              <app-col titleName=email col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="email" type="text" placeholder="info@mail.ru">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=position col="12 col-lg-4">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="position" type="text" placeholder="Директор">
+                </ng-template>
+              </app-col>
+              <app-col titleName=responsibilitiesLegal col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="comment" type="text" placeholder="Руководство компанией">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </fieldset>
+      </ng-container>
+      <app-row class="mt-4">
+        <ng-template #rowContent>
+          <app-col class="pt-2 pt-lg-0 pb-2 pb-lg-0">
+            <ng-template #colContent>
+              <a (click)="addContactPerson()" class="form-span__lnk-btn">Добавить сотрудника</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row class="pb-3">
+        <ng-template #rowContent>
+          <app-col titleName=selectActivities col="12 col-lg-6">
+            <ng-template #colContent>
+              <app-ui-multi-select-field [(choices)]="choicesActivities" [control]="formGroup.get('activity')"
+                [searchInput]="true"></app-ui-multi-select-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=specifyYourActivities col="12 col-lg-6" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="customActivities" type="text" placeholder="Укажите виды деятельности">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row formGroupName="legalEntity">
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-12">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input formControlName="productionFacility" id="production-facility" type="checkbox">
+                <label for="production-facility">Является подконтрольным объектом</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+    <app-owner-file-view *ngIf="model && model.id && showBlockFile" [fileTypes$]="fileTypes$" [files]="files"
+      [owner]="model"></app-owner-file-view>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <app-reference-button-form
+            [goListUrl]="'/owners'"
+            [backButton]="true"
+            [hidden]="backButton"
+            [goListUrlAfterRemove]="'/owners'"
+            [id]="formGroup.value['id']"
+            (buttonClick)="submit()"
+            [isEdit]="formGroup.value['id'] ? true : false"
+            [type]="type"
+            [saveButtonName]="formGroup.value['id'] ? 'Сохранить':'Добавить'"
+            removeButtonName="УДАЛИТЬ ВЛАДЕЛЬЦА">
+          </app-reference-button-form>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

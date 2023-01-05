@@ -1,0 +1,12 @@
+<ng-container *ngIf="itemsList; else itemsListDefault">
+  <ng-container [ngTemplateOutlet]="itemsList"></ng-container>
+</ng-container>
+
+<ng-template #itemsListDefault>
+  <ng-container *ngFor="let item of items; let i=index">
+    <li><a routerLink="{{item.url}}" [ngClass]="{
+    'krv-breadcrumbs__item': true, 'krv-breadcrumbs__item--disabled':item.current
+    }">{{item.label}}</a></li>
+    <li class="krv-breadcrumbs__divider" *ngIf="items.length  % 2 && showDivider">/</li>
+  </ng-container>
+</ng-template>

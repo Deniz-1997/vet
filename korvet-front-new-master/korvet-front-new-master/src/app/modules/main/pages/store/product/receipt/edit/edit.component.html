@@ -1,0 +1,40 @@
+
+<app-title-view title="{{getTitle()}}"></app-title-view>
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-4" [required]="true" titleName=stock formGroupName="state">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('stock')" [options]="referenceStocks"
+              [type]="crudType.ReferenceStock" placeholder="Укажите склад"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=dateRegistration col="12 col-sm-6 col-lg-3">
+          <ng-template #colContent>
+            <app-datepicker-overview formControlName="date"></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col titleName=timeRegistration col="12 col-sm-6 col-lg-3">
+          <ng-template #colContent>
+            <input appUiMaskTime class="inp-st time-mask" formControlName="time" />
+          </ng-template>
+        </app-col>
+        <app-col *ngIf="formGroup.get('createdAt').value" titleName=createdAt col="12 col-lg-2 pt-2 pt-sm-0">
+          <ng-template #colContent>
+            <strong>{{ formGroup.get('createdAt').value | slice:0:-3 }}</strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-product-list [documentProducts]="item.documentProducts" [formGroup]="formGroup" [state]="item.state"
+          [stock]="formGroup.get('stock')" class="w-100"></app-product-list>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrlAfterRemove]="goListUrlAfterRemove()" [goListUrl]="goListUrl()" [id]="id"
+    [isEdit]="isEdit()" [type]="type"></app-reference-button-form>
+</form>

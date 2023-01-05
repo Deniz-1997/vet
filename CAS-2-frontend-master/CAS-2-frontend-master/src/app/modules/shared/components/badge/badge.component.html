@@ -1,0 +1,6 @@
+<span class="app-badge">
+  <ng-container [ngTemplateOutlet]="content" *ngIf="content"></ng-container>
+  <span class="app-badge__wrapper">
+    <span class="app-badge__badge red" [hidden]="isShow()" style="inset: auto auto calc(100% - 12px) calc(100% - 12px);">{{count}}</span>
+  </span>
+</span>

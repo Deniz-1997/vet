@@ -1,0 +1,37 @@
+<template>
+  <g>
+    <rect
+      x="0.6"
+      y="2.85"
+      width="12.8"
+      height="10.8"
+      rx="1.4"
+      stroke="#828286"
+      stroke-width="1.2"
+    />
+    <line
+      x1="0.829102"
+      y1="6.275"
+      x2="13.1885"
+      y2="6.275"
+      stroke="#828286"
+      stroke-width="1.2"
+    />
+    <rect
+      x="3.3999"
+      y="0.75"
+      width="1.2"
+      height="3.5"
+      rx="0.6"
+      fill="#828286"
+    />
+    <rect
+      x="9.3999"
+      y="0.75"
+      width="1.2"
+      height="3.5"
+      rx="0.6"
+      fill="#828286"
+    />
+  </g>
+</template>

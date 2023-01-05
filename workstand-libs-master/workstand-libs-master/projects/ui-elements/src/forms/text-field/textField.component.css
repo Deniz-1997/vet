@@ -1,0 +1,8 @@
+:host(.krv-input-text-field) {
+  height: 100%;
+  display: block;
+}
+
+::ng-deep .mat-theme .krv-input-text-field  .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #0d51b669;
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+node_modules/.bin/vue-cli-service test:unit --silent --passWithNoTests --coverage=false && yarn lint-staged -p 1

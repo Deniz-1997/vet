@@ -1,0 +1,119 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+             [show]="loading">
+</ngx-loading>
+
+<ng-container *ngIf="!loading && item.cullingRegistrationHistory.length">
+
+  <div class="header">
+    <div class="header__name">История отловов</div>
+    <!--    <span class="header__comment">Москва, ул. Весенняя, 64-А</span>-->
+  </div>
+  <div class="delivery">
+    <table class="table table-borderless">
+      <tbody>
+      <tr>
+        <th>Дата отлова</th>
+        <th>Компания отловщик</th>
+        <th>Адрес отлова</th>
+        <th>Отловщик</th>
+      </tr>
+      <ng-container *ngFor="let history of item.cullingRegistrationHistory">
+        <tr class="cursor-pointer" routerLink="/culling/{{item.id}}/register/{{history.id}}">
+          <td>{{history.date|dateParse:'dd.MM.yyyy'}}</td>
+          <td>{{history.contractor?.name}}</td>
+          <td>
+            <ng-container *ngIf="history.address">
+              {{history.address.full}}
+            </ng-container>
+          </td>
+          <td>
+            <ng-container *ngIf="history.contactPerson
+            && history.contactPerson.person
+            && history.contactPerson.person.fullName">
+              {{history.contactPerson.person.fullName.lastName}}
+              {{history.contactPerson.person.fullName.name}}
+              {{history.contactPerson.person.fullName.middleName}}
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="delivery-grid">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <ng-container *ngFor="let history of item.cullingRegistrationHistory">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="4" text="Дата отлова">
+              <ng-template #colContent>
+                <strong>{{history.date|dateParse:'dd.MM.yyyy'}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col col="8" class="text-right">
+              <ng-template #colContent>
+                <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed">
+                  <span class="expand-lnk"></span>
+                  <span class="expand-text"></span>
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col text="Дата отлова">
+                <ng-template #colContent>
+                  <strong>{{history.date|dateParse:'dd.MM.yyyy'}}</strong>
+                </ng-template>
+              </app-col>
+              <app-col text="Компания отловщик">
+                <ng-template #colContent>
+                  <strong>{{history.contractor?.name}}</strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+
+          <app-row class="pt-2">
+            <ng-template #rowContent>
+              <app-col text="Адрес отлова">
+                <ng-template #colContent>
+                  <strong>
+                    <ng-container *ngIf="history.address">
+                      {{history.address.full}}
+                    </ng-container>
+                  </strong>
+                </ng-template>
+              </app-col>
+              <app-col text="Отловщик">
+                <ng-template #colContent>
+                  <strong>
+                    <ng-container *ngIf="history.contactPerson
+                    && history.contactPerson.person
+                    && history.contactPerson.person.fullName">
+                      {{history.contactPerson.person.fullName.name}}
+                      {{history.contactPerson.person.fullName.middleName}}
+                      {{history.contactPerson.person.fullName.lastName}}
+                    </ng-container>
+                  </strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+
+          <app-row class="pt-2 text-right">
+            <ng-template #rowContent>
+              <app-col >
+                <ng-template #colContent>
+                  <a routerLink="/culling/{{item.id}}/register/{{history.id}}" target="_blank" class="lnk-open">Открыть</a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,337 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=textId col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="code" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=description class="pb-2">
+          <ng-template #colContent>
+            <textarea class="textarea-st" cols="30" formControlName="description" rows="6"></textarea>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=extraAction col="">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeHolder="Найти дополнительные действия"
+              [selectFormControl]="formGroup.get('additionalActions')"
+              [type]="crudType.Action">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=parent col="4">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('parent')"
+              [options]="actionItems$"
+              [type]="crudType.Action"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+
+        <app-col titleName=groupAction col="4">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeHolder="Найти группы"
+              [selectFormControl]="formGroup.get('groups')"
+              [type]="crudType.ActionGroup">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+
+        <app-col titleName=sort col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="sort" type="number"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=roles>
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeHolder="Найти роли"
+              [selectFormControl]="formGroup.get('roles')"
+              [type]="crudType.Role">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <!--Поведение-->
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=typeAction col="4" formGroupName="type">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select disableOptionCentering formControlName="code" placeholder="Не выбрано">
+                <mat-option *ngFor="let item of ActionTypeEnum" [value]="item.id">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+        <app-col titleName=url col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="url" type="text"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=entityClass col="4">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <input [matAutocomplete]="auto" formControlName="entityClass" matInput type="text">
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let option of filteredEntity" [value]="option">
+                  {{option.name}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <!-- type = ENTITY_LIST_URL -->
+    <app-row *ngIf="isTypeEntityListUrl()">
+      <ng-template #rowContent >
+        <app-col  col="4">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="itemsCountEnabled" id="itemsCountEnabled" type="checkbox"
+                     value="">
+              <label for="itemsCountEnabled">Рассчитывать количество элементов сущности</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=itemsCount col="8">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="itemsCount" type="number"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <!-- type = ENTITY -->
+    <app-row *ngIf="isTypeEntity()">
+      <ng-template #rowContent >
+        <app-col  col="4">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="getListEnabled" id="getListEnabled" type="checkbox"
+                     value="">
+              <label for="getListEnabled">Доступно в списке</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col  col="4">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="viewItemEnabled" id="viewItemEnabled" type="checkbox"
+                     value="">
+              <label for="viewItemEnabled">Доступно в форме просмотра</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col  col="4">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="getItemEnabled" id="getItemEnabled" type="checkbox"
+                     value="">
+              <label for="getItemEnabled">
+                Доступно в форме редактирования
+              </label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent formGroupName="buttonSettings">
+        <app-col  col="4">
+          <ng-template #colContent>
+            <strong>Настройки кнопки</strong><br>(buttonSettings)
+          </ng-template>
+        </app-col>
+        <app-col titleName=color col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="color" type="text"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=backgroundColor col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="backgroundColor" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  col="4">
+          <ng-template #colContent>
+          </ng-template>
+        </app-col>
+        <app-col titleName=icon col="8">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('buttonSettings.icon')"
+              [fields]="iconFields"
+              [options]="icons$"
+              [addFilter]="{subclass: 'NOANIMAL'}"
+              [type]="crudType.ReferenceIcon"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+        <app-row>
+          <ng-template #rowContent formGroupName="confirmation">
+            <app-col col="4">
+              <ng-template #colContent>
+                <strong>Подтверждение действия</strong><br>(confirmation)
+              </ng-template>
+            </app-col>
+            <app-col titleName=title col="4">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="title" type="text"/>
+              </ng-template>
+            </app-col>
+            <app-col titleName=description col="4">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="description" type="text"/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent formGroupName="confirmation">
+            <app-col col="4">
+              <ng-template #colContent>
+                Настройка кнопки подтверждения<br>(confirmButtonSettings)
+              </ng-template>
+            </app-col>
+            <app-col titleName=color col="4" formGroupName="confirmButtonSettings">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="color" type="text"/>
+              </ng-template>
+            </app-col>
+            <app-col titleName=backgroundColor col="4" formGroupName="confirmButtonSettings">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="backgroundColor" type="text"/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="4">
+              <ng-template #colContent>
+              </ng-template>
+            </app-col>
+            <app-col titleName=icon col="8">
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('confirmation.confirmButtonSettings.icon')"
+                  [fields]="iconFields"
+                  [options]="icons$"
+                  [addFilter]="{subclass: 'NOANIMAL'}"
+                  [type]="crudType.ReferenceIcon"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent formGroupName="confirmation">
+            <app-col col="4">
+              <ng-template #colContent>
+                Настройка кнопки отмены<br>(cancelButtonSettings)
+              </ng-template>
+            </app-col>
+            <app-col titleName=color col="4" formGroupName="cancelButtonSettings">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="color" type="text"/>
+              </ng-template>
+            </app-col>
+            <app-col titleName=backgroundColor col="4" formGroupName="cancelButtonSettings">
+              <ng-template #colContent>
+                <input class="inp-st" formControlName="backgroundColor" type="text"/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="4">
+              <ng-template #colContent>
+              </ng-template>
+            </app-col>
+            <app-col titleName=icon col="8">
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('confirmation.cancelButtonSettings.icon')"
+                  [fields]="iconFields"
+                  [options]="icons$"
+                  [addFilter]="{subclass: 'NOANIMAL'}"
+                  [type]="crudType.ReferenceIcon"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>
+

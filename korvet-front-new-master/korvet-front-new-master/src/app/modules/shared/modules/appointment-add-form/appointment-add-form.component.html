@@ -1,0 +1,141 @@
+<app-row class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view [title]="title">
+        </app-title-view>
+        <div *ngIf="openDialog">
+          <app-button-close></app-button-close>
+        </div>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+<div class="position-relative">
+  <ngx-loading [show]="loading"></ngx-loading>
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="container-fluid">
+      <div  class="row d-none d-lg-block" >
+        <div class="col-12 col-lg-12  text-right d-inline-block mb-3">
+          <button   (click)="addOwner($event)" class="btn  btn-primary mr-4">Добавить владельца</button>
+          <button  [disabled]="ownerId === undefined ? true : false" (click)="addPet($event)" class="btn  btn-primary">Добавить животное</button>
+        </div>
+      </div>
+      <div  class="row d-block d-lg-none">
+        <div class="col-12 col-lg-12  text-right d-inline-block">
+          <a   (click)="addOwner($event)" class="btn btn-link">Добавить владельца</a>
+          <a [class.disabled]="ownerId === undefined ? true : false"  (click)="addPet($event)" class="btn btn-link mr-2">Добавить животное</a>
+        </div>
+      </div>
+    </div>
+    <div class="form-wr container-fluid" style="box-shadow: 0 0 0 0">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=dateAppointment col="12 col-sm-6 col-lg-3">
+            <ng-template #colContent>
+              <app-datepicker-overview [dataError]="formGroup.controls['date'].hasError('required')"
+                                       formControlName="date"></app-datepicker-overview>
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=timeAppointment col="12 col-sm-6 col-lg-3">
+            <ng-template #colContent>
+              <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=owner  col="12 col-lg-3" *ngIf="formType === types.Appointment || formType === types.Pet || formType === types.Owner">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('owner')"
+                [convertReturnResult]="convertResultForPets"
+                [fields]="fields"
+                [petId]="petId"
+                [type]="types.Owner"
+                [placeholder]="placeholderOwner">
+              </app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=pet col="12 col-lg-3"
+            *ngIf="formType === types.Appointment || formType === types.Owner || formType === types.Pet">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('pet')"
+                [convertReturnResult]="convertResultForPets"
+                [fields]="fieldsPet"
+                [ownerId]="ownerId"
+                [type]="types.Pet"
+                [placeholder]="placeholderPet"></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=petitions col="12 col-lg-12">
+            <ng-template #colContent>
+              <textarea [value]="formGroup.get('name').value | firstLetter" [placeholder]="placeholderPetitions" class="textarea-st" cols="30" formControlName="name" rows="6"></textarea>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=professions col="12 col-lg-6">
+            <ng-template #colContent>
+              <app-ui-autocomplete class="profession" [control]="formGroup.get('profession')" [options]="professions"
+                [type]="types.ReferenceProfession" [placeholder]="placeholderProfession" field="name" ></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=expert col="12 col-lg-6">
+            <ng-template #colContent>
+              <ng-container *ngIf="hasProfession()">
+                <app-ui-autocomplete [addFilter]="isProfession()" [control]="formGroup.get('user')" [type]="types.User" [placeholder]="placeholderProfession"
+                  field="fullName"></app-ui-autocomplete>
+              </ng-container>
+              <ng-container *ngIf="!hasProfession()">
+                <input class="inp-st" disabled type="text">
+              </ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=typeOfAppeal col="12 col-lg-6" formGroupName="type">
+            <ng-template #colContent>
+              <mat-form-field appearance="outline">
+                <mat-select disableOptionCentering formControlName="code" name="type" placeholder="Не выбрано">
+                  <mat-option value="PRIMARY">Первичный</mat-option>
+                  <mat-option value="SECONDARY">Повторный</mat-option>
+                  <mat-option value="EVSD">эВСД</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=previousAppointment col="12 col-lg-6" *ngIf="formGroup.get('type.code').value === 'SECONDARY'">
+            <ng-template #colContent>
+              <div formGroupName="previous">
+                <mat-form-field appearance="outline">
+                  <mat-select disableOptionCentering formControlName="id" placeholder="Не выбрано">
+                    <mat-option *ngFor="let item of (previousAppointments)" [value]="item.id">
+                      {{item.date}} - {{item.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </form>
+  <div class="form-footer">
+    <app-reference-button-form
+      [isEdit]="false"
+      [showExtraButton]="true"
+      (buttonClick)="submit(false)"
+      ExtraButtonName="Сохранить и начать приём"
+      (extraButtonClick)="submit(true)"
+      [backButton]="backButton"
+      ></app-reference-button-form>
+  </div>
+</div>

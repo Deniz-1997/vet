@@ -1,0 +1,134 @@
+<div class="header">
+  <div class="header__name">{{monitoredObject.id ? 'Редактирование' : 'Добавление'}} подконтрольного объекта</div>
+</div>
+
+<form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+  <div class="form-wr form-wr--mmin">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  titleName=phone col="12 col-md-6" class="mb-2 mb-md-0" >
+          <ng-template #colContent>
+            <input appUiMaskPhone class="inp-st" formControlName="phone" type="text">
+          </ng-template>
+        </app-col>
+        <app-col  titleName=emailObject col="12 col-md-6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="email" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <fieldset formGroupName="address">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=householdAddress>
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </fieldset>
+    <app-ya-maps-field [coordinatesControl]="formGroup.get('address').get('coordinates')"></app-ya-maps-field>
+    <div class="form-header">Уполномоченное лицо
+      <div class="form-btn__check form-btn__check--span">
+        <div class="check-st">
+          <input formControlName="responsibleIsOwnerHead" id="address-residence" type="checkbox">
+          <label for="address-residence">Совпадает с руководителем</label>
+        </div>
+      </div>
+    </div>
+
+    <fieldset formGroupName="responsible">
+      <app-row>
+        <ng-template #rowContent formGroupName="fullName">
+          <app-col  titleName=lastName col="12 col-md-4" >
+            <ng-template #colContent>
+              <input [attr.disabled]="formGroup.get('responsibleIsOwnerHead').value ? '' : null" class="inp-st"
+                     formControlName="lastName"
+                     type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=firstName col="12 col-md-4" class="mb-2 mt-2 mb-md-0 mt-md-0">
+            <ng-template #colContent>
+              <input [attr.disabled]="formGroup.get('responsibleIsOwnerHead').value ? '' : null" class="inp-st"
+                     formControlName="name"
+                     type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=middleName col="12 col-md-4">
+            <ng-template #colContent>
+              <input [attr.disabled]="formGroup.get('responsibleIsOwnerHead').value ? '' : null" class="inp-st"
+                     formControlName="middleName"
+                     type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=phone col="12 col-md-6" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <input [attr.disabled]="formGroup.get('responsibleIsOwnerHead').value ? '' : null" appUiMaskPhone
+                     class="inp-st" formControlName="phone"
+                     type="text">
+            </ng-template>
+          </app-col>
+          <app-col titleName=email col="12 col-md-6" >
+            <ng-template #colContent>
+              <input [attr.disabled]="formGroup.get('responsibleIsOwnerHead').value ? '' : null" class="inp-st"
+                     formControlName="email"
+                     type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </fieldset>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  titleName=selectActivities col="12 col-md-7" class="mb-2 mb-md-0">
+          <ng-template #colContent>
+            <app-ui-multi-select-field
+              [(choices)]="choicesActivities"
+              [searchInput]="true"
+            ></app-ui-multi-select-field>
+          </ng-template>
+        </app-col>
+        <app-col  titleName=specifyYourActivities col="12 col-md-5">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="customActivities" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+  <app-files-view (fileAdd)="addFile()"
+                  *ngIf="id"
+                  [fileType]="typeFile"
+                  [files]="files$|async">
+  </app-files-view>
+
+  <div class="form-footer">
+    <button (click)="submit()" [class.btn-loader]="getLoading$ | async" class="btn-st btn-st--right"
+            type="button">{{monitoredObject.id ? 'Сохранить' : 'Добавить'}}
+    </button>
+    <button (click)="goBack()" [class.btn-st--left]="!monitoredObject.id"
+            [class.btn-st--right]="monitoredObject.id"
+            class="btn-st btn-st--gray"
+            type="button">Назад
+    </button>
+    <a (click)="onDelete()" *ngIf="monitoredObject.id"
+       class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold">Удалить подконтрольный объект</a>
+  </div>
+</form>

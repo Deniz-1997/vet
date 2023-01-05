@@ -1,0 +1,76 @@
+<div class="fancybox-slide--html">
+  <div id="popup-add-file"  class="popup-wr">
+    <ngx-loading [show]="loading$|async"></ngx-loading>
+    <div class="popup-wr__head">Добавить файл</div>
+    <div class="popup-wr__body">
+      <form [formGroup]="formGroup" (submit)="submit()" [class.show-error]="showError" appFormFocus>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" class="pt-2">
+              <ng-template #colContent>
+                <a class="form-span__lnk-btn" href="#" (click)="chooseFile($event)">Выбрать файл</a>
+                <input type="file" hidden #file (change)="changeFile($event)" [accept]="acceptTypes" name="file"
+                       formControlName="file"/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" [required]="true" text="Укажите название файла"  class="pb-2">
+              <ng-template #colContent>
+                <input type="text" class="inp-st" placeholder="" formControlName="name"/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12"[required]="true" titleName=fileType  class="pb-2" *ngIf="data.subject != null">
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('type')"
+                  [options]="data.fileTypes$"
+                  [type]="crudType.ReferenceFileType"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=selectAppeal  class="pb-2" *ngIf="data.appointments">
+              <ng-template #colContent>
+                <select id="select-appeal" formControlName="appointment" app-ui-select-field
+                        [options]="data.appointments"></select>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=selectAppeal  class="pb-2" *ngIf="data.leaving">
+              <ng-template #colContent>
+                <select id="select-appeal" formControlName="leaving" app-ui-select-field
+                        [options]="data.leaving"></select>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </form>
+    </div>
+    <div>
+      <app-reference-button-form
+        [type]="crudType.UploadedFile"
+        [isEdit]="false"
+        [backButton]="false"
+        [cancelButton]="true"
+        [getLoading$]="getLoading"
+        (buttonClick)="uploadFile()"
+        [disabled]="formGroup.invalid"
+        saveButtonName="Загрузить"
+      ></app-reference-button-form>
+    </div>
+  </div>
+</div>
+

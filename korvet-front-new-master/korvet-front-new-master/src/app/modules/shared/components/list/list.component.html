@@ -1,0 +1,33 @@
+<div *ngIf="(items$ | async).length>0" class="list-table-template">
+  <div class="table-info table-info--padding">
+    <div class="table-hor">
+      <table class="table-report table-report--left">
+        <tr>
+          <th *ngFor="let col of columns" [ngStyle]="col.styleTh">{{col.title}}</th>
+        </tr>
+        <tr *ngFor="let row of items$ | async">
+          <td *ngFor="let col of columns" [ngStyle]="col.styleTd">
+            <div *ngIf="!col.type" [innerHtml]="getData(row,col)"></div>
+            <div *ngIf="col.type === 'link'"><a [routerLink]="col.params(row)['link']"
+                                                href="{{col.params(row)['link']}}">{{col.params(row)['value']}}</a>
+            </div>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+  </div>
+  <a (click)="load();" *ngIf="items.length<totalCount && listService.isLoad===false" class="btn-show-add" href="">Показать
+    ещё 40 записей</a>
+</div>
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<div *ngIf="(items$|async).length===0" [hidden]="loading$|async" class="list-table-template-empty">
+  <div class="box-empty">
+    <h3>
+      Нет ни одного {{options.words[0]}}.
+      <span>Вы можете добавить {{options.words[1]}}</span>
+    </h3>
+    <div class="box-empty__btn"><a [routerLink]="options.linkAdd" class="btn-st btn-st--inline"
+                                   href="">Добавить {{options.words[1]}}</a></div>
+  </div>
+</div>

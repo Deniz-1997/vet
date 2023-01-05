@@ -1,0 +1,33 @@
+<app-row class="pt-2 mb-0">
+  <ng-template #rowContent>
+    <a class="map-show mb-0" (click)="toggle($event)">Показать карту</a>
+  </ng-template>
+</app-row>
+
+<app-row class="form-row--column form-row--map-hide">
+  <ng-template #rowContent>
+    <app-col>
+      <ng-template #colContent>
+        <div id="form-map" class="form-map">
+        </div>
+      </ng-template>
+    </app-col>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 cpl-lg-6" titleName=latitude >
+          <ng-template #colContent>
+            <input type="text" readonly class="inp-st inp-namber" lang="en" data-min="0" data-max="1000" [ngModel]="latitude | number:'1.0-9':'en-US'" (ngModelChange)="latitude = $event">
+          </ng-template>
+        </app-col>
+        <app-col col="12 cpl-lg-6" class="pt-2 pt-lg-0" titleName=longitude>
+          <ng-template #colContent>
+            <input type="text" readonly class="inp-st inp-namber" lang="en" data-min="0.0001" data-max="1000" [ngModel]="longitude | number:'1.0-9':'en-US'" (ngModelChange)="longitude = $event">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </ng-template>
+</app-row>
+
+
+

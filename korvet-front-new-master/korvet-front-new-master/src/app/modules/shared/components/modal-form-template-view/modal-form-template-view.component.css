@@ -1,0 +1,74 @@
+
+.popup-wr {
+  min-width: 768px;
+  /*max-width: 1200px;*/
+}
+.check-st {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.check-st .check-st__col{
+  display: inline-block;
+}
+
+.check-st .check-st__col:not(:first-child) {
+  margin-left: 15px;
+}
+
+.popup-wr__body .form-span--date {
+  max-width: 50%;
+  display: inline-block;
+}
+
+.bg-blue {
+  background-color: lightblue;
+}
+
+.bg-pink {
+  background-color: lightcoral;
+}
+
+.bg-blue-dark {
+  background-color: #86c5da;
+}
+
+.bg-pink-dark {
+  background-color: #eb5252;
+}
+
+.text-input-highlight-container {
+  position: relative;
+}
+
+.text-input-highlight-container .text-input-element {
+  background: none;
+  position: relative;
+  z-index: 2;
+}
+
+.text-input-highlight-container .text-highlight-element {
+  overflow: hidden !important;
+  white-space: pre-wrap;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f7f7f7;
+  color: rgba(0, 0, 0, 0);
+  z-index: 1;
+}
+
+.text-input-highlight-container .text-highlight-tag {
+  border-radius: 8px;
+  padding: 1px 3px;
+  margin: -1px -3px;
+  overflow-wrap: break-word;
+}
+
+
+.inline {
+  display: inline!important;
+  width: auto!important;
+}

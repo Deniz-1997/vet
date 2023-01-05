@@ -1,0 +1,56 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'шаблон',
+    title: 'Не найдено ни одного шаблона',
+    subtitle: 'Вы можете добавить новый шаблон',
+    addLink: ['create']
+  }"
+  [type]="type"
+  title="Шаблоны"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>#</th>
+      <th>Наименование</th>
+      <th>Кол-во приемов</th>
+      <th>Архив</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td>{{item.appointmentCount}}</td>
+      <td>{{ !item.active ? 'Да' : 'Нет' }}</td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="5" titleName="name">
+            <ng-template #colContent>
+              <a [routerLink]="[item.id]">{{item.name}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="5" text="Кол-во приемов">
+            <ng-template #colContent>
+              {{item.appointmentCount}}
+            </ng-template>
+          </app-col>
+          <app-col col="2" text="Архив">
+            <ng-template #colContent>
+              {{ !item.active ? 'Да' : 'Нет' }}
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

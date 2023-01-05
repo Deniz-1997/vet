@@ -1,0 +1,65 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<k-row *ngIf="openDialog">
+  <ng-template #row>
+    <k-col>
+      <ng-template #col>
+        <app-close-dialog [textCenter]="true" title="История изменений"></app-close-dialog>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>
+<div class="container-fluid mt-2 pt-4 off-overflow">
+  <ng-container *ngIf="dataList.length; else blockElse">
+    <mat-card>
+      <mat-card-header *ngIf="!openDialog">
+        <mat-card-title class="mat-card-title-custom text-left">История изменений</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="dataList">
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef>Действие</mat-header-cell>
+            <mat-cell class="justify-start" *matCellDef="let element">
+              <span>{{element.action === 'create' ? 'Создание': 'Обновление'}}</span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef>Дата изменения</mat-header-cell>
+            <mat-cell class="justify-start" *matCellDef="let element">
+              <span>{{element?.loggedAt}}</span>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef>Статус</mat-header-cell>
+            <mat-cell class="justify-start" *matCellDef="let element">
+              <ng-container *ngIf="element.data.length; else elseBlock">
+                {{element['data'][0]['ReportsData.statusId']['title']}}
+              </ng-container>
+              <ng-template #elseBlock>
+                {{element['diff']['ReportsData.statusId']['new']}}
+              </ng-template>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="user">
+            <mat-header-cell *matHeaderCellDef>Пользователь</mat-header-cell>
+            <mat-cell class="justify-start" *matCellDef="let element">
+              {{element['user']['userSurname'] + ' ' + element['user']['userFirstname']}}
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="tableFields"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: tableFields;" fxLayout="row"></mat-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+  <ng-template #blockElse>
+    <div class="center">
+      <p>Изменения ещё не вносились</p>
+    </div>
+  </ng-template>
+  <ng-container *ngIf="openDialog">
+    <div class="center">
+      <button mat-raised-button color="primary" (click)="close()">Закрыть</button>
+    </div>
+  </ng-container>
+</div>

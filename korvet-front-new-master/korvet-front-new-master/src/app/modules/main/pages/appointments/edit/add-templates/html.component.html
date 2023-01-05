@@ -1,0 +1,29 @@
+<app-row class="justify-content-lg-between">
+  <ng-template #rowContent>
+    <app-col col="12 col-lg-8 mr-1">
+      <ng-template #colContent>
+        <app-ui-autocomplete
+          [addFilter]="{unit: {id: filterUnitId.id}}"
+          [control]="control"
+          [limit]='limit'
+          [fields]="appointmentTemplateFields"
+          [type]="crudType.AppointmentTemplate"
+        ></app-ui-autocomplete>
+      </ng-template>
+    </app-col>
+    <app-col col="12 col-lg-3" class="pt-1 text-right">
+      <ng-template #colContent>
+        <a (click)="addTemplateTo('add')" [ngClass]="{'disabled' : hasTemplate()}"
+           class="btn btn-outline-primary mb-2 mr-4"
+           href="javascript:void(0)">
+          Добавить
+        </a>
+        <a (click)="addTemplateTo('show')" [ngClass]="{'disabled' : hasTemplate()}"
+           class="btn btn-outline-primary mb-2 mr-4"
+           href="javascript:void(0)">
+          Показать
+        </a>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>

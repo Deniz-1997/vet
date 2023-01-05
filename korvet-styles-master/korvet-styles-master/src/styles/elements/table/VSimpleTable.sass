@@ -1,0 +1,179 @@
+// Imports
+@import './_variables.scss'
+
+// Theme
++theme(krv-data-table) using ($material)
+  background-color: map-get($material, 'cards')
+  color: map-deep-get($material, 'text', 'primary')
+
+  .krv-data-table__divider
+    border-right: thin solid map-get($material, 'dividers')
+
+  &.krv-data-table--fixed-header
+    thead th
+      background: map-get($material, 'cards')
+      box-shadow: inset 0 -1px 0 map-get($material, 'dividers')
+
+  > .krv-data-table__wrapper
+    > table
+      > thead
+        > tr
+          > th
+            color: map-deep-get($material, 'text', 'secondary')
+
+          &:last-child
+            > th
+              border-bottom: thin solid map-get($material, 'dividers')
+
+  > .krv-data-table__wrapper
+    > table
+      > tbody
+        > tr
+          &:not(:last-child)
+            > td,
+            > th
+              &:not(.krv-data-table__mobile-row)
+                border-bottom: thin solid map-get($material, 'dividers')
+
+              &:last-child
+                border-bottom: thin solid map-get($material, 'dividers')
+
+          &.active
+            background: map-deep-get($material, 'table', 'active')
+
+          &:hover:not(.krv-data-table__expanded__content):not(.krv-data-table__empty-wrapper)
+            background: map-deep-get($material, 'table', 'hover')
+
+      > tfoot
+        > tr
+          > td,
+          > th
+            &:not(.krv-data-table__mobile-row)
+              border-top: thin solid map-get($material, 'dividers')
+
+// Block
+.krv-data-table
+  // Do not inherit line-height
+  line-height: 1.5
+  max-width: 100%
+
+  > .krv-data-table__wrapper
+    > table
+      width: 100%
+      border-spacing: 0
+
+      > tbody,
+      > thead,
+      > tfoot
+        > tr
+          > td,
+          > th
+            padding: 0 16px
+            transition: height $secondary-transition
+
+          > th
+            user-select: none
+            font-size: $data-table-regular-header-font-size
+            height: $data-table-regular-header-height
+
+            +ltr()
+              text-align: left
+
+            +rtl()
+              text-align: right
+
+          > td
+            font-size: $data-table-regular-row-font-size
+            height: $data-table-regular-row-height
+
+// Elements
+.krv-data-table__wrapper
+  overflow-x: auto
+  overflow-y: hidden
+
+.krv-data-table__progress
+  height: auto !important
+
+  th
+    height: auto !important
+    border: none !important
+    padding: 0
+    position: relative
+
+// Modifiers
+.krv-data-table--dense
+  > .krv-data-table__wrapper
+    > table
+      > tbody,
+      > thead,
+      > tfoot
+        > tr
+          > td
+            height: $data-table-dense-row-height
+          > th
+            height: $data-table-dense-header-height
+
+.krv-data-table--has-top
+  > .krv-data-table__wrapper
+    > table
+      > tbody
+        > tr
+          &:first-child
+            &:hover
+              > td
+                &:first-child
+                  border-top-left-radius: 0
+
+                &:last-child
+                  border-top-right-radius: 0
+
+.krv-data-table--has-bottom
+  > .krv-data-table__wrapper
+    > table
+      > tbody
+        > tr
+          &:last-child
+            &:hover
+              > td
+                &:first-child
+                  border-bottom-left-radius: 0
+
+                &:last-child
+                  border-bottom-right-radius: 0
+
+.krv-data-table--fixed-height
+  .krv-data-table__wrapper
+    overflow-y: auto
+
+.krv-data-table--fixed-header
+  > .krv-data-table__wrapper
+    overflow-y: auto
+
+    > table
+      > thead
+        > tr
+          > th
+            border-bottom: 0px !important
+            position: sticky
+            top: 0
+            z-index: 2
+
+        > tr:nth-child(2)
+          > th
+            top: $data-table-regular-header-height
+
+  // Account for scroll bar
+  .krv-data-footer
+    +ltr()
+      margin-right: $data-table-scroll-bar-width
+
+    +rtl()
+      margin-left: $data-table-scroll-bar-width
+
+.krv-data-table--fixed-header.krv-data-table--dense
+  > .krv-data-table__wrapper
+    > table
+      > thead
+        > tr:nth-child(2)
+          > th
+            top: $data-table-dense-header-height

@@ -1,0 +1,39 @@
+:host .form-row .form-row .form-span {
+  padding-bottom: 20px;
+}
+
+:host .form-row .form-row .form-span.form-span-mat {
+  padding-bottom: 0px;
+}
+
+:host .minH {
+  min-height: 360px;
+}
+@media (max-width: 1023px) {
+  :host /deep/ .mat-calendar {
+    width: 100% - 50px !important;
+    height: 100% - 50px !important;
+  }
+}
+
+
+:host /deep/ .mat-calendar-body-selected .mat-calendar-body-cell-content.mat-calendar-body-selected {
+  background: inherit;
+  color: inherit;
+}
+
+.mat-calendar-body-cell-content {
+  border-color: white;
+}
+
+:host /deep/ .special-date .mat-calendar-body-cell-content,
+:host /deep/ .special-date .mat-calendar-body-selected.mat-calendar-body-cell-content {
+  background: #0d51b6;
+  color: white;
+}
+
+:host /deep/ .mat-calendar-body-selected.mat-calendar-body-cell-content {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: transparent;
+  border-color: transparent;
+}

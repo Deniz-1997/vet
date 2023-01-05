@@ -1,0 +1,22 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+
+<div class="table-info">
+  <table class="table-info-st table-info-st--close  table-info-st--vert">
+    <tr>
+      <th>Наименование</th>
+    </tr>
+    <ng-container *ngFor="let item of catalog$ | async">
+      <tr>
+        <td>
+          <ng-container
+            *ngIf="item.type && (item.type.code === 'ENTITY_LIST_URL' || item.type.code === 'URL'), else default">
+            <a [routerLink]="[item.url]">{{item.name}}</a>
+          </ng-container>
+          <ng-template #default>
+            {{item.name}}
+          </ng-template>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>

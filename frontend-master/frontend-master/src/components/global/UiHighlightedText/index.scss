@@ -1,0 +1,9 @@
+@import '@/assets/styles/_variables';
+
+.ui-highlighted-text {
+  &__item {
+    &_active {
+      background-color: $highlight-bg;
+    }
+  }
+}

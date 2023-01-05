@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Packages\Client\AbstractClient:
+    abstract: true
+    public: false
+    autowire: true
+
+  App\Packages\Client\GatewayClient:
+      public: true
+      autowire: true

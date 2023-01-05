@@ -1,0 +1,116 @@
+<form [formGroup]="formGroup" (submit)="submit()">
+  <div class="popup-wr__search popup-wr__search--ico popup-wr__search--lnk-ext main-search">
+    <input type="text" [placeholder]="placeholder" formControlName="search" class="main-search">
+    <ng-container *ngIf="mutableSearch">
+      <mat-form-field appearance="outline" class="search-type" formGroupName="mutableSearch">
+        <mat-select disableOptionCentering formControlName="type">
+          <mat-option *ngFor="let item of mutableSearchOption" [value]="item.type">
+            {{item.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <input type="submit" value="Найти">
+    <a (click)="toggle()" class="popup-wr__lnk-extended"
+       [style.display]="extended||!filterFields.length  ? 'none' : 'block'" #extendBtn>Расширенный поиск</a>
+  </div>
+  <div class="search-detals" [style.display]="extended && filterFields.length ? 'block' : 'none'" #searchDetails>
+    <div class="container-fluid">
+      <div class="row" *ngFor="let row of filterFields">
+        <div class="col-12 col-md form-row form-row--column" *ngFor="let field of row">
+          <div class="form-span"
+               [ngClass]="field.class"
+               [style]="field.style"
+               [style.display]="(!mutableSearch ||
+                            mutableSearch && field.mutableSearchType === formGroup.get('mutableSearch.type').value) ? 'table-cell' : 'none'">
+            <div class="form-head"
+                 *ngIf="field.head"
+                 [ngClass]="field.class"
+                 [style]="field.style">{{field.head.value}}</div>
+            <div *ngIf="field.loading" class="form-body"><span class="loader"></span></div>
+            <!--               [ngClass]="field.body?.class"-->
+
+            <div class="form-body" [style]="field.body?.style" *ngIf="!field.loading">
+              <ng-container [ngSwitch]="field.type">
+                <ng-container *ngSwitchCase="fieldTypes.text">
+                  <input type="text" class="inp-st"
+                         [style]="field.attributes?.style"
+                         [ngClass]="field.attributes?.class" [formControl]="formGroup.get('filter.' + field.prop)">
+                </ng-container>
+                <ng-container *ngSwitchCase="fieldTypes.date">
+                  <!--                <input type="text" class="inp-st datepicker" appUiDatepicker-->
+                  <!--                       [style]="field.attributes?.style"-->
+                  <!--                       [ngClass]="field.attributes?.class" [formControl]="formGroup.get('filter.' + field.prop)">-->
+                  <app-datepicker-overview
+                    [formControl]="formGroup.get('filter.' + field.prop)"
+                  ></app-datepicker-overview>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="fieldTypes.select">
+                  <select app-ui-select-field
+                          [style]="field.attributes?.style"
+                          [options]="field.attributes?.options || []"
+                          [nullTitle]="field.prop === 'appointment.paymentType' ? PaymentTypeEnum.options[0].name : 'Все'"
+                          [ngClass]="field.attributes?.class" [formControl]="formGroup.get('filter.' + field.prop)">
+                    <!-- <option [value]="null">Все</option>
+                     <option *ngFor="let option of field.attributes?.options || []" [value]="option.id">{{option.name}}</option>-->
+                  </select>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="fieldTypes.autocomplete">
+                  <ng-container *ngIf="field.attributes?.optionsType !== crudType.ReferenceBreed">
+                    <app-ui-autocomplete
+                      [control]="formGroup.get('filter.' + field.prop)"
+                      [options]="field.attributes?.options || []"
+                      [type]="field.attributes?.optionsType"
+                      [field]="field.field"
+                      [placeholder]="field.placeholder"
+                    ></app-ui-autocomplete>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="field.attributes?.optionsType === crudType.ReferenceBreed && (field.attributes.optionsFilter | async).length">
+                    <app-ui-autocomplete
+                      [control]="formGroup.get('filter.' + field.prop)"
+                      [options]="field.attributes?.options || []"
+                      [type]="field.attributes?.optionsType"
+                      [petId]="(field.attributes.optionsFilter | async) || []"
+                      [placeholder]="field.placeholder"
+                    ></app-ui-autocomplete>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="field.attributes?.optionsType === crudType.ReferenceBreed && !(field.attributes.optionsFilter | async).length">
+                    <input type="text" class="inp-st" disabled>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="fieldTypes.number">
+                  <input type="text" class="inp-st inp-namber" appUiMaskNumber
+                         [maskNumberMin]="field.attributes?.min"
+                         [maskNumberMax]="field.attributes?.max"
+                         [style]="field.attributes?.style"
+                         [ngClass]="field.attributes?.class" [formControl]="formGroup.get('filter.' + field.prop)">
+                </ng-container>
+                <ng-container *ngSwitchCase="fieldTypes.multiSelect">
+                  <!--                {{formGroup.get('filter.' + field.prop)}}-->
+                  <app-ui-multi-select-field *ngIf="!mutableSearch || this.formGroup.get('mutableSearch').get('type').value === field.mutableSearchType"
+                                             [control]="formGroup.get('filter.' + field.prop)"
+                                             [choices]="field.attributes?.options"
+                                             [searchInput]="true"
+                  ></app-ui-multi-select-field>
+                </ng-container>
+                <ng-container *ngSwitchCase="fieldTypes.checkbox">
+                  <div class="check-st">
+                    <input id="{{field.prop}}" type="checkbox" [style]="field.attributes?.style"
+                           [ngClass]="field.attributes?.class" [formControl]="formGroup.get('filter.' + field.prop)">
+                    <label for="{{field.prop}}">{{field.attributes?.label}}</label>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="search-detals__close"><a (click)="toggle()">Скрыть расширенный поиск</a></div>
+  </div>
+</form>

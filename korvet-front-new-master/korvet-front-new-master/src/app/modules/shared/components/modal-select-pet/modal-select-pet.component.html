@@ -1,0 +1,20 @@
+<div class="fancybox-slide--html">
+  <form class="popup-add popup-wr " [formGroup]="formGroup" (submit)="submit()" appFormFocus>
+    <div class="popup-wr__head title-required">
+      <span>Выберите животное</span>
+    </div>
+    <div class="popup-wr__body">
+      <mat-form-field appearance="outline">
+        <mat-select disableOptionCentering placeholder="Не выбрано" formControlName="pet">
+          <mat-option *ngFor="let pet of data" [value]="pet.id">
+            {{pet.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="popup-wr__footer">
+      <button type="button" (click)="submit()" class="btn-st btn-st--right">Выбрать</button>
+    </div>
+    <app-button-close></app-button-close>
+  </form>
+</div>

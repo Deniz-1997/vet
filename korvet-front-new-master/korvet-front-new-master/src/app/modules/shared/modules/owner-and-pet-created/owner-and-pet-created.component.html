@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <div  class="row d-none d-lg-block" >
+    <div class="col-12 col-lg-12  text-right d-inline-block mb-3">
+      <button   (click)="addOwner($event)" class="btn  btn-primary mr-4">Добавить владельца</button>
+      <button  [disabled]="ownerId === undefined ? true : false" (click)="addPet($event)" class="btn  btn-primary mr-3">Добавить животное</button>
+    </div>
+  </div>
+  <div  class="row d-block d-lg-none">
+    <div class="col-12 col-lg-12  text-right d-inline-block">
+      <a   (click)="addOwner($event)" class="btn btn-link">Добавить владельца</a>
+      <a [class.disabled]="ownerId === undefined ? true : false"  (click)="addPet($event)" class="btn btn-link mr-2">Добавить животное</a>
+    </div>
+  </div>
+</div>
+

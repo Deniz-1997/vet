@@ -1,0 +1,47 @@
+<div class="position-relative">
+  <a class="menu-column__logo" routerLink="/"><img alt="" src="assets/img/logo-white.svg"></a>
+  <div class="menu-column__ms">
+    <div class="menu-column__ms-ico">
+      <a (click)="open()" appUiNotificationToggle>
+        <app-icon-notifications [animate]="animateBell"></app-icon-notifications>
+        <span *ngIf="unreadedMessagesCount!==0">{{unreadedMessagesCount | maxNumber}}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="menu-column__ms-popup position-fixed">
+    <a (click)="close($event)" class="popup-close">
+      <app-icon-notifications [animate]="animateBell"></app-icon-notifications>
+      <span *ngIf="unreadedMessagesCount!==0">{{unreadedMessagesCount | maxNumber}}</span>
+    </a>
+    <ng-template [ngIf]="messagesCount===0">
+      <div class="menu-column__ms-empty">
+        Нет ни одного сообщения
+      </div>
+    </ng-template>
+    <div id="notifications">
+      <ng-template [ngIf]="messagesCount!==0">
+        <ng-container *ngFor="let notification of notifications; let i=index">
+          <div [class.menu-column__ms-item--new]="!isNotificationViewed(notification)" class="menu-column__ms-item">
+            <ng-container *ngIf="notification.type.id === getChannelKorvet()">
+              <div class="menu-column__ms-img">
+                <img src="assets/img/ico-update.png" style="width: 16px; height: 16px;"/>
+              </div>
+              <div class="menu-column__ms-body">
+                <a (click)="showUpdateModal(notification)"
+                   href="javascript:void(0)">{{notification?.data.header ? notification?.data.header :
+                  UPDATE_DEFAULT_HEADER}}</a>
+              </div>
+            </ng-container>
+            <div class="menu-column__ms-date">
+              {{notification?.data.date}}
+            </div>
+          </div>
+        </ng-container>
+      </ng-template>
+      <div class="container text-center mb-1 mt-1">
+        <div *ngIf="loading" class="loader"></div>
+      </div>
+    </div>
+  </div>
+</div>

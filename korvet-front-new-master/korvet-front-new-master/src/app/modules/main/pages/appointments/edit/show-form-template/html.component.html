@@ -1,0 +1,300 @@
+<div class="fancybox-slide--html">
+  <div class="popup-wr" id="">
+    <ngx-loading [show]="loading$|async"></ngx-loading>
+    <div class="popup-wr__head">
+      <div  class="header__name">Шаблон {{data.head}}</div>
+    </div>
+    <div class="popup-wr__body">
+
+      <div *ngFor="let field of data.template.fields; let i = index" class="inline">
+
+        <strong [innerHTML]="template[i]" class="inline"></strong>
+
+        <!-- Текстовое поле -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'text'">
+          <div class="col-12 col-lg-4 {{field.isRequired ? 'title-required': ''}}">
+            <input class="inp-st" type="text">
+          </div>
+        </div>
+<!--        <div *ngIf="field.formTemplateField.type.code === 'text'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>-->
+<!--          <div class="form-body inline">-->
+<!--            <input class="inp-st inline" type="text">-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Числовое поле -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'number'">
+          <div class="col-12 col-lg-4 {{field.isRequired ? 'title-required': ''}}">
+            <input class="inp-st " type="number">
+          </div>
+        </div>
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'number'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}">-->
+<!--          </div>-->
+<!--          <div class="form-body inline">-->
+<!--            <input class="inp-st inline" type="number">-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Многострочныое текстовое поле -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'textarea'">
+          <div class="col-12 col-lg-6 {{field.isRequired ? 'title-required': ''}}">
+            <textarea class="textarea-st" rows="3"></textarea>
+          </div>
+        </div>
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'textarea'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}">-->
+<!--          </div>-->
+<!--          <div class="form-body inline">-->
+<!--            <textarea class="textarea-st inline" rows="3"></textarea>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Справочник -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'reference'">
+          <div class="col-12 col-lg-6 {{field.isRequired ? 'title-required': ''}}">
+            <ng-container *ngIf="field.parentReference">
+              <app-ui-select-reference
+                [crudType]="field.parentReference.crudType"
+                [multiSelect]="false"
+                [title]="field.parentReference.title"
+                [value]="field.parentReference.value"
+                [viewType]="'select'">
+              </app-ui-select-reference>
+            </ng-container>
+
+            <ng-container *ngIf="field.subParentReference">
+              <app-ui-select-reference
+                [crudType]="field.subParentReference.crudType"
+                [filter]="field.subParentReference.filter"
+                [multiSelect]="false"
+                [title]="field.subParentReference.title"
+                [value]="field.subParentReference.value"
+                [viewType]="'select'">
+              </app-ui-select-reference>
+            </ng-container>
+
+            <ng-container *ngFor="let property of field.formTemplateField.properties">
+              <app-ui-select-reference
+                *ngIf="property.formFieldProperty.code === 'entity'"
+                [crudType]="property.value"
+                [filter]="field.filter"
+                [index]="i"
+                [multiSelect]="field.multiSelect"
+                [value]="field.defaultValue"
+                [viewType]="field.viewType"
+              >
+              </app-ui-select-reference>
+            </ng-container>
+          </div>
+        </div>
+
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'reference'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>-->
+<!--          <div class="form-body inline mat-select__inline">-->
+<!--            <ng-container *ngIf="field.parentReference">-->
+<!--              <app-ui-select-reference-->
+<!--                [crudType]="field.parentReference.crudType"-->
+<!--                [multiSelect]="false"-->
+<!--                [title]="field.parentReference.title"-->
+<!--                [value]="field.parentReference.value"-->
+<!--                [viewType]="'select'">-->
+<!--              </app-ui-select-reference>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container *ngIf="field.subParentReference">-->
+<!--              <app-ui-select-reference-->
+<!--                [crudType]="field.subParentReference.crudType"-->
+<!--                [filter]="field.subParentReference.filter"-->
+<!--                [multiSelect]="false"-->
+<!--                [title]="field.subParentReference.title"-->
+<!--                [value]="field.subParentReference.value"-->
+<!--                [viewType]="'select'">-->
+<!--              </app-ui-select-reference>-->
+<!--            </ng-container>-->
+
+<!--            <ng-container *ngFor="let property of field.formTemplateField.properties">-->
+<!--              <app-ui-select-reference-->
+<!--                *ngIf="property.formFieldProperty.code === 'entity'"-->
+<!--                [crudType]="property.value"-->
+<!--                [filter]="field.filter"-->
+<!--                [index]="i"-->
+<!--                [multiSelect]="field.multiSelect"-->
+<!--                [value]="field.defaultValue"-->
+<!--                [viewType]="field.viewType"-->
+<!--              >-->
+<!--              </app-ui-select-reference>-->
+<!--            </ng-container>-->
+
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Справочники конструктора -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'template_reference'">
+          <div class="col-12 col-lg-6 {{field.isRequired ? 'title-required': ''}}">
+            <ng-container *ngFor="let property of field.formTemplateField.properties">
+              <app-ui-select-reference
+                *ngIf="property.formFieldProperty.code === 'entity'"
+                [crudType]="field.crudType"
+                [filter]="field.filter"
+                [index]="i"
+                [multiSelect]="field.multiSelect"
+                [value]="field.defaultValue"
+                [viewType]="field.viewType"
+              >
+              </app-ui-select-reference>
+            </ng-container>
+          </div>
+        </div>
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'template_reference'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>-->
+<!--          <div class="form-body inline mat-select__inline">-->
+
+<!--            <ng-container *ngFor="let property of field.formTemplateField.properties">-->
+<!--              <app-ui-select-reference-->
+<!--                *ngIf="property.formFieldProperty.code === 'entity'"-->
+<!--                [crudType]="field.crudType"-->
+<!--                [filter]="field.filter"-->
+<!--                [index]="i"-->
+<!--                [multiSelect]="field.multiSelect"-->
+<!--                [value]="field.defaultValue"-->
+<!--                [viewType]="field.viewType"-->
+<!--              >-->
+<!--              </app-ui-select-reference>-->
+<!--            </ng-container>-->
+
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Дата -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'date'">
+          <div class="col-6 col-lg-3 {{field.isRequired ? 'title-required': ''}}">
+            <div >
+              <app-datepicker-overview
+                [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.max : null"
+                [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.min : null"
+              ></app-datepicker-overview>
+            </div>
+            <input
+              *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_format').value"
+              appUiMaskTime
+              class="inp-st time-mask "
+              value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_time')['formFieldProperty'].defaultValue}}"
+            >
+          </div>
+        </div>
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'date'" class="inline">-->
+<!--          <div class="form-head inline {{field.isRequired ? 'title-required': ''}}">-->
+<!--          </div>-->
+<!--          <div class="form-body inline date-group&#45;&#45;inline">-->
+<!--            <div class="inline-block">-->
+<!--              <app-datepicker-overview-->
+<!--                [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.max : null"-->
+<!--                [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.min : null"-->
+<!--              ></app-datepicker-overview>-->
+<!--            </div>-->
+<!--            <input-->
+<!--              *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_format').value"-->
+<!--              appUiMaskTime-->
+<!--              class="inp-st time-mask inline"-->
+<!--              value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_time')['formFieldProperty'].defaultValue}}"-->
+<!--            >-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <!-- Дата диапазон -->
+        <div class="row" *ngIf="field.formTemplateField.type.code === 'multi_date'">
+          <div class="col-6 col-lg-3 {{field.isRequired ? 'title-required': ''}}">
+            <div >
+              <app-datepicker-overview
+                [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.max : null"
+                [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.min : null"
+              ></app-datepicker-overview>
+            </div>
+            <input
+              *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_format').value"
+              appUiMaskTime
+              class="inp-st time-mask "
+              value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_time')['formFieldProperty'].defaultValue}}"
+            >
+          </div>
+          <div class="form-span inline">
+            <div class="form-head inline"><strong>-</strong></div>
+            <div class="form-body inline date-group--inline">
+              <div class="inline-block">
+                <app-datepicker-overview
+                  [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.max : null"
+                  [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.min : null"
+                >
+                </app-datepicker-overview>
+              </div>
+              <input
+                *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_format').value"
+                appUiMaskTime
+                class="inp-st time-mask inline"
+                value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_time')['formFieldProperty'].defaultValue}}"
+              >
+            </div>
+          </div>
+        </div>
+
+<!--        <div *ngIf="field.formTemplateField.type.code === 'multi_date'" class="inline">-->
+<!--          <div class="form-span inline">-->
+<!--            <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>-->
+<!--            <div class="form-body inline date-group&#45;&#45;inline">-->
+<!--              <div class="inline-block">-->
+<!--                <app-datepicker-overview-->
+<!--                  [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMin.max : null"-->
+<!--                  [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMin.min : null"-->
+<!--                >-->
+<!--                </app-datepicker-overview>-->
+<!--              </div>-->
+<!--              <input-->
+<!--                *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_min_format').value"-->
+<!--                appUiMaskTime-->
+<!--                class="inp-st time-mask inline"-->
+<!--                value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_min_time')['formFieldProperty'].defaultValue}}"-->
+<!--              >-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="form-span inline">-->
+<!--            <div class="form-head inline"><strong>-</strong></div>-->
+<!--            <div class="form-body inline date-group&#45;&#45;inline">-->
+<!--              <div class="inline-block">-->
+<!--                <app-datepicker-overview-->
+<!--                  [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.max : null"-->
+<!--                  [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.min : null"-->
+<!--                >-->
+<!--                </app-datepicker-overview>-->
+<!--              </div>-->
+<!--              <input-->
+<!--                *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_format').value"-->
+<!--                appUiMaskTime-->
+<!--                class="inp-st time-mask inline"-->
+<!--                value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_time')['formFieldProperty'].defaultValue}}"-->
+<!--              >-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+
+      </div>
+
+    </div>
+
+    <pre [innerHTML]="template[template.length - 1]" class="inline"></pre>
+
+    <div *ngIf="data.actions && data.actions.length" class="popup-wr__footer">
+      <ng-container *ngFor="let action of data.actions">
+        <button [mat-dialog-close]="action.action" [ngClass]="action.class">{{action.title}}</button>
+      </ng-container>
+    </div>
+
+    <app-button-close></app-button-close>
+  </div>
+</div>

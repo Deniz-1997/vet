@@ -1,0 +1,182 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<div *ngIf="leaving">
+  <div class="header">
+    <div class="header__name">
+      <app-icon-animal [type]="petType"></app-icon-animal>
+      {{leaving.pet?.name}}
+    </div>
+    <div class="body-header__setting">
+      <app-print-list [leavingId]="id" partition="Leaving"></app-print-list>
+      <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+        <app-icon-download></app-icon-download>
+      </a>
+      <a class="lnk-edit" routerLink="leaving-edit">
+        <span class="lnk-edit__ico">
+          <app-icon-edit></app-icon-edit>
+        </span>
+        Редактировать
+      </a>
+    </div>
+  </div>
+  <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+    <mat-tab label="Выезд">
+      <div *ngIf="leaving.id" class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=dateAppointment col="12 col-lg-6" class="pb-2 pb-lg-0">
+              <ng-template #colContent>
+                <strong>{{leaving.date}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=owner col="12 col-lg-6">
+              <ng-template #colContent>
+                <strong><a [routerLink]="'/owners/'+leaving.owner?.id">{{leaving.owner?.name}}</a></strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=professions col="12 col-lg-6" class="pb-2 pb-lg-0">
+              <ng-template #colContent>
+                <strong>{{leaving.profession?.name}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=dateEndContract col="12 col-lg-6">
+              <ng-template #colContent>
+                <strong *ngIf="leaving.owner?.contractDateTo">{{leaving.owner?.contractDateTo.split(' ')[0] |
+                  defaultValue}}</strong>
+                <strong *ngIf="!leaving.owner?.contractDateTo">-</strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=typeOfAppeal col="12 col-lg-6" class="pb-2 pb-lg-0">
+              <ng-template #colContent>
+                <strong>{{leaving.type.title}}</strong>
+
+              </ng-template>
+            </app-col>
+            <app-col  titleName=expert col="12 col-lg-6">
+              <ng-template #colContent>
+                <strong *ngIf="leaving.user">
+                  <ng-container *ngIf="leaving.user.surname"> {{leaving.user.surname}} </ng-container>
+                  <ng-container *ngIf="leaving.user.name"> {{leaving.user.name}} </ng-container>
+                  <ng-container *ngIf="leaving.user.patronymic"> {{leaving.user.patronymic}} </ng-container>
+                </strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=previousAppointment *ngIf="leaving.previous">
+              <ng-template #colContent>
+                <strong>
+                  <ng-container *ngIf="leaving.previous.date">{{leaving.previous.date}}</ng-container>
+                  :
+                  <ng-container *ngIf="leaving.previous.name">{{leaving.previous.name}}</ng-container>
+                </strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+
+      <div class="tab-box" *ngIf="leaving.pet !== null">
+        <app-pets-view-detail [pet]="leaving?.pet"></app-pets-view-detail>
+      </div>
+
+      <div class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName=petitions >
+              <ng-template #colContent>
+                <span *ngIf="leaving?.name" [innerText]="leaving.name"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName=survey *ngIf="leavingPermission.isVisible('survey') | async">
+              <ng-template #colContent>
+                <span *ngIf="leaving?.survey" [innerText]="leaving.survey"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName=diagnosis *ngIf="leavingPermission.isVisible('diagnosis') | async">
+              <ng-template #colContent>
+                <span *ngIf="leaving?.diagnosis" [innerText]="leaving.diagnosis"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName=prescription *ngIf="leavingPermission.isVisible('prescription') | async">
+              <ng-template #colContent>
+                <span *ngIf="leaving?.prescription" [innerText]="leaving.prescription"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <div *ngIf="false">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  titleName=destination col="6">
+                <ng-template #colContent>
+                  <strong>Прививка от блох</strong>
+                </ng-template>
+              </app-col>
+              <app-col  titleName=dosage col="6">
+                <ng-template #colContent>
+                  <strong>5 мг</strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col>
+                <ng-template #colContent>
+                  <a class="form-span__lnk-btn" href="">Добавить назначение</a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </div>
+
+      <!-- Блок шаблоны форм -->
+      <app-form-template-appointment-view [appointment]="leaving" [type]="type"></app-form-template-appointment-view>
+
+
+      <app-leaving-view-items [leavingLogs]="leavingLogs" [leaving]="leaving"></app-leaving-view-items>
+      <app-appointment-files [leaving]="leaving"></app-appointment-files>
+
+    </mat-tab>
+    <mat-tab label="История обращений">
+      <ngx-loading [show]="getLoading"></ngx-loading>
+      <div *ngIf="leavings.length !== 0; then thenBlock; else elseBlock"></div>
+      <ng-template #thenBlock>
+        <div *ngFor="let leaving of leavings">
+          <app-appointment-history  [appointment]="leaving"></app-appointment-history>
+        </div>
+      </ng-template>
+      <ng-template #elseBlock>
+        <app-list-view
+          [emptyOptions]="{title: 'Не найдено ни одной истории обращения!'}"
+        >
+        </app-list-view>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

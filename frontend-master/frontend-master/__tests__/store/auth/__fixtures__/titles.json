@@ -1,0 +1,32 @@
+[
+  { "prefix": "Личный кабинет", "name": "Администратора", "ROLE_ADMIN": true },
+  { "prefix": "Личный кабинет", "name": "Администратора безопасности", "ROLE_SECURITY_ADMIN": true },
+  {
+    "prefix": "Личный кабинет",
+    "name": "сотрудника Министерства сельского хозяйства",
+    "ROLE_MCX_USER": true,
+    "ROLE_REQUEST": true,
+    "ROLE_SUBJECT_ADMIN": true,
+    "ROLE_DICTIONARY": true,
+    "ROLE_WORKFLOW": true,
+    "ROLE_LABORATORY": true
+  },
+  {
+    "prefix": "Личный кабинет",
+    "name": "сотрудника организации, осуществляющей государственный мониторинг зерна",
+    "ROLE_GOVERMENT_MONITORING": true
+  },
+  {
+    "prefix": "Личный кабинет",
+    "name": "сотрудника Федерального агентства по государственным резервам",
+    "ROLE_FEDERAL_RESERVE": true
+  },
+  {
+    "prefix": "Личный кабинет",
+    "name": "Товаропроизводителя",
+    "ROLE_SUBJECT_USER": true,
+    "ROLE_ELEVATOR_USER": true,
+    "ROLE_AGENT_USER": true
+  },
+  { "prefix": "Личный кабинет", "name": "Органа государственной власти", "ROLE_GOVERMENT_USER": true }
+]

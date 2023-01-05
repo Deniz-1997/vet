@@ -1,0 +1,155 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'кассовую смену',
+    title: 'Не найдено ни одной кассовой смены',
+    subtitle: 'Вы можете добавить кассовую смену',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Кассовые смены"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Номер смены</th>
+      <th>Дата создания</th>
+      <th>ККМ</th>
+      <th>Кассир</th>
+      <th>Количество чеков</th>
+      <th>Статус</th>
+      <th>Дата закрытия</th>
+      <th>Действия</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td>{{item.fiscalOpen.shiftNumber}}</td>
+      <td>{{item.createdAt}}</td>
+      <td>{{item.cashRegister.name}} {{item.cashRegister?.organization?.taxationType.title}}</td>
+      <td>
+        <ng-container
+          *ngIf="item.cashier">{{item.cashier.surname}} {{item.cashier.name}} {{item.cashier.patronymic}}</ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="item.fiscalClose.receiptsCount; else blockElse">
+          {{item.fiscalClose.receiptsCount}}
+        </ng-container>
+        <ng-template  #blockElse>
+          <app-cash-receipt-count [id]="item.id"></app-cash-receipt-count>
+        </ng-template>
+      </td>
+      <td>{{item.state.title}}</td>
+      <td>{{item.fiscalClose.fiscalDocumentDateTime}}</td>
+      <td>
+        <!--<ng-container *ngIf="item.state.code === 'OPEN'">-->
+        <!--<a (click)="onClose(item.cashRegister.id)">Закрыть смену</a>-->
+        <!--</ng-container>-->
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6" text="Дата создания">
+            <ng-template #colContent>
+              <strong>{{item.createdAt}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col col="6"  class="text-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample2">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Номер смены">
+                      <ng-template #colContent>
+                        <strong>{{item.fiscalOpen.shiftNumber}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="ККМ">
+                      <ng-template #colContent>
+                        <strong>{{item.cashRegister.name}} {{item.cashRegister?.organization?.taxationType.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Кассир">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.cashier">
+                          <strong>{{item.cashier.surname}} {{item.cashier.name}} {{item.cashier.patronymic}}</strong>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Количество чеков">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.fiscalClose.receiptsCount; else blockElse">
+                          <strong>{{item.fiscalClose.receiptsCount}}</strong>
+                        </ng-container>
+                        <ng-template  #blockElse>
+                          <app-cash-receipt-count [id]="item.id"></app-cash-receipt-count>
+                        </ng-template>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Статус">
+                      <ng-template #colContent>
+                        <strong>{{item.state.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Дата закрытия">
+                      <ng-template #colContent>
+                        <strong>{{item.fiscalClose.fiscalDocumentDateTime}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

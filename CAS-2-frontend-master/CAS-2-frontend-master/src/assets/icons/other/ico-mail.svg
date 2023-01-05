@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="18px" viewBox="0 0 24 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>E31E12E6-2193-4E5B-8458-80175C3B37DC</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Авторизация" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="01_login" transform="translate(-807.000000, -687.000000)" fill="#0747A6" fill-rule="nonzero">
+            <g id="Group-3" transform="translate(498.000000, 684.000000)">
+                <path d="M329,3 L313,3 C310.7944,3 309,4.7944 309,7 L309,17 C309,19.2056 310.7944,21 313,21 L329,21 C331.2056,21 333,19.2056 333,17 L333,7 C333,4.7944 331.2056,3 329,3 Z M331,17 C331,18.1 330.1,19 329,19 L313,19 C311.9,19 311,18.1 311,17 L311,9.4412 L318.788,14.8928 C319.408,15.3268 320.204,15.5436 321,15.5436 C321.796,15.5436 322.5916,15.3268 323.212,14.8924 L331,9.4412 L331,17 Z M322.0652,13.2544 C321.5076,13.6448 320.4924,13.6444 319.9352,13.2544 L311,7 C311,5.9 311.9,5 313,5 L329,5 C330.1,5 331,5.9 331,7 L322.0652,13.2544 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

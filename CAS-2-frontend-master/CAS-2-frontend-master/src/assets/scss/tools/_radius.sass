@@ -1,0 +1,6 @@
+@mixin radius($r, $important: false)
+  border-radius: $r if($important, !important, null)
+  // Key exists within the $rounded variable
+  //@if (map-has-key(1, $r))
+  //  border-radius: map-get($rounded, $r) if($important, !important, null)
+  //@else

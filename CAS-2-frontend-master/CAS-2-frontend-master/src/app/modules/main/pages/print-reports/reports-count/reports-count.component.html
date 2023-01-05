@@ -1,0 +1,31 @@
+<k-header>Количество сданных отчетов</k-header>
+<form *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="k-form container-fluid">
+    <k-row>
+      <ng-template #row>
+        <k-col xs="12" sm="12" md="6" lg="6">
+          <ng-template #col>
+            <app-ui-multi-select-field #businessEntityIds label="Хозяйствующие субъекты"
+              [selectFormControl]="formGroup.get('businessEntityIds')" [type]="crudType.ReferenceBusinessEntity">
+            </app-ui-multi-select-field>
+          </ng-template>
+        </k-col>
+        <k-col xs="12" sm="12" md="6" lg="6">
+          <ng-template #col>
+            <app-ui-multi-select-field #stationsIds label="Станции" [selectFormControl]="formGroup.get('stationsIds')"
+              [type]="crudType.ReferenceStation">
+            </app-ui-multi-select-field>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </div>
+</form>
+
+<div class="text-right">
+  <k-button color="primary" type="button" name="Очистить фильтры" (click)="clearForm()"></k-button>
+  <k-button [class.btn-loader]="loader" color="primary" type="button" name="Сформировать отчет" (click)="submit()">
+  </k-button>
+  <k-button [class.btn-loader]="loader" color="primary" type="button" name="Сформировать отчет(по видам отчетов)" (click)="submit(true)">
+  </k-button>
+</div>

@@ -1,0 +1,517 @@
+@import './_mixins.sass'
+@import './_variables.scss'
+
++theme(krv-text-field) using ($material)
+  > .krv-input__control > .krv-input__slot:before
+    border-color: map-get($material, 'input-bottom-line')
+
+  &:not(.krv-input--has-state):hover > .krv-input__control > .krv-input__slot:before
+    border-color: map-deep-get($material, 'text', 'primary')
+
+  &.krv-input--is-disabled .krv-input__slot::before
+    border-image: repeating-linear-gradient(to right, #{map-deep-get($material, 'text', 'disabled')} 0px, #{map-deep-get($material, 'text', 'disabled')} 2px, transparent 2px, transparent 4px) 1 repeat
+
+  &--filled
+    > .krv-input__control > .krv-input__slot
+      background: map-deep-get($material, 'text-fields', 'filled')
+
+    &:not(.krv-input--is-focused):not(.krv-input--has-state)
+      > .krv-input__control > .krv-input__slot:hover
+        background: map-deep-get($material, 'text-fields', 'filled-hover')
+
+  &--solo
+    > .krv-input__control > .krv-input__slot
+      background: map-get($material, 'cards')
+
+  &--solo-inverted
+    > .krv-input__control > .krv-input__slot
+      background: map-deep-get($material, 'inputs', 'solo-inverted')
+
+    &.krv-input--is-focused
+      > .krv-input__control > .krv-input__slot
+        background: map-deep-get($material, 'inputs', 'solo-inverted-focused')
+
+        input
+          color: map-deep-get($material, 'inputs', 'solo-inverted-focused-text')
+
+        input::placeholder
+          color: map-deep-get($material, 'inputs', 'solo-inverted-focused-placeholder')
+
+        .krv-label
+          color: map-deep-get($material, 'inputs', 'solo-inverted-focused-label')
+
+  &--outlined
+    &:not(.krv-input--is-focused)
+      &:not(.krv-input--has-state)
+        > .krv-input__control > .krv-input__slot fieldset
+          color: map-deep-get($material, 'text-fields', 'outlined')
+
+        &:not(.krv-input--is-disabled)
+          > .krv-input__control > .krv-input__slot:hover fieldset
+            color: map-deep-get($material, 'text-fields', 'outlined-hover')
+
+      &.krv-input--is-disabled
+        > .krv-input__control > .krv-input__slot fieldset
+          color: map-deep-get($material, 'text-fields', 'outlined-disabled')
+
+.krv-text-field
+  padding-top: $text-field-active-label-height
+  margin-top: $input-top-spacing - $text-field-active-label-height
+
+  &__prefix,
+  &__suffix
+    line-height: $text-field-line-height
+  input
+    flex: 1 1 auto
+    line-height: $text-field-line-height
+    padding: $text-field-padding
+    max-width: 100%
+    min-width: 0px
+    width: 100%
+
+  fieldset,
+  .krv-input__control,
+  .krv-input__slot
+    border-radius: inherit
+
+  fieldset,
+  .krv-input__control
+    color: inherit
+
+  &.krv-input--has-state
+    .krv-input__control > .krv-text-field__details > .krv-counter
+      color: inherit
+
+  &.krv-input--is-disabled
+    .krv-input__control > .krv-text-field__details > .krv-counter,
+    .krv-input__control > .krv-text-field__details > .krv-messages
+      color: inherit
+
+  &.krv-input--dense
+    padding-top: 0
+
+    .krv-label
+      top: 4px
+
+    &:not(.krv-text-field--outlined)
+      .krv-text-field__prefix,
+      .krv-text-field__suffix,
+      input
+        padding: $text-field-dense-padding
+      .krv-text-field__prefix
+        padding-right: $text-field-append-prepend-margin
+      .krv-text-field__suffix
+        padding-left: $text-field-append-prepend-margin
+
+    &[type=text]::-ms-clear
+      display: none
+
+    .krv-input__prepend-inner,
+    .krv-input__append-inner
+      margin-top: $text-field-dense-append-prepend-margin
+
+  .krv-input__prepend-inner,
+  .krv-input__append-inner
+    align-self: flex-start
+    display: inline-flex
+    margin-top: $text-field-append-prepend-margin
+    line-height: 1
+    user-select: none
+
+  .krv-input__prepend-inner
+    +ltr()
+      margin-right: auto
+      padding-right: $text-field-append-prepend-margin
+
+    +rtl()
+      margin-left: auto
+      padding-left: $text-field-append-prepend-margin
+
+  .krv-input__append-inner
+    +ltr()
+      margin-left: auto
+      padding-left: $text-field-append-prepend-margin
+
+    +rtl()
+      margin-right: auto
+      padding-right: $text-field-append-prepend-margin
+
+  .krv-counter
+    white-space: nowrap
+
+    +ltr()
+      margin-left: $text-field-counter-margin
+
+    +rtl()
+      margin-right: $text-field-counter-margin
+
+  .krv-label
+    max-width: 90%
+    overflow: hidden
+    text-overflow: ellipsis
+    top: $text-field-label-top // equal to the margin top of icons
+    white-space: nowrap
+    pointer-events: none
+
+    +ltr()
+      transform-origin: top left
+
+    +rtl()
+      transform-origin: top right
+
+    &--active
+      max-width: 133%
+      transform: $text-field-label-active-transform
+      pointer-events: auto // Show title attr on label hover
+
+  & > .krv-input__control > .krv-input__slot
+    cursor: text
+
+    &:before,
+    &:after
+      bottom: -1px // Needed for browser autocomplete styles
+      content: ''
+      left: 0
+      position: absolute
+      transition: $primary-transition
+      width: 100%
+
+    &:before
+      border-color: inherit
+      border-style: solid
+      border-width: thin 0 0 0
+
+    &:after
+      background-color: currentColor
+      border-color: currentColor
+      border-style: solid
+      border-width: thin 0 thin 0
+      transform: scaleX(0)
+
+  &__details
+    display: flex
+    flex: 1 0 auto
+    max-width: 100%
+    min-height: $text-field-details-min-height
+    overflow: hidden
+
+  &__prefix,
+  &__suffix
+    align-self: center
+    cursor: default
+    transition: color $primary-transition
+    white-space: nowrap
+
+  &__prefix
+    +ltr()
+      text-align: right
+      padding-right: $text-field-append-prepend-margin
+
+    +rtl()
+      text-align: left
+      padding-left: $text-field-append-prepend-margin
+
+  &__suffix
+    white-space: nowrap
+
+    +ltr()
+      padding-left: $text-field-append-prepend-margin
+
+    +rtl()
+      padding-right: $text-field-append-prepend-margin
+
+  &--reverse
+    .krv-text-field__prefix
+
+      +ltr()
+        text-align: left
+        padding-right: 0
+        padding-left: $text-field-append-prepend-margin
+
+      +rtl()
+        text-align: right
+        padding-right: $text-field-append-prepend-margin
+        padding-left: 0
+
+    .krv-text-field__suffix
+      +ltr()
+        padding-left: 0
+        padding-right: $text-field-append-prepend-margin
+
+      +rtl()
+        padding-left: $text-field-append-prepend-margin
+        padding-right: 0
+
+  & > .krv-input__control > .krv-input__slot > .krv-text-field__slot
+    display: flex
+    flex: 1 1 auto
+    position: relative
+
+  &:not(.krv-text-field--is-booted)
+    .krv-label,
+    legend
+      transition: none
+
+  &--filled,
+  &--full-width,
+  &--outlined
+    position: relative
+
+    & > .krv-input__control > .krv-input__slot
+      align-items: stretch
+      min-height: $text-field-filled-full-width-outlined-slot-min-height
+
+    &.krv-input--dense
+      > .krv-input__control > .krv-input__slot
+        min-height: $text-field-filled-full-width-outlined-dense-slot-min-height
+
+      &.krv-text-field--single-line,
+      &.krv-text-field--outlined,
+      &.krv-text-field--outlined.krv-text-field--filled
+        > .krv-input__control > .krv-input__slot
+          min-height: $text-field-filled-full-width-outlined-single-line-slot-min-height
+
+  &--outlined
+    border-radius: $text-field-border-radius
+
+  &--full-width,
+  &--enclosed
+    +prepend-append-margin-top($text-field-enclosed-prepend-append-margin-top)
+
+    &.krv-input--dense:not(.krv-text-field--solo)
+      +prepend-append-margin-top($text-field-dense-prepend-append-margin-top)
+
+      &.krv-text-field--single-line
+        +prepend-append-margin-top($text-field-single-line-prepend-append-margin-top)
+
+      &.krv-text-field--outlined
+        +prepend-append-margin-top($text-field-outlined-prepend-append-margin-top)
+
+  &--filled,
+  &--full-width
+    .krv-label
+      top: $text-field-filled-full-width-label-top
+
+      &--active
+        transform: $text-field-filled-full-width-label-active-transform
+
+    &.krv-input--dense
+      .krv-label
+        top: $text-field-dense-label-top
+
+        &--active
+          transform: $text-field-dense-label-active-transform
+
+      &.krv-text-field--single-line
+        .krv-label
+          top: $text-field-single-line-label-top
+
+  &--filled
+    border-radius: $text-field-filled-border-radius
+
+    &:not(.krv-text-field--single-line)
+      input
+        margin-top: $text-field-filled-margin-top
+
+    &.krv-input--dense:not(.krv-text-field--single-line)
+      &.krv-text-field--outlined
+        input
+          margin-top: 0
+
+    .krv-text-field__prefix,
+    .krv-text-field__suffix
+      max-height: 32px
+      margin-top: 20px
+
+  &--full-width
+    border-radius: 0
+
+  &--outlined,
+  &--single-line
+    .krv-text-field__slot
+      align-items: center
+
+  &.krv-text-field--enclosed
+    margin: 0
+    padding: 0
+
+    &.krv-text-field--single-line
+      .krv-text-field__prefix,
+      .krv-text-field__suffix
+        margin-top: 0
+
+    &:not(.krv-text-field--filled)
+      .krv-progress-linear__background
+        display: none
+
+    &:not(.krv-text-field--rounded) > .krv-input__control > .krv-input__slot,
+    .krv-text-field__details
+      padding: $text-field-enclosed-details-padding
+
+    .krv-text-field__details
+      padding-top: $text-field-details-padding-top
+      margin-bottom: $text-field-details-margin-bottom
+
+  &--reverse
+    input
+      +ltr()
+        text-align: right
+
+      +rtl()
+        text-align: left
+
+    .krv-label
+      +ltr()
+        transform-origin: top right
+
+      +rtl()
+        transform-origin: top left
+
+    & > .krv-input__control > .krv-input__slot,
+    .krv-text-field__slot
+      flex-direction: row-reverse
+
+  &--outlined,
+  &--solo,
+  &--rounded
+    & > .krv-input__control > .krv-input__slot
+      &:before,
+      &:after
+        display: none
+
+  &--outlined,
+  &--solo
+    border-radius: $text-field-border-radius
+
+  &--outlined
+    margin-bottom: $text-field-outlined-margin-bottom
+    transition: border $primary-transition
+
+    +label-position($text-field-outlined-label-position-x, $text-field-outlined-label-position-y)
+
+    &.krv-input--dense
+      +label-position($text-field-outlined-dense-label-position-x, $text-field-outlined-dense-label-position-y)
+
+    fieldset
+      border-collapse: collapse
+      border-color: currentColor
+      border-style: solid
+      border-width: $text-field-outlined-fieldset-border-width
+      bottom: 0
+      left: 0
+      pointer-events: none
+      position: absolute
+      right: 0
+      top: $text-field-outlined-fieldset-top
+      transition-duration: 0.15s
+      transition-property: color
+      transition-timing-function: map-get($transition, 'fast-in-fast-out')
+
+      +ltr()
+        padding-left: $text-field-outlined-fieldset-padding
+
+      +rtl()
+        padding-right: $text-field-outlined-fieldset-padding
+
+
+    &.krv-text-field--reverse fieldset
+      +ltr()
+        padding-right: $text-field-outlined-fieldset-padding
+
+      +rtl()
+        padding-left: $text-field-outlined-fieldset-padding
+
+    legend
+      line-height: $text-field-outlined-legend-line-height
+      padding: 0
+      transition: width $primary-transition
+
+      +ltr()
+        text-align: left
+
+      +rtl()
+        text-align: right
+
+    &.krv-text-field--reverse legend
+      +ltr()
+        margin-left: auto
+
+      +rtl()
+        margin-right: auto
+
+    &.krv-text-field--rounded
+      legend
+        +ltr()
+          margin-left: $text-field-rounded-legend-margin
+
+        +rtl()
+          margin-right: $text-field-rounded-legend-margin
+
+    & > .krv-input__control > .krv-input__slot
+      background: transparent
+
+    .krv-text-field__prefix
+      max-height: $text-field-prefix-max-height
+
+    .krv-input__prepend-outer,
+    .krv-input__append-outer
+      margin-top: $text-field-outlined-append-prepend-outer-margin-top // 2px for border
+
+    &.krv-input--is-focused,
+    &.krv-input--has-state
+      fieldset
+        border: $text-field-outlined-fieldset-border
+
+  &--rounded
+    border-radius: $text-field-rounded-border-radius
+
+    > .krv-input__control > .krv-input__slot
+      padding: $text-field-outlined-rounded-slot-padding
+
+  &--shaped
+    border-radius: $text-field-shaped-border-radius
+
+  &.krv-text-field--solo
+    .krv-label
+      top: $text-field-solo-label-top
+
+    .krv-input__control
+      min-height: $text-field-solo-control-min-height
+      padding: 0
+
+      input
+        caret-color: auto
+
+    &.krv-input--dense > .krv-input__control
+      min-height: $text-field-solo-dense-control-min-height
+
+    &:not(.krv-text-field--solo-flat) > .krv-input__control > .krv-input__slot
+      +elevation(2)
+
+    .krv-input__append-inner,
+    .krv-input__prepend-inner
+      align-self: center
+      margin-top: 0
+
+    +outer-margin-top($text-field-solo-outer-margin-top)
+
+    &.krv-input--dense
+      +outer-margin-top($text-field-solo-dense-outer-margin-top)
+
+  &.krv-input--is-focused > .krv-input__control > .krv-input__slot:after
+    transform: scaleX(1)
+
+  &.krv-input--has-state > .krv-input__control > .krv-input__slot:before
+    border-color: currentColor
+
+  // TODO: where are the corresponding rules for LTR?
+  //
+  // +rtl()
+  //   &--enclosed
+  //     .krv-input__append-outer
+  //       margin-left: 0
+  //       margin-right: 16px
+
+  //     .krv-input__prepend-outer
+  //       margin-left: 16px
+  //       margin-right: 0

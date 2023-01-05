@@ -1,0 +1,13 @@
+<a appUiPrintMenu >
+  <app-icon-print></app-icon-print>
+</a>
+<ul id="print-list-b" class="menu-column__user-menu-dr">
+  <li class="menu-column__user-menu-ico"><a (click)="close($event)">
+    <app-icon-print></app-icon-print>
+  </a></li>
+  <li *ngFor="let printForm of printForms$ | async" class="list-print">
+    <div class="block-print-nam">{{ printForm.name }}</div>
+    <a class="lnk-icon" (click)="onPrintForms(printForm, 'docx')">DOCX</a>
+    <a class="lnk-icon" (click)="onPrintForms(printForm, 'pdf')">PDF</a>
+  </li>
+</ul>

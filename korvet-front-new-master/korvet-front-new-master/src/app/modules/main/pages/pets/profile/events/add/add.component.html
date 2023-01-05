@@ -1,0 +1,60 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+  [show]="loading$|async"></ngx-loading>
+<div class="header">
+  <div class="header__name">{{id ? 'Редактировать мероприятие' : 'Добавить мероприятие'}}</div>
+</div>
+<form (submit)="submit($event)" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=date col="12 col-md-3">
+          <ng-template #colContent>
+            <app-datepicker-overview [dataError]="formGroup.controls['date'].hasError('required')"
+              formControlName="date">
+            </app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=time col="12 col-md-3" class="mb-2 mb-md-0">
+          <ng-template #colContent>
+            <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=expert col="12 col-md-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('user')" [options]="users$" [type]="crudType.User"
+              field="fullName"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=typeEvent formGroupName="type">
+          <ng-template #colContent>
+            <app-ui-select [control]="formGroup.get('type.id')" [options]="typeItems"></app-ui-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-3">
+      <ng-template #rowContent>
+        <app-col titleName=comments>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="comment" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</form>
+<div class="form-footer">
+  <app-reference-button-form
+    [id]="id"
+    [isEdit]="false"
+    [type]="type"
+    [goListUrl]="'/pets' + id"
+    (buttonClick)="submit($event)"
+    [saveButtonName]="id ? 'Сохранить' : 'Добавить'">
+  </app-reference-button-form>
+
+</div>

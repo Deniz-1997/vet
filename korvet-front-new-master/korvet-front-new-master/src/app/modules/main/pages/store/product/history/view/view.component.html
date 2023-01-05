@@ -1,0 +1,58 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<div class="form-wr">
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=date col="6" class="pb-2">
+        <ng-template #colContent>
+          <strong>{{item.date}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=nomenclature col="6" class="pb-2">
+        <ng-template #colContent>
+          <a *ngIf="item.product && item.product.fullName"
+             [routerLink]="['/store/product/', item.product.id]">
+            <strong>{{item.product.fullName}}</strong>
+          </a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=stock col="6" class="pb-2">
+        <ng-template #colContent>
+          <a *ngIf="item.stock && item.stock.name"
+             [routerLink]="['/admin/references/stock/', item.stock.id]">
+            <strong>{{item.stock.name}}</strong>
+          </a>
+        </ng-template>
+      </app-col>
+      <app-col titleName=quantity col="6" class="pb-2">
+        <ng-template #colContent>
+          <strong>{{item.quantity}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=typeOperations col="6" class="pb-2">
+        <ng-template #colContent>
+          <strong *ngIf="item.operationType && item.operationType.title">{{item.operationType.title}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=documentUUID col="6" class="pb-2">
+        <ng-template #colContent>
+          <strong>{{item.documentUUID}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>
+<div class="form-footer">
+  <a [routerLink]="goListUrl()" class="btn-st btn-st--left btn-st--gray">Назад</a>
+</div>
+

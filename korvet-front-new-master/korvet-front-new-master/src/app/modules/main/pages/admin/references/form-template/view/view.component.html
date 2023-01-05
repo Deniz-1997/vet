@@ -1,0 +1,139 @@
+<app-row *ngFor="let field of formTemplate.fields; let i = index">
+  <ng-template #rowContent >
+    <app-col col="12 col-lg-2" *ngIf="field.formTemplateField.type.code !== 'title'">
+      <ng-template #colContent>
+        <strong [innerHTML]="formTemplate.templateArr ? formTemplate.templateArr[i] : ''" class="inline text-middle"></strong>
+      </ng-template>
+    </app-col>
+    <app-col col="12 col-lg-2" *ngIf="field.formTemplateField.type.code === 'title'">
+      <ng-template #colContent>
+        <strong [innerHTML]="formTemplate.templateArr ? formTemplate.templateArr[i] : ''" class="inline text-middle"></strong>
+      </ng-template>
+    </app-col>
+    <!-- Текстовое поле -->
+    <app-col col="12 col-lg-8" *ngIf="field.formTemplateField.type.code === 'text'">
+      <ng-template #colContent>
+        <input class="inp-st inline" type="text">
+      </ng-template>
+    </app-col>
+    <!-- Числовое поле -->
+    <app-col col="12 col-lg-4"*ngIf="field.formTemplateField.type.code === 'number'">
+      <ng-template #colContent>
+        <input class="inp-st inline" type="number">
+      </ng-template>
+    </app-col>
+    <!-- Многострочное текстовое поле -->
+    <app-col col="12 col-lg-8" *ngIf="field.formTemplateField.type.code === 'textarea'">
+      <ng-template #colContent>
+        <textarea class="textarea-st inline" rows="3"></textarea>
+      </ng-template>
+    </app-col>
+    <!-- Справочник -->
+    <app-col col="12 col-lg-4" *ngIf="field.formTemplateField.type.code === 'reference'">
+      <ng-template #colContent>
+        <ng-container *ngIf="field.parentReference">
+          <app-ui-select-reference
+            [crudType]="field.parentReference.crudType"
+            [title]="field.parentReference.title"
+            [multiSelect]="false"
+            [value]="field.parentReference.value"
+            [viewType]="'select'">
+          </app-ui-select-reference>
+        </ng-container>
+
+        <ng-container *ngIf="field.subParentReference">
+          <app-ui-select-reference
+            [crudType]="field.subParentReference.crudType"
+            [filter]="field.subParentReference.filter"
+            [title]="field.subParentReference.title"
+            [multiSelect]="false"
+            [value]="field.subParentReference.value"
+            [viewType]="'select'">
+          </app-ui-select-reference>
+        </ng-container>
+
+        <ng-container *ngFor="let property of field.formTemplateField.properties">
+          <app-ui-select-reference
+            *ngIf="property.formFieldProperty.code === 'entity'"
+            [crudType]="property.value"
+            [filter]="field.filter"
+            [multiSelect]="field.multiSelect"
+            [index]="i"
+            [value]="field.defaultValue"
+            [viewType]="field.viewType"
+          >
+          </app-ui-select-reference>
+        </ng-container>
+      </ng-template>
+    </app-col>
+    <!-- Справочник конструктора -->
+    <app-col col="12 col-lg-4" *ngIf="field.formTemplateField.type.code === 'template_reference'">
+      <ng-template #colContent>
+        <ng-container *ngFor="let property of field.formTemplateField.properties">
+          <app-ui-select-reference
+            *ngIf="property.formFieldProperty.code === 'entity'"
+            [crudType]="field.crudType"
+            [filter]="field.filter"
+            [multiSelect]="field.multiSelect"
+            [index]="i"
+            [value]="field.defaultValue"
+            [viewType]="field.viewType"
+          >
+          </app-ui-select-reference>
+        </ng-container>
+      </ng-template>
+    </app-col>
+    <!-- Дата -->
+    <app-col col="12 col-lg-3" *ngIf="field.formTemplateField.type.code === 'date'">
+      <ng-template #colContent>
+        <div class="inline-block mr-4">
+          <app-datepicker-overview
+            [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.min : null"
+            [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.date.max : null"
+          ></app-datepicker-overview>
+        </div>
+        <input
+          *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_format').value"
+          appUiMaskTime
+          class="inp-st time-mask inline"
+          value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_time')['formFieldProperty'].defaultValue}}"
+        >
+      </ng-template>
+    </app-col>
+    <!-- Дата диапазон -->
+    <app-col col="12 col-lg-3" *ngIf="field.formTemplateField.type.code === 'multi_date'">
+      <ng-template #colContent>
+        <div class="inline-block mr-4">
+          <app-datepicker-overview
+            (changed)="onChangeMinDate($event, field)"
+            [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMin.max : null"
+            [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMin.min : null">
+          </app-datepicker-overview>
+        </div>
+        <input *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_min_format').value"
+               appUiMaskTime
+               class="inp-st time-mask inline mr-4"
+               value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_min_time')['formFieldProperty'].defaultValue}}">
+        <div class="inline-block mr-4">
+          <app-datepicker-overview
+            [maxDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.max : null"
+            [minDate]="field.formTemplateField.extraData ? field.formTemplateField.extraData.dateMax.min : null"
+          >
+          </app-datepicker-overview>
+        </div>
+        <input
+          *ngIf="formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_format').value"
+          appUiMaskTime
+          class="inp-st time-mask inline"
+          value="{{formTemplateService.findProperty(field.formTemplateField.properties, 'date_max_time')['formFieldProperty'].defaultValue}}"
+        >
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+
+<pre [innerHTML]="formTemplate.fields
+? formTemplate.templateArr[formTemplate.templateArr.length - 1]
+: formTemplate.templateArr[0]" class="form-body form-span form-span--9"
+></pre>

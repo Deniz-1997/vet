@@ -1,0 +1,144 @@
+import { EAction } from '@/utils';
+import NotificationPage from '@/views/Notifications/NotificationPage.vue';
+import { mount } from '@vue/test-utils';
+import Vue from 'vue';
+import { injectVuetify } from '../__utils__/helpers';
+
+interface IComponent extends Vue {
+  filter: any;
+  total: number;
+  list: any[];
+  isLoading: boolean;
+}
+
+describe.skip('NotificationPage', () => {
+  test('render', async () => {
+    const $store = {
+      $rules: {
+        [EAction.VIEW_NOTIFICATION_REGISTRY]: true,
+      },
+      get rules() {
+        return $store.$rules;
+      },
+      set rules(v) {
+        $store.$rules = v;
+        $store.getters['auth/check'] = jest.fn((action) => Boolean($store.rules[action]));
+      },
+      getters: {
+        'auth/check': jest.fn((action) => Boolean($store.rules[action])),
+      },
+    };
+    let code = 'NEW';
+    const $service = {
+      notify: {
+        flush: jest.fn(),
+      },
+      notification: {
+        find: jest.fn(() => ({
+          data: [
+            {
+              id: 7,
+              created: '2022-02-14T12:09:00.000Z',
+              message:
+                'Обнаружено нарушение : Деятельность организации прекращена. Выявленные расхождения: Дата аннулирования организации 20.02.2020',
+              status: { id: 2, code: 'READ', name: 'Прочитано' },
+              object: { id: 7, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 2331, name: 'Трус, Балбес и Бывалый' },
+            },
+            {
+              id: 6,
+              created: '2022-02-10T11:14:00.000Z',
+              message:
+                'Обнаружено нарушение : Деятельность организации прекращена. Выявленные расхождения: Дата аннулирования организации 20.02.2020',
+              status: { id: 2, code: 'READ', name: 'Прочитано' },
+              object: { id: 6, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 2, name: 'ОАО "Шекснинский комбинат хлебопродуктов"' },
+            },
+            {
+              id: 5,
+              created: '2022-02-07T15:49:00.000Z',
+              message: 'Обнаружено нарушение : Неактуальные данные. Выявленные расхождения ИНН',
+              status: { id: 1, code, name: 'Новое' },
+              object: { id: 5, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 1, name: 'ОАО "Вологодский комбинат хлебопродуктов"' },
+            },
+            {
+              id: 4,
+              created: '2022-02-07T15:46:00.000Z',
+              message: 'Обнаружено нарушение : Нарушение. Выявленные расхождения ИНН',
+              status: { id: 2, code: 'READ', name: 'Прочитано' },
+              object: { id: 4, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 1, name: 'ОАО "Вологодский комбинат хлебопродуктов"' },
+            },
+            {
+              id: 3,
+              created: '2022-02-07T15:43:00.000Z',
+              message: 'Обнаружено нарушение VIOLATION! : ИНН!',
+              status: { id: 2, code: 'READ', name: 'Прочитано' },
+              object: { id: 3, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 1, name: 'ОАО "Вологодский комбинат хлебопродуктов"' },
+            },
+            {
+              id: 2,
+              created: '2022-02-07T15:19:00.000Z',
+              message: 'ИНН',
+              status: { id: 2, code: 'READ', name: 'Прочитано' },
+              object: { id: 2, name: 'Нарушение', type: 'VIOLATION' },
+              subject: { id: 1, name: 'ОАО "Вологодский комбинат хлебопродуктов"' },
+            },
+          ],
+        })),
+        markAsRead: jest.fn(),
+      },
+    };
+    const page = mount<IComponent>(NotificationPage, {
+      ...injectVuetify(),
+      mocks: {
+        $store,
+        $service,
+      },
+      stubs: ['NotificationPageCardModal'],
+    });
+
+    expect($service.notification.find).not.toBeCalled();
+    expect(page.find('.notifications__settings').exists()).toBe(false);
+    $store.rules = { ...$store.rules, [EAction.CUSTOMIZE_NOTIFICATION_REGISTRY]: true };
+    await page.vm.$forceUpdate();
+    await Vue.nextTick();
+    expect($service.notification.find).toBeCalled();
+    expect(page.vm.isLoading).toBe(false);
+    expect(page.vm.total).toBe(6);
+    expect(page.vm.list).toHaveLength(6);
+    expect(page.findAll('table tr')).toHaveLength(7);
+    expect(page.findAll('.notifications__table-row_read')).toHaveLength(5);
+    expect(page.findAll('.notifications__item_check')).toHaveLength(0);
+    expect(page.findAll('.notifications__item')).toHaveLength(0);
+    expect(page.find('.search').exists()).toBe(false);
+    expect(page.find('.notifications__only-new').exists()).toBe(false);
+
+    $store.rules = { ...$store.rules, [EAction.FILTER_NOTIFICATION_REGISTRY]: true };
+    await page.vm.$forceUpdate();
+    await Vue.nextTick();
+    expect(page.find('.search').exists()).toBe(true);
+    expect(page.find('.notifications__only-new').exists()).toBe(true);
+
+    $store.rules = { ...$store.rules, [EAction.CUSTOMIZE_NOTIFICATION_REGISTRY]: true };
+    await page.vm.$forceUpdate();
+    await Vue.nextTick();
+    expect(page.find('.notifications__settings').isVisible()).toBe(true);
+
+    $store.rules = { ...$store.rules, [EAction.VIEW_NOTIFICATION]: true };
+    await page.vm.$forceUpdate();
+    await Vue.nextTick();
+    expect(page.findAll('.notifications__item_check')).toHaveLength(1);
+    expect(page.findAll('.notifications__item')).toHaveLength(7);
+
+    code = 'READ';
+    page.find('.notifications__item_check').trigger('click');
+    expect($service.notification.markAsRead).toBeCalled();
+    expect($service.notification.find).toBeCalledTimes(1);
+    await Vue.nextTick();
+    await Vue.nextTick();
+    expect(page.find('.notifications__item_check').exists()).toBe(false);
+  });
+});

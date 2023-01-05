@@ -1,0 +1,46 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<app-close-dialog [textCenter]="true" [title]="'Загрузка файла '+ data?.title"></app-close-dialog>
+<mat-dialog-content align="center">
+  <form (submit)="submit()" [formGroup]="formGroup" appFormFocus>
+    <k-row *ngIf="data.subTitle">
+      <ng-template #row>
+        <k-col>
+          <ng-template #col>
+            {{data.subTitle}}
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row>
+      <ng-template #row>
+        <k-col>
+          <ng-template #col>
+            <k-button type="raised" color="primary" (click)="chooseFile($event)" name="Выбрать файл"></k-button>
+            <input type="file" hidden #file (change)="changeFile($event)" [accept]="data?.extension" name="file"
+              formControlName="file" [multiple]="false" />
+          </ng-template>
+        </k-col>
+        <k-col cols="12" *ngIf="file">
+          <ng-template #col>
+            {{ file.name }}
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </form>
+</mat-dialog-content>
+<k-row>
+  <ng-template #row>
+    <div fxFlex="49">
+      <button class="align-left" mat-raised-button mat-dialog-close>Закрыть</button>
+    </div>
+    <div fxFlex="49" class="text-right">
+      <ng-container *ngIf="!data.uploadFileForExplanatoryNote; else buttonForExplanatoryNote">
+        <button mat-raised-button color="primary" [mat-dialog-close]="true" (click)="submit()">Загрузить</button>
+      </ng-container>
+      <ng-template #buttonForExplanatoryNote>
+        <button mat-raised-button color="primary" [mat-dialog-close]="true" (click)="submit()">Подтвердить</button>
+      </ng-template>
+    </div>
+  </ng-template>
+</k-row>

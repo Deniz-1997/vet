@@ -1,0 +1,45 @@
+<div class="body-header">
+  <div class="body-header__name">Вес</div>
+  <div class="body-header__setting">
+    <a (click)="onAdd()" *ngIf="!pet.isDead" class="lnk-add">Добавить</a>
+  </div>
+</div>
+<div *ngIf="(weight$|async).length>0" class="table-info delivery">
+  <table class="table-info-st">
+    <tr>
+      <th>Дата измерения</th>
+      <th>Возраст</th>
+      <th>Вес</th>
+    </tr>
+    <tr>
+      <td>{{petsViewService.getDateFormat(currentWeight.date)}}</td>
+      <td>{{pet.birthday | age}}</td>
+      <td>{{currentWeight.value | weight}}</td>
+    </tr>
+  </table>
+  <div class="info-lnk info-lnk--left"><a (click)="onShow()">История изменений</a>
+  </div>
+</div>
+<div *ngIf="(weight$|async).length>0" class="delivery-grid">
+  <div class="form-wr form-wr--adaptive container-fluid">
+    <app-row class="d-flex p-1">
+      <ng-template #rowContent>
+        <app-col class="p-1" text="Дата">
+          {{petsViewService.getDateFormat(currentWeight.date)}}
+        </app-col>
+        <app-col class="p-1" text="Возраст">
+          {{pet.birthday | age}}
+        </app-col>
+        <app-col class="p-1" text="Вес">
+          {{currentWeight.value | weight}}
+        </app-col>
+      </ng-template>
+    </app-row>
+    <div class="lnk-open"><a (click)="onShow()">История изменений</a>
+    </div>
+  </div>
+</div>
+<div *ngIf="(weight$|async).length === 0" class="table-info">
+  <div class="no_data"><span>Нет данных</span>
+  </div>
+</div>

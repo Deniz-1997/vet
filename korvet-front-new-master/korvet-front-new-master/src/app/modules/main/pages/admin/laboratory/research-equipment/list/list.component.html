@@ -1,0 +1,40 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'Оборудование для исследования',
+    title: 'Не найдено ни одного оборудования для исследования',
+    subtitle: 'Вы можете добавить новое оборудование для исследования',
+    addLink: ['create']
+  }"
+  [order]="order"
+  [sort]="sort"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Оборудование для исследования"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Сортировка</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td><a>{{item.sort}}</a></td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

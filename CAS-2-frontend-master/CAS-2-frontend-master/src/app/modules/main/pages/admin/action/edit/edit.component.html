@@ -1,0 +1,323 @@
+<ng-container *ngIf="openDialog">
+  <app-close-dialog [title]="title"></app-close-dialog>
+</ng-container>
+
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <k-container fluid>
+    <ng-template #templateRef>
+      <k-row>
+        <ng-template #row>
+          <k-col cols="6">
+            <ng-template #col>
+              <k-text-field type="text" label="наименование" [control]="formGroup.get('name')" required></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="6">
+            <ng-template #col>
+              <k-text-field type="text" label="Текстовый идентификатор" [control]="formGroup.get('code')"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Описание</mat-label>
+                <textarea matInput rows="6" formControlName="description"></textarea>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12">
+            <ng-template #col>
+              <app-ui-multi-select-field [selectFormControl]="formGroup.get('additionalActions')"
+                                         [data]="searchActions" [offClearData]="true"
+                                         [label]="'Дополнительные действия'">
+              </app-ui-multi-select-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <app-ui-autocomplete label="Родитель" [control]="formGroup.get('parent')"
+                                   [type]="crudType.Action">
+              </app-ui-autocomplete>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Группы действий</mat-label>
+                <mat-select [compareWith]="compareFn" disableOptionCentering formControlName="groups" multiple
+                            panelClass="multiple-panel">
+                  <mat-option *ngFor="let group of (actionGroupItems$ | async)" [value]="group">{{group.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="number" [control]="formGroup.get('sort')" label="Сортировка"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Роли</mat-label>
+                <mat-select [compareWith]="compareFn" [multiple]="true" disableOptionCentering formControlName="roles"
+                            panelClass="multiple-panel" placeholder="Не выбрано">
+                  <div class="select-search">
+                    <div class="select-search-header">
+                      <mat-form-field appearance="fill">
+                        <input autocomplete="off" formControlName="rolesSearch" matInput placeholder="Найти роль"
+                               type="text">
+                      </mat-form-field>
+                    </div>
+                    <div class="select-search-body">
+                      <mat-option *ngFor="let role of searchState" [value]="role">{{role.name}}</mat-option>
+                    </div>
+                  </div>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="4" formGroupName="type">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Тип действия</mat-label>
+                <mat-select required disableOptionCentering formControlName="code" placeholder="Не выбрано">
+                  <mat-option *ngFor="let item of ActionTypeEnum" [value]="item.id">
+                    {{item.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" label="URL" [control]="formGroup.get('url')"></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Имя (класс) сущности</mat-label>
+                <input [matAutocomplete]="auto" formControlName="entityClass" matInput type="text">
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let option of filteredEntity" [value]="option">
+                    {{option.name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row *ngIf="isTypeEntityListUrl()">
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <p>
+                <mat-checkbox color="primary" formControlName="itemsCountEnabled">Рассчитывать количество элементов
+                  сущности
+                </mat-checkbox>
+              </p>
+            </ng-template>
+          </k-col>
+          <k-col cols="8">
+            <ng-template #col>
+              <k-text-field type="number" [control]="formGroup.get('itemsCount')" label="Количество элементов"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row *ngIf="isTypeEntity()">
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <p>
+                <mat-checkbox color="primary" formControlName="getListEnabled">Доступно в списке</mat-checkbox>
+              </p>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <p>
+                <mat-checkbox color="primary" formControlName="viewItemEnabled">Доступно в форме просмотра
+                </mat-checkbox>
+              </p>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <p>
+                <mat-checkbox color="primary" formControlName="getItemEnabled"> Доступно в форме редактирования
+                </mat-checkbox>
+              </p>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <strong>Настройки кнопки</strong><br>(buttonSettings)
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('buttonSettings').get('color')" label="Цвет"></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text"  [control]="formGroup.get('buttonSettings').get('backgroundColor')" label="Цвет фона"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <app-ui-autocomplete label="Иконки" [control]="formGroup.get('buttonSettings.icon')" [fields]="iconFields"
+                                    [type]="crudType.ReferenceIcon"></app-ui-autocomplete>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              <strong>Подтверждение действия</strong><br>(confirmation)
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text"  [control]="formGroup.get('confirmation').get('title')" label="Заголовок"></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('confirmation').get('description')" label="Описание"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+
+      <k-row >
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              Настройка кнопки подтверждения<br>(confirmButtonSettings)
+            </ng-template>
+
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('confirmation').get('confirmButtonSettings').get('color')" label="Цвет"></k-text-field>
+            </ng-template>
+
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('confirmation').get('confirmButtonSettings').get('backgroundColor')" label="Цвет фона"></k-text-field>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="8">
+            <ng-template #col>
+              <app-ui-autocomplete label="Иконки" [control]="formGroup.get('confirmation.confirmButtonSettings.icon')"
+                                   [fields]="iconFields"
+                                   [type]="crudType.ReferenceIcon"></app-ui-autocomplete>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="4">
+            <ng-template #col>
+              Настройка кнопки отмены<br>(cancelButtonSettings)
+            </ng-template>
+
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('confirmation').get('cancelButtonSettings').get('color')" label="Цвет"></k-text-field>
+            </ng-template>
+
+          </k-col>
+          <k-col cols="4">
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('confirmation').get('cancelButtonSettings').get('backgroundColor')" label="Цвет фона"></k-text-field>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="8">
+            <ng-template #col>
+              <app-ui-autocomplete label="Иконки" [control]="formGroup.get('confirmation.cancelButtonSettings.icon')"
+                                   [fields]="iconFields"
+                                   [type]="crudType.ReferenceIcon"></app-ui-autocomplete>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+    </ng-template>
+  </k-container>
+
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

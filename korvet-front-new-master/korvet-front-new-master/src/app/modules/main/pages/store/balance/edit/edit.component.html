@@ -1,0 +1,42 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=nomenclatures col="5" class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('product')"
+              [options]="referenceProductItems$"
+              [type]="crudType.ReferenceProduct"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=warehouse col="5" class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('stock')"
+              [options]="referenceStockItems$"
+              [type]="crudType.ReferenceStock"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=quantities col="5" class="pb-2">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="quantity" type="number"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+  ></app-reference-button-form>
+</form>
+

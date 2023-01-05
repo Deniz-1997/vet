@@ -1,0 +1,32 @@
+parameters:
+  webslon_api.rabbitmq.rpc_response_queue: 'korvet'
+  webslon_api.rabbitmq.rpc_response_frontend_queue_prefix: '%kernel.environment%.korvet.async-results'
+  webslon_api.rabbitmq.lifetime_callback_rpc_queue: '%env(int:RABBITMQ_LIFETIME_CALLBACK_RPC_QUEUE)%'
+  webslon_api.rabbitmq.protocol: '%env(RABBITMQ_HTTP_PROTOCOL)%'
+  webslon_api.queue_dto_directory: # директории проекта, в которых сложены DTO-сущности
+    - 'src/Packages/DTO'
+#  webslon_auth.client_id: '%env(MICROSERVICE_CLIENT_ID)%'
+#  webslon_auth.client_secret: '%env(MICROSERVICE_CLIENT_SECRET)%'
+#  webslon_auth.scope: ~
+#  webslon_auth.oauth2_success_login_route: 'webslon_api_homepage'
+#  webslon_auth.oauth2_security_firewalls:
+#    - 'documentation'
+#    - 'simple_oauth_redirect'
+
+
+#framework:
+#  rabbitmq:
+#    host: '%env(RABBITMQ_HOST)%'
+#    port: '%env(int:RABBITMQ_PORT)%'
+#    vhost: '%env(RABBITMQ_VHOST)%'
+#    username: '%env(RABBITMQ_USERNAME)%'
+#    password: '%env(RABBITMQ_PASSWORD)%'
+#    http_port: '%env(int:RABBITMQ_HTTP_PORT)%'
+#    http_protocol: '%env(RABBITMQ_HTTP_PROTOCOL)%'
+#    lifetime_callback_rpc_queue: '%env(int:RABBITMQ_LIFETIME_CALLBACK_RPC_QUEUE)%'
+#    rpc_response_queue: 'korvet'
+#    rpc_response_frontend_queue_prefix: '%kernel.environment%.korvet.async-results'
+#    redis:
+#      host: 127.0.0.1
+#      port: 6379
+#      scheme: tcp

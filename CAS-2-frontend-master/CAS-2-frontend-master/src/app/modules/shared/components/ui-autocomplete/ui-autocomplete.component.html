@@ -1,0 +1,22 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{label}}</mat-label>
+  <input type="text" class="autocomplete-input" matInput [placeholder]="placeholder"
+         [errorStateMatcher]="matcher"
+         [formControl]="control"
+         [matAutocomplete]="auto"
+         [hidden]="disabled"
+         [required]="required"/>
+  <k-icon matPrefix name="search" class="magnifier"></k-icon>
+  <div class="icon-container" *ngIf="loading">
+    <i class="loader"></i>
+  </div>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+    <div class="mat-option-loading" *ngIf="loading$|async"></div>
+    <mat-option *ngFor="let option of filteredOptions" [value]="option" (click)="onSelected()">
+      {{option[field]}}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="control && control.hasError('required')">
+    <strong>{{textError}}</strong>
+  </mat-error>
+</mat-form-field>

@@ -1,0 +1,15 @@
+<ng-template [ngIf]="tag == 'button'">
+  <button type="button" [ngClass]="class">
+    <span class="app-btn__content">
+    <ng-container *ngIf="content" [ngTemplateOutlet]="content"></ng-container>
+<!--      Upload <i aria-hidden="true"-->
+<!--                                            class="v-icon notranslate v-icon&#45;&#45;right mdi mdi-cloud-upload theme&#45;&#45;dark"></i>-->
+    </span>
+  </button>
+</ng-template>
+
+<ng-template [ngIf]="tag == 'a'">
+  <a href="#" (click)="onClickToggle($event)" [ngClass]="class">
+    <ng-container *ngIf="content" [ngTemplateOutlet]="content"></ng-container>
+  </a>
+</ng-template>

@@ -1,0 +1,11 @@
+<div class="tab-item">
+  <div class="tab-box">
+    <app-pets-view-detail [pet]="pet"></app-pets-view-detail>
+  </div>
+  <app-print-forms
+    [owners]="pet?.owners"
+    [petId]="pet?.id"
+    partition="Pet"
+  ></app-print-forms>
+</div>
+

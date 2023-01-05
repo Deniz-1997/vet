@@ -1,0 +1,18 @@
+@mixin prepend-append-margin-top($margin-top)
+  .krv-input__prepend-outer,
+  .krv-input__prepend-inner,
+  .krv-input__append-inner,
+  .krv-input__append-outer
+    margin-top: $margin-top
+
+@mixin outer-margin-top($margin-top)
+  .krv-input__prepend-outer,
+  .krv-input__append-outer
+    margin-top: $margin-top
+
+@mixin label-position($top, $translateY, $scale: .75)
+  .krv-label
+    top: $top
+
+    &--active
+      transform: translateY($translateY) scale($scale)

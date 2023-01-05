@@ -1,0 +1,33 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Filter\BaseFilter:
+      abstract: true
+      arguments:
+          - '@request_stack'
+
+  App\Filter\DeletedFilter:
+      arguments:
+          - '@annotations.reader'
+      tags:
+          - { name: webslon_api.filter_handler }
+
+  App\Filter\SearchFilter:
+      tags:
+          - { name: webslon_api.filter_handler }
+
+  App\Filter\InFilter:
+    tags:
+      - { name: webslon_api.filter_handler }
+
+  App\Filter\FullNameFilter:
+    tags:
+      - { name: entity_fullname_filter }
+
+  App\Filter\NestedEntityFilter:
+    calls:
+      - ['setTypeFilters', [!tagged webslon_api.type_filter]]
+    tags:
+      - { name: webslon_api.filter_handler }

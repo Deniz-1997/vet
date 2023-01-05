@@ -1,0 +1,134 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<form (submit)="submit($event)" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=login>
+          <ng-template #colContent>
+            <input [value]="formGroup.get('username').value" class="inp-st" formControlName="username" type="text"
+              placeholder="ivanov999"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=lastName col="4">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('surname').value | titleCaseName" class="inp-st" formControlName="surname"
+              type="text" placeholder="Иван"/>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=firstName col="4">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('name').value | titleCaseName" class="inp-st" formControlName="name"
+              type="text" placeholder="Иванов"/>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=patronymic col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="patronymic" type="text" placeholder="Иванович"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=inn formGroupName="additionalFields">
+          <ng-template #colContent>
+            <input appNumberOnly class="inp-st" formControlName="inn" maxlength="12" numberType="integer" type="text"
+              placeholder="948590389199"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=phoneNumber col="6">
+          <ng-template #colContent>
+            <input (change)="getMatches.emit(formGroup.value)" [maskPhoneMax]="10" [maskPhoneMin]="1" appUiMaskPhone
+              class="inp-st inp-namber" formControlName="phoneNumber" type="text"
+              placeholder="+79999999999"/>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName="email" col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="email" type="email" placeholder="info@mail.ru"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=newPassword col="6">
+          <ng-template #colContent>
+            <input autocomplete="new-password" class="inp-st" formControlName="plainPassword" type="password"
+              placeholder="nJFkcl999"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=repeatPassword col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="repeat_password" type="password"
+              placeholder="nJFkcl999"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=groups col="6">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeholder="Укажите группу"
+              [selectFormControl]="formGroup.get('groups')"
+              [type]="crudType.Group">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+        <app-col class="align-self-center">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="status" id="address-residence" type="checkbox">
+              <label for="address-residence">
+                <ng-container>Активна</ng-container>
+              </label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=professions col="6">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeholder="Укажите специальность"
+              [selectFormControl]="formGroup.get('professions')"
+              [type]="crudType.ReferenceProfession">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=clinic col="6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('unit')" [options]="unitItems"
+              [type]="crudType.ReferenceUnit" placeholder="Ветеринарная станция по г.о Зарайск и Серебряные пруды"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+
+  ></app-reference-button-form>
+
+</form>

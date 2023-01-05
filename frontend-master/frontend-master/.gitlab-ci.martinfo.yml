@@ -1,0 +1,37 @@
+stages:
+  - build
+
+build-prod:
+  only:
+  - master
+  stage: build
+  tags: [ zerno-test ]
+  script:
+    - ls
+    - npm install
+    - node --max_old_space_size=5096 node_modules/@vue/cli-service/bin/vue-cli-service.js build --mode modern
+    - rm -rf /srv/frontend/dist
+    - mv dist /srv/frontend
+  
+  cache:
+    paths:
+      - node_modules/
+
+build-dev:
+  only:
+    - dev
+  stage: build
+  environment:
+    name: zerno-test2.mart-info.ru
+    url: https://zerno-test2.mart-info.ru
+  tags: [ zerno-test2 ]
+  script:
+    - ls
+    - npm install
+    - node --max_old_space_size=5096 node_modules/@vue/cli-service/bin/vue-cli-service.js build --mode modern
+    - rm -rf /srv/frontend/dist
+    - mv dist /srv/frontend
+
+  cache:
+    paths:
+      - node_modules/

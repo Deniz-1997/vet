@@ -1,0 +1,154 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+  [show]="loading">
+</ngx-loading>
+
+<ng-container *ngIf="!loading">
+  <div class="header">
+    <div class="header__name">
+      <ng-container *ngIf="item.type && item.type.name">
+        {{item.type.name}},
+      </ng-container>
+      <ng-container *ngIf="item.breed && item.breed.name">
+        {{item.breed.name}}
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="form-wr container-fluid">
+    <a [routerLink]="['/culling' , item.id, 'edit']" class="info-edit" style="opacity: 1">
+      <app-icon-edit></app-icon-edit>
+    </a>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-md-2">
+          <ng-template #colContent>
+            <div class="animal-photo">
+              <ng-container *ngIf="!arrayImagesType() || (arrayImagesType() && arrayImagesType().length === 0)">
+                <div class="owl-item">
+                  <img src="assets/img/no_photo.png">
+                </div>
+              </ng-container>
+
+              <owl-carousel-o *ngIf="arrayImagesType() && arrayImagesType().length > 0" [options]="customOptions">
+                <ng-container *ngFor="let slide of arrayImagesType()">
+                  <ng-template carouselSlide>
+                    <a (click)="onShow()" class="showModal"></a>
+                    <img src="{{slide['uploadedFile']['path']}}/{{slide.name}}">
+                  </ng-template>
+                </ng-container>
+              </owl-carousel-o>
+              <div *ngIf="item.aggressive" class="mt-1 text-danger text-center">
+                <strong>агрессивно</strong>
+              </div>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-md-10">
+          <ng-template #colContent>
+            <div class="container-fluid">
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col titleName=animalNumber col="6 col-md-2">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.animalNumber">
+                        <strong>{{item.animalNumber}}</strong>
+                      </ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=chip col="6 col-md-2">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.chipNumber">
+                        <strong>{{item.chipNumber}}</strong>
+                      </ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=view col="6 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.type && item.type.name">
+                        <strong>{{item.type.name}}</strong>
+                      </ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=breed col="6 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.breed && item.breed.name">
+                        <strong>{{item.breed.name}}</strong>
+                      </ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=gender col="6 col-md-2" >
+                    <ng-template #colContent>
+                      <strong>{{getGender(item.gender)}}</strong>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=tagNumber col="6 col-md-2" >
+                    <ng-template #colContent>
+                      <strong>{{item.tagNumber}}</strong>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row class="mt-2">
+                <ng-template #rowContent>
+                  <app-col titleName=age col="6 col-md-2">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.birthday">
+                        <strong>{{item.birthday | age}}</strong>
+                      </ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=vaccinationDate col="6 col-md-2">
+                    <ng-template #colContent>
+                      <strong>{{item.lastVaccinationDate|dateParse:'dd.MM.yyyy'}}</strong>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=isSterilized col="6 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                    <ng-template #colContent>
+                      <strong>
+                        <ng-container *ngIf="item.breed && item.breed.name">
+                          <ng-container *ngIf="item.isSterilized">Да</ng-container>
+                          <ng-container *ngIf="item.isSterilized===false">Нет</ng-container>
+                          <ng-container *ngIf="item.isSterilized===null">-</ng-container>
+                        </ng-container>
+                      </strong>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=dateSterilization col="6 col-md-2" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                    <ng-template #colContent>
+                      <strong>{{item.sterilizationDate|dateParse:'dd.MM.yyyy'}}</strong>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=dateOfDeath col="6 col-md-2" >
+                    <ng-template #colContent>
+                      <strong>{{item.dateOfDeath|dateParse:'dd.MM.yyyy'}}</strong>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=animalDeath col="6 col-md-2" >
+                    <ng-template #colContent>
+                      <strong>{{item.causeOfDeath}}</strong>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12" class="text-right">
+          <ng-template #colContent>
+            <div *ngIf="visibleFooter" class="form-footer">
+              <a [ngClass]="{'btn-st--gray2 pointer-none':item.dateOfDeath}"
+                [routerLink]="['/culling' , item.id, 'register']" class="btn btn-primary mr-0 mr-md-4">
+                Зарегистрировать отлов</a>
+              <a [routerLink]="['/culling' , item.id, 'death']" class="btn btn-outline-secondary  mt-2 mt-md-0">
+                Зарегистрировать смерть животного</a>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</ng-container>

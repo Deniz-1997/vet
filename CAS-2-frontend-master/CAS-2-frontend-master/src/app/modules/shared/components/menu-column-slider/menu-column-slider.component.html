@@ -1,0 +1,42 @@
+<div *ngFor="let item of menu; let i = index"
+     class="menu-column__slider"
+     [ngClass]="{'active': item.state  || isActive(item), 'menu-column__slider-st': item.type.code === 'URL' }">
+
+  <ng-container *ngIf="item.type.code !== 'URL'; else elseBlock">
+    <a class="menu-column__slider-h" appMenuColumnSlider>
+      <span>
+        <app-icon *ngIf="item.buttonSettings && item.buttonSettings.icon"
+                  [name]="item.buttonSettings.icon.class"></app-icon>
+      </span>
+      {{item.name}}
+    </a>
+  </ng-container>
+
+  <ng-template #elseBlock>
+    <a class="menu-column__slider-h" appMenuColumnSlider [routerLink]="item.url">
+      <span class="pt-1">
+        <app-icon *ngIf="item.buttonSettings && item.buttonSettings.icon"
+                  [name]="item.buttonSettings.icon.class" [size]="'22'" [sizeType]="'px'"></app-icon>
+      </span>
+      {{item.name}}
+    </a>
+  </ng-template>
+
+  <ul class="menu-column__slider-lnk" *ngIf="item.items && item.items.length"
+      [style.display]="item.state || isActive(item) ? 'block' : 'none'">
+    <li *ngFor="let i of item.items">
+
+      <ng-container *ngIf="i.additionalActions">
+
+        <ng-container *ngFor="let j of i.additionalActions">
+          <ng-container *ngIf="j.type.code === 'ENTITY_LIST_URL' || j.type.code === 'URL'">
+            <a [routerLink]="j.url" class="lnk-plus"></a>
+          </ng-container>
+        </ng-container>
+
+        <a [routerLink]="i.url">{{i.name}}</a>
+
+      </ng-container>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,110 @@
+$btn-background-disabled: #e3e3e3;
+$btn-border-color-disabled: #e3e3e3;
+$btn-color-disabled: #c1c1c1;
+$btn-color-focus: #ffffff80;
+
+@mixin btn-border-radius($radius) {
+  border-radius: $radius;
+}
+
+@mixin btn-text-color($text-color, $type) {
+  color: map-get($text-color, $type);
+}
+
+@mixin btn-background-color($background-color, $type) {
+  background-color: map-get($background-color, $type);
+}
+
+@mixin btn-border-color($border-color, $type) {
+  border: 1px solid map-get($border-color, $type);
+}
+
+@mixin btn-padding-size($padding) {
+  padding: $padding;
+}
+
+@mixin btn-font-size($font-size) {
+  font-size: $font-size;
+}
+
+@mixin btn-line-height($line-height) {
+  line-height: $line-height;
+}
+
+$variants: (
+  (variant: "default", color: $default, text: $default-btn, border: $default-btn-border, loader: $primary),
+  (variant: "primary", color: $primary, text: $primary-btn, border: $primary-btn-border, loader: $primary-btn),
+  (variant: "success", color: $success, text: $success-btn, border: $success-btn-border, loader: $primary-btn),
+  (variant: "error", color: $error, text: $error-btn, border: $error-btn-border, loader: $primary-btn),
+);
+
+$sizes: (
+  (size: "large", font-size: 18px, line-height: 18px, padding: 24px 60px, loader: 24px),
+  (size: "medium", font-size: 22px, line-height: 22px, padding: 16px 40px, loader: 20px),
+  (size: "small", font-size: 16px, line-height: 16px, padding: 16px 40px, loader: 18px),
+  (size: "micro", font-size: 14px, line-height: 14px, padding: 12px 30px, loader: 16px),
+  (size: "pico", font-size: 12px, line-height: 12px, padding: 8px 20px, loader: 24px),
+);
+
+
+@mixin default-style {
+  @each $variant in $variants {
+    $btn_variant: map-get($variant, variant);
+    $color_scheme: map-get($variant, loader);
+
+    .loader--#{$btn_variant} {
+      color: map-get($color_scheme, "500");
+    }
+  }
+
+  .btn {
+    text-transform: none;
+
+    @each $variant in $variants {
+      $btn_variant: map-get($variant, variant);
+
+      &.btn--#{$btn_variant} {
+        @include btn-background-color(map-get($variant, color), "500");
+
+        @include btn-text-color(map-get($variant, text), "500");
+
+        @include btn-border-color(map-get($variant, border), "500");
+      }
+
+      &.btn--#{$btn_variant}:hover {
+        @include btn-background-color(map-get($variant, color), "600");
+
+        @include btn-text-color(map-get($variant, text), "600");
+
+        @include btn-border-color(map-get($variant, border), "600");
+      }
+
+      &.btn--#{$btn_variant}:focus {
+        @include btn-background-color(map-get($variant, color), "500");
+
+        @include btn-text-color(map-get($variant, text), "500");
+
+        @include btn-border-color(map-get($variant, border), "500");
+      }
+    }
+  }
+}
+
+@mixin button-size {
+  @each $size in $sizes {
+    .loader--#{map-get($size, size)} {
+      height: map-get($size, loader) !important;
+      width: map-get($size, loader) !important;
+    }
+  }
+
+  @each $size in $sizes {
+    .btn--#{map-get($size, size)} {
+      @include btn-padding-size(map-get($size, padding));
+
+      @include btn-font-size(map-get($size, font-size));
+
+      @include btn-line-height(map-get($size, line-height));
+    }
+  }
+}

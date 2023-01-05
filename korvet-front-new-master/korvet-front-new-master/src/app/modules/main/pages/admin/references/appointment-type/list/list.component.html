@@ -1,0 +1,38 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'тип обращения',
+    title: 'Не найдено ни одного типа обращения',
+    subtitle: 'Вы можете добавить новый тип обращения',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Тип обращений"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th width="100">Идентификатор</th>
+      <th>Наименование</th>
+      <!--<th width="100">Сортировка</th>-->
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <!--<td>{{item.sort}}</td>-->
+    </tr>
+  </ng-template>
+</app-list-filter-view>

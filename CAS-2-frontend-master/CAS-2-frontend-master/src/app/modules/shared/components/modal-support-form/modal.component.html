@@ -1,0 +1,71 @@
+<app-close-dialog [textCenter]="true" [title]="'Сообщение в техническую поддержку'"></app-close-dialog>
+<k-row>
+  <ng-template #row>
+    <k-col  cols="12">
+      <ng-template #col>
+        <form (submit)="submit()" [formGroup]="formGroup" appFormFocus>
+          <k-row>
+            <ng-template #row>
+              <k-col cols="12">
+                <ng-template #col>
+                  <mat-form-field  appearance="fill">
+                    <mat-label>Телефон для связи</mat-label>
+                    <input matInput [value]="formGroup.get('phone').value" minlength="1" maxLength="16" formControlName="phone"/>
+                  </mat-form-field>
+                </ng-template>
+              </k-col>
+            </ng-template>
+          </k-row>
+          <k-row>
+            <ng-template #row>
+              <k-col cols="12">
+                <ng-template #col>
+                  <mat-form-field  appearance="fill">
+                    <mat-label>Текст обращения</mat-label>
+                    <textarea matInput required [value]="formGroup.get('message').value | firstLetter"  rows="10" cols="30" formControlName="message"></textarea>
+                  </mat-form-field>
+                </ng-template>
+              </k-col>
+            </ng-template>
+          </k-row>
+          <k-row>
+            <ng-template #row>
+              <k-col  cols="12" class="img-style">
+                <ng-template #col>
+                  <k-button type="button" (click)="chooseFile($event)" name="Добавить изображение"></k-button>
+                  <input type="file" hidden #file (change)="changeFile($event)" [accept]="acceptTypes" name="file"
+                         formControlName="file" />
+                </ng-template>
+              </k-col>
+            </ng-template>
+
+          </k-row>
+          <k-row *ngIf="imageData">
+            <ng-template #row>
+              <k-col cols="12">
+                <ng-template #col>
+                  <img [src]="imageData" id="smallImage">
+                  <br><k-button type="button" (click)="clearImage()" name="Удалить изображение" color="warn"> </k-button>
+                </ng-template>
+              </k-col>
+            </ng-template>
+          </k-row>
+        </form>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>
+<k-row>
+  <ng-template #row>
+    <k-col cols="6">
+      <ng-template #col>
+        <button class="align-left" mat-raised-button  mat-dialog-close>Закрыть</button>
+      </ng-template>
+    </k-col>
+    <k-col cols="6" class="text-right">
+      <ng-template #col>
+        <button mat-raised-button color="primary"  (click)="submit()" [class.btn-loader]="loading">Отправить</button>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>

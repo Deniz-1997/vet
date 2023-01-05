@@ -1,0 +1,188 @@
+
+@import "~animate.css";
+
+@import "assets/scss/material";
+
+//@import '~@korvet/styles/src/styles/app';
+@import '~@korvet/styles/src/styles/tools/index';
+@import '@material-design-icons/font';
+@import '~@korvet/styles/src/styles/settings/variables';
+@import '~@korvet/styles/src/styles/settings/colors';
+@import '~@korvet/styles/src/styles/settings/elevations';
+@import '~@korvet/styles/src/styles/settings/utilities';
+@import "assets/scss/_light";
+@import '~@korvet/styles/src/styles/settings/theme';
+
+@import '~@korvet/styles/src/styles/generic/index';
+@import '~@korvet/styles/src/styles/elements/index';
+@import '~@korvet/styles/src/styles/utilities/index';
+
+@import "~@korvet/styles/src/styles/elements/overlay/index";
+@import "~@korvet/styles/src/styles/elements/sheet/index";
+
+@import "~@korvet/styles/src/styles/elements/grid/index";
+@import "assets/scss/components/icon";
+@import "~@korvet/styles/src/styles/elements/btn/index";
+@import "~@korvet/styles/src/styles/elements/breadcrumbs/index";
+@import "~@korvet/styles/src/styles/elements/divider/index";
+@import "~@korvet/styles/src/styles/elements/subheader/index";
+@import "~@korvet/styles/src/styles/elements/list/index";
+@import "~@korvet/styles/src/styles/elements/badge/index";
+@import "~@korvet/styles/src/styles/elements/card/index";
+
+// inputs
+@import "~@korvet/styles/src/styles/elements/label/index";
+@import "~@korvet/styles/src/styles/elements/text-field/index";
+@import "~@korvet/styles/src/styles/elements/textarea/index";
+@import "~@korvet/styles/src/styles/elements/select/index";
+@import "~@korvet/styles/src/styles/elements/input/index";
+
+@import "~@korvet/styles/src/styles/elements/table/VDataTable";
+@import "~@korvet/styles/src/styles/elements/table/VDataTableHeader";
+@import "~@korvet/styles/src/styles/elements/table/VEditDialog";
+@import "~@korvet/styles/src/styles/elements/table/VSimpleTable";
+@import "~@korvet/styles/src/styles/elements/table/VVirtualTable";
+
+@import "assets/scss/components/navigation";
+@import "assets/scss/components/responsive";
+@import "~@korvet/styles/src/styles/app";
+@import "assets/scss/colors";
+
+/* roboto-300 - latin_cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.woff') format('woff'), /* Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-300.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-regular - latin_cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.woff') format('woff'), /* Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-regular.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+/* roboto-500 - latin_cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.eot'); /* IE9 Compat Modes */
+  src: local(''),
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.woff2') format('woff2'), /* Super Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.woff') format('woff'), /* Modern Browsers */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('/assets/fonts/Roboto/roboto-v30-latin_cyrillic-500.svg#Roboto') format('svg'); /* Legacy iOS */
+}
+
+body {
+  //vertical-align: top;
+  //position: relative;
+  //font-size: 14px;
+  //background-color: #f2f2f2;
+  //-ms-text-size-adjust: 100%;
+  //-moz-text-size-adjust: 100%;
+  //-webkit-text-size-adjust: 100%;
+}
+
+.krv-application {
+  //width: 100%;
+  //min-height: 100vh;
+}
+
+
+
+
+//@import '~@korvet/styles/src/styles/settings/_colors';
+//@import '~@korvet/styles/src/styles/settings/_elevations';
+//@import '~@korvet/styles/src/styles/settings/_utilities';
+//@import '~@korvet/styles/src/styles/settings/_light';
+//@import '~@korvet/styles/src/styles/settings/_dark';
+//@import '~@korvet/styles/src/styles/settings/_theme';
+
+
+//@import "~@korvet/styles/src/styles/settings/_index";
+
+
+//@import './settings/_index'
+//@import './generic/_index'
+//@import './elements/_index'
+//@import './utilities/_index'
+//
+//@import "elements/grid/_index"
+//@import "elements/icon/_index"
+//@import "elements/btn/_index"
+//@import './tools/_index'
+
+//$font-family-base: Roboto, "Helvetica Neue", sans-serif;
+//
+//@import "assets/scss/changes";
+//
+//@import "assets/scss/bootstrap";
+//
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+//@import "assets/scss/custom/animate";
+//
+//
+////@import "assets/scss/theme";
+//
+//@media print {
+//  #main-sidenav, .btn-st, .crubs, .form-wr-btn, .tab .tab-btn, .print-block {
+//    display: none !important;
+//  }
+//
+//  .wr-column .body-column{
+//    padding: 30px 30px 0 30px !important;
+//  }
+//
+//  body{
+//    background-color: white !important;
+//  }
+//}
+.k-form {
+  margin: 0 0 16px;
+  padding: 20px 20px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 5px 15px -10px #a7a7a7;
+  box-shadow: 0 5px 15px -10px #a7a7a7;
+  position: relative;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.checkBoxBlock .mat-checkbox-checkmark-path {
+  stroke: black !important;
+}
+
+.mat-row {
+  border-bottom: white;
+}
+.mat-cell {
+  border-bottom-style: none !important;
+}
+
+.child-color {
+  color: $shadow;
+}
+
+.success-snackBar {color:#155724;background-color:#d4edda;border-color:#c3e6cb}
+.danger-snackBar {color:#721c24;background-color:#f8d7da;border-color:#f5c6cb}
+.warning-snackBar {color:#856404;background-color:#fff3cd;border-color:#ffeeba}
+.info-snackBar{color:#0c5460;background-color:#d1ecf1;border-color:#bee5eb}
+

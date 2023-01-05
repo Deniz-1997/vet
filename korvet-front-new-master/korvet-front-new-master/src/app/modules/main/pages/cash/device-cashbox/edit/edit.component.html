@@ -1,0 +1,21 @@
+<app-title-view [title]="title"></app-title-view>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name>
+          <ng-template #colContent>
+            <input [(ngModel)]="item.name" class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+  ></app-reference-button-form>
+</form>

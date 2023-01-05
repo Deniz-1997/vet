@@ -1,0 +1,36 @@
+[
+  { "prefix": "Личный кабинет", "name": "Администратора", "ROLE_ADMIN": true },
+  { "prefix": "Личный кабинет", "name": "Администратора безопасности", "ROLE_SECURITY_ADMIN": true },
+  { "prefix": "Личный кабинет", "name": "Пользователя на просмотр всех форм", "ROLE_AUDITOR": true },
+  {
+    "prefix": "Личный кабинет",
+    "name": "Сотрудника Министерства сельского хозяйства",
+    "ROLE_MCX_USER": true,
+    "ROLE_REQUEST": true,
+    "ROLE_SUBJECT_ADMIN": true,
+    "ROLE_DICTIONARY": true,
+    "ROLE_WORKFLOW": true,
+    "ROLE_LABORATORY": true
+  },
+  { "prefix": "Личный кабинет", "name": "Сотрудника РоссельхозНадзора", "ROLE_RSHN": true },
+  {
+    "prefix": "Личный кабинет",
+    "name": "Сотрудника организации, осуществляющей государственный мониторинг зерна",
+    "ROLE_GOVERMENT_MONITORING": true
+  },
+  {
+    "prefix": "Личный кабинет",
+    "name": "Сотрудника Федерального агентства по государственным резервам",
+    "ROLE_FEDERAL_RESERVE": true
+  },
+  { "prefix": "Личный кабинет", "name": "Сотрудника РОУ АПК", "ROLE_ROU_APK": true },
+  { "prefix": "Личный кабинет", "name": "Оператора системы", "ROLE_OPERATOR": true },
+  { "prefix": "Личный кабинет", "name": "Сотрудника органа государственной власти", "ROLE_GOVERMENT_USER": true },
+  {
+    "prefix": "Личный кабинет",
+    "name": "Товаропроизводителя",
+    "ROLE_SUBJECT_USER": true,
+    "ROLE_ELEVATOR_USER": true,
+    "ROLE_AGENT_USER": true
+  }
+]

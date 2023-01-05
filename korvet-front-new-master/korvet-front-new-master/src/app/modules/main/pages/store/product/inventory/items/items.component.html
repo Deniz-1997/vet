@@ -1,0 +1,121 @@
+ <ng-container *ngIf="formGroup.get('documentProducts').value.length > 0">
+    <div class="d-none d-lg-block">
+    <app-row  *ngFor="let item of formGroup.get('documentProducts').controls; let i = index;">
+      <ng-template #rowContent>
+        <app-col [required]="state.code === 'DRAFT'" col="4" titleName=name>
+          <ng-template #colContent>
+            <strong *ngIf="state.code !== 'DRAFT'">
+              {{item.get('product').value['name']}}
+            </strong>
+            <app-ui-autocomplete (selected)="changeQuantity(item)" *ngIf="state.code === 'DRAFT'"
+                                 [addFilter]="productStockFilter" [control]="item.get('product')" [fields]="productStockFields"
+                                 [formGroup]="formGroup" [options]="stockProducts" [required]="true" [type]="crudType.ReferenceProduct"
+                                 styleClass="space-normal"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=quantityByCounting col="2">
+          <ng-template #colContent>
+            <span *ngIf="state.code !== 'DRAFT'">
+              {{item.get('quantityActual').value}}
+            </span>
+            <span *ngIf="state.code === 'DRAFT'">
+              <input [formControl]="item.get('quantityActual')" class="inp-st" type="number" readonly/>
+            </span>
+          </ng-template>
+        </app-col>
+        <app-col titleName=quantityActual col="2">
+          <ng-template #colContent>
+            <span *ngIf="state.code !== 'DRAFT'">
+              {{item.get('quantityAccounting').value}}
+            </span>
+            <span *ngIf="state.code === 'DRAFT'">
+              <input [formControl]="item.get('quantityAccounting')" class="inp-st" type="number"/>
+            </span>
+          </ng-template>
+        </app-col>
+        <app-col titleName=shortageInExcess col="3">
+          <ng-template #colContent>
+            <input readonly class="inp-st"
+                   value="{{(item.get('quantityAccounting').value - item.get('quantityActual').value).toFixed(2)}}">
+          </ng-template>
+        </app-col>
+        <app-col col="1"  class="align-self-center text-right">
+          <ng-template #colContent>
+            <a (click)="removeProduct($event, i)" *ngIf="state.code === 'DRAFT'" class="tr-close"></a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    </div>
+  </ng-container>
+  <div class="d-block d-lg-none">
+  <ng-container *ngIf="formGroup.get('documentProducts').value.length > 0">
+    <div class="form-wr form-wr--adaptive container-fluid" *ngFor="let item of formGroup.get('documentProducts').controls; let i = index;">
+      <app-row >
+        <ng-template #rowContent>
+          <app-col [required]="state.code === 'DRAFT'" col="12" titleName=name>
+            <ng-template #colContent>
+              <strong *ngIf="state.code !== 'DRAFT'">
+                {{item.get('product').value['name']}}
+              </strong>
+              <app-ui-autocomplete (selected)="changeQuantity(item)" *ngIf="state.code === 'DRAFT'"
+                                   [addFilter]="productStockFilter" [control]="item.get('product')" [fields]="productStockFields"
+                                   [formGroup]="formGroup" [options]="stockProducts" [required]="true" [type]="crudType.ReferenceProduct"
+                                   styleClass="space-normal"></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+            <app-col titleName=quantityByCounting col="12 col-sm-4">
+              <ng-template #colContent>
+                <span *ngIf="state.code !== 'DRAFT'">
+                  {{item.get('quantityActual').value}}
+                </span>
+                <span *ngIf="state.code === 'DRAFT'">
+                  <input [formControl]="item.get('quantityActual')" class="inp-st" type="number" readonly/>
+                </span>
+              </ng-template>
+            </app-col>
+            <app-col titleName=quantityActual col="12 col-sm-4" class="pt-2 pb-2 pb-sm-0 pt-sm-0">
+              <ng-template #colContent>
+                <span *ngIf="state.code !== 'DRAFT'">
+                  {{item.get('quantityAccounting').value}}
+                </span>
+                <span *ngIf="state.code === 'DRAFT'">
+                  <input [formControl]="item.get('quantityAccounting')" class="inp-st" type="number"/>
+                </span>
+              </ng-template>
+            </app-col>
+            <app-col titleName=shortageInExcess col="12 col-sm-4">
+              <ng-template #colContent>
+                <span *ngIf="state.code !== 'DRAFT'">
+                  {{(item.get('quantityAccounting').value - item.get('quantityActual').value).toFixed(2)}}
+                </span>
+                <span *ngIf="state.code === 'DRAFT'">
+                <input readonly class="inp-st"
+                  value="{{(item.get('quantityAccounting').value - item.get('quantityActual').value).toFixed(2)}}">
+                </span>
+              </ng-template>
+            </app-col>
+            <app-col col="12"  class="text-left">
+              <ng-template #colContent>
+                <a (click)="removeProduct($event, i)" *ngIf="state.code === 'DRAFT'" class="lnk-delete">удалите товар</a>
+              </ng-template>
+            </app-col>
+      </ng-template>
+    </app-row>
+      </div>
+  </ng-container>
+  </div>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col>
+        <ng-template #colContent>
+          <a (click)="addProduct($event)" *ngIf="state.code === 'DRAFT'" class="form-span__lnk-btn">Добавить товар</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+

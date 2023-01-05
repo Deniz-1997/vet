@@ -1,0 +1,61 @@
+<div class="tab-item">
+  <div class="body-header">
+    <div class="body-header__name">Амбулаторная карта</div>
+    <div class="body-header__setting">
+      <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+        <app-icon-print></app-icon-print>
+      </a>
+      <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+        <app-icon-download></app-icon-download>
+      </a>
+    </div>
+  </div>
+  <div class="tab-box">
+    <app-pets-view-detail [pet]="pet"></app-pets-view-detail>
+  </div>
+
+  <div class="row">
+    <div class="12 col-md-6">
+      <app-pets-view-card-temperature></app-pets-view-card-temperature>
+    </div>
+    <div class="12 col-md-6">
+      <app-pets-view-card-weight></app-pets-view-card-weight>
+    </div>
+  </div>
+
+  <app-pets-view-events [pet$]="pet" limit="5"></app-pets-view-events>
+
+  <div *ngIf="false">
+    <div class="body-header">
+      <div class="body-header__name">Лабораторные исследования</div>
+      <div class="body-header__setting">
+        <a class="lnk-ico" href="">
+          <app-icon-print></app-icon-print>
+        </a>
+        <a class="lnk-ico" href="">
+          <app-icon-download></app-icon-download>
+        </a>
+      </div>
+    </div>
+    <div class="table-info">
+      <table class="table-info-st">
+        <tr>
+          <th>№</th>
+          <th>Тип исследования</th>
+          <th>Дата взятия</th>
+          <th>Дата исследования</th>
+          <th>Результат</th>
+        </tr>
+        <tr>
+          <td>1234556</td>
+          <td>Анализ крови</td>
+          <td>12.08.18</td>
+          <td>12.08.18</td>
+          <td><a href="">Скачать</a></td>
+        </tr>
+      </table>
+    </div>
+    <a class="btn-show-add" href="">Показать все 40 записей</a>
+  </div>
+  <app-pets-view-appointments [pet$]="pet" limit="5"></app-pets-view-appointments>
+</div>

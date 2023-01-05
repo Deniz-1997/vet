@@ -1,0 +1,38 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'остаток',
+    title: 'Не найдено ни одного остатока',
+    subtitle: 'Вы можете добавить остаток',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Остатки"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Склад</th>
+      <th>Количество</th>
+      <th>Единица измерения</th>
+      <th width="100px">Цена</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td>{{item.product.name}}</td>
+      <td>{{item.stock.name}}</td>
+      <td>{{item.quantity}}</td>
+      <td>{{item.product.measure}}</td>
+      <td>{{item.product.price | price }}</td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

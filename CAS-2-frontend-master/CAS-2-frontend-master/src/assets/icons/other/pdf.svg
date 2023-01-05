@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="30px" viewBox="0 0 22 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>C1973A37-7557-4725-BBD3-62EF88310A9E</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Spec" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="16-spec-task-rez" transform="translate(-700.000000, -885.000000)">
+            <g id="Group-18" transform="translate(650.000000, 824.000000)">
+                <g id="Group-13" transform="translate(30.000000, 46.000000)">
+                    <g id="Group-5" transform="translate(20.000000, 15.000000)">
+                        <path d="M22,28 L22,10.7510999 C22,9.89227674 21.7235853,9.0562577 21.2116408,8.36669986 L16.1994606,1.61560001 C15.444869,0.59921128 14.2537008,2.4319967e-15 12.9878198,2.66453526e-15 L2,0 C0.8954305,2.02906125e-16 -1.3527075e-16,0.8954305 0,2 L0,28 C1.3527075e-16,29.1045695 0.8954305,30 2,30 L20,30 C21.1045695,30 22,29.1045695 22,28 Z" id="Shape" fill="#EEF0F2" fill-rule="nonzero"></path>
+                        <path d="M0,18 L22,18 L22,28 C22,29.1045695 21.1045695,30 20,30 L2,30 C0.8954305,30 1.3527075e-16,29.1045695 0,28 L0,18 Z" id="Rectangle-path" fill="#9E2020" fill-rule="nonzero"></path>
+                        <text id="pdf" font-family="Roboto-Medium, Roboto" font-size="10" font-weight="400" letter-spacing="0.300000012" fill="#FFFFFF">
+                            <tspan x="3" y="27">pdf</tspan>
+                        </text>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

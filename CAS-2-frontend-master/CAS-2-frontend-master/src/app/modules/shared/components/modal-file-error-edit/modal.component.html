@@ -1,0 +1,28 @@
+<app-close-dialog [textCenter]="true"></app-close-dialog>
+<form (submit)="submit()" [formGroup]="formGroup">
+  <k-container fluid>
+    <ng-template #templateRef>
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12">
+            <ng-template #col>
+              <k-text-field type="text"
+                            [hint]="data.error.error"
+                            label="{{dataNameService.getDataName(this.data.error.field)}}"
+                            formControlName="errorField"></k-text-field>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="12" class="align-right">
+                    <ng-template #col>
+                      <k-button name="Сохранить" (click)="submit()"></k-button>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+              </k-row>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+    </ng-template>
+  </k-container>
+</form>

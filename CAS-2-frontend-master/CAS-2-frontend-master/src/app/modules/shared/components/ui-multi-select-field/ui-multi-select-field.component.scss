@@ -1,0 +1,58 @@
+@import "src/styles";
+:host .ui-selectmenu-button {
+  width: 100%;
+}
+
+//:host /deep/ .mCustomScrollBox {
+//  margin-right: 0;
+//  max-width: 100%;
+//}
+
+:host .ui-selectmenu-popup__list {
+}
+
+:host .ui-selectmenu-popup {
+  width: 100%;
+  overflow: hidden
+}
+
+:host [data-open="true"] .ui-selectmenu-popup {
+  display: block;
+}
+
+//.input-class {
+//  margin-top: 15px;
+//  margin-bottom: 15px;
+//}
+
+::ng-deep .custom-autocomplete-input mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+::ng-deep .custom-autocomplete-input mat-form-field .mat-form-field-wrapper .mat-form-field-underline {
+  bottom: 0;
+}
+
+.select-search {
+  -webkit-box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+  padding: 14px;
+
+  & .select-search-header {
+    padding: 8px 16px 0 16px;
+
+    & .mat-form-field-wrapper {
+      padding-bottom: 8px;
+    }
+  }
+  & .lnk-ico{
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  & .select-search-body {
+    max-height: 360px;
+    overflow-y: auto;
+  }
+}

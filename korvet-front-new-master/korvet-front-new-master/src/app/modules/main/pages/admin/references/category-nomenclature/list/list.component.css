@@ -1,0 +1,8 @@
+.link_plus{
+    font-size: 22px;
+    font-weight: 400;
+}
+.link_plus:hover{
+    text-decoration: none;
+}
+

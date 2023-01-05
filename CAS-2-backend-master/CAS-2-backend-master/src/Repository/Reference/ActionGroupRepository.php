@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Repository\Reference;
+
+use App\Entity\Reference\ActionGroup;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @method ActionGroup|null find($id, $lockMode = null, $lockVersion = null)
+ * @method ActionGroup|null findOneBy(array $criteria, array $orderBy = null)
+ * @method ActionGroup[]    findAll()
+ * @method ActionGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class ActionGroupRepository extends ServiceEntityRepository
+{
+    /**
+     * CashReceiptRepository constructor.
+     * @param ManagerRegistry $registry
+     */
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, ActionGroup::class);
+    }
+}

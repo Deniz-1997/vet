@@ -1,0 +1,109 @@
+<div class="fancybox-slide--html" height='500'>
+  <div id="close-id" class="popup-close-id popup-wr">
+    <div class="popup-wr__head" *ngIf="data.head">
+      <span [innerHTML]="data.head"></span>
+      <div class="popup-wr__head-comment" [innerHTML]="data.headComment" *ngIf="data.headComment"></div>
+    </div>
+    <div class="popup-wr__body">
+
+      <pre *ngIf="data.template" class="inline" [innerHTML]="data.template"></pre>
+
+      <ng-container *ngIf="data.formTemplate">
+
+        <div *ngFor="let field of data.formTemplate.fields; let i = index" class="inline">
+
+          <!-- Текстовое поле -->
+          <div class="form-group" *ngIf="field.formTemplateField.type.code === 'text'">
+            <label for="input_text_{{i}}" class="{{field.isRequired ? 'title-required': ''}}">{{field.name}}</label>
+            <input type="text" class="form-control" id="input_text_{{i}}" [value]="field.defaultValue">
+            <div class="form-text" *ngIf="errors[i]">
+              Не заполнено обязательное поле
+            </div>
+          </div>
+
+          <!-- Числовое поле -->
+          <div class="form-row inline" *ngIf="field.formTemplateField.type.code === 'number'">
+            <div class="form-head {{field.isRequired ? 'title-required': ''}}" [innerHTML]="field.name"></div>
+            <div class="form-body">
+              <input class="inp-st" type="number" [value]='field.defaultValue' id="input_number_{{i}}">
+            </div>
+            <div class="form-span" *ngIf="errors[i]">
+              Не заполнено обязательное поле
+            </div>
+          </div>
+
+          <!-- Многострочныое текстовое поле -->
+          <div class="form-row inline" *ngIf="field.formTemplateField.type.code === 'textarea'">
+            <div class="form-head inline {{field.isRequired ? 'title-required': ''}}">
+            </div>
+            <div class="form-body inline">
+              <textarea class="textarea-st inline"></textarea>
+            </div>
+          </div>
+
+          <!-- Справочник -->
+          <div class="form-row inline" *ngIf="field.formTemplateField.type.code === 'reference'">
+            <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>
+            <div class="form-body inline">
+              <select name="referenceSelect" id="referenceSelect" style="display: block; opacity: 1">
+                <option value="1">Test</option>
+                <option value="2">Test2</option>
+                <option value="3">Test3</option>
+              </select>
+
+              <div class="check-st">
+                <div class="check-st__col">
+                  <input id="referenceCheckField" type="radio" name="referenceCheckField">
+                  <label for="referenceCheckField">Значение 1</label>
+                </div>
+                <div class="check-st__col">
+                  <input id="referenceCheckField2" type="radio" name="referenceCheckField">
+                  <label for="referenceCheckField2">Значение 2</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Дата -->
+          <div class="form-row inline" *ngIf="field.formTemplateField.type.code === 'date'">
+            <div class="form-head inline {{field.isRequired ? 'title-required': ''}}"></div>
+            <div class="form-body inline">
+              <app-datepicker-overview></app-datepicker-overview>
+            </div>
+          </div>
+
+          <!-- Дата диапазон -->
+          <div class="form-row inline" *ngIf="field.formTemplateField.type.code === 'date_format'">
+            <div class="form-span form-span--date">
+              <div class="form-head {{field.isRequired ? 'title-required': ''}}"></div>
+              <div class="form-body">
+                <app-datepicker-overview></app-datepicker-overview>
+              </div>
+            </div>
+            <div class="form-span form-span--date">
+              <div class="form-head {{field.isRequired ? 'title-required': ''}}">
+              </div>
+              <div class="form-body">
+                <app-datepicker-overview></app-datepicker-overview>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </ng-container>
+
+    </div>
+    <div class="popup-wr__footer d-flex container justify-content-around" *ngIf="data.actions && data.actions.length">
+      <ng-container *ngFor="let action of data.actions">
+        <button *ngIf="!action.action" [ngClass]="action.class"
+                [mat-dialog-close]="action.action">{{action.title}}</button>
+        <button *ngIf="action.action" [ngClass]="action.class" (click)="submit()">{{action.title}}</button>
+      </ng-container>
+    </div>
+  </div>
+
+  <button type="button" class="fancybox-button fancybox-close-small" title="Close" mat-dialog-close>
+    <app-icon-close></app-icon-close>
+  </button>
+</div>

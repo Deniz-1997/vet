@@ -1,0 +1,296 @@
+image: node:latest
+
+stages:
+  - deploy
+
+deploy-prod:
+  only:
+    - master
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: 89.108.112.145
+    USER: dev
+    ARCHIVE: build_backend.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ prod ]
+
+  before_script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME} && /usr/local/bin/composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev'
+  script:
+    - echo "" > ~/.ssh/known_hosts
+
+
+deploy-dev:
+  only:
+    - dev
+  stage: deploy
+  environment:
+    name: api.dev-cas.mart-info.ru
+    url: http://api.dev-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev'
+
+
+deploy-dev1:
+  only:
+    - dev1
+  stage: deploy
+  environment:
+    name: api.dev1-cas.mart-info.ru
+    url: http://api.dev1-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev1.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev1
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev1'
+
+deploy-dev2:
+  only:
+    - dev2
+  stage: deploy
+  environment:
+    name: api.dev2-cas.mart-info.ru
+    url: http://api.dev2-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev2.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev2
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev2'
+
+deploy-dev3:
+  only:
+    - dev3
+  stage: deploy
+  environment:
+    name: api.dev3-cas.mart-info.ru
+    url: http://api.dev3-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev3.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev3
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev3'
+
+deploy-dev4:
+  only:
+    - dev4
+  stage: deploy
+  environment:
+    name: api.dev4-cas.mart-info.ru
+    url: http://api.dev4-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev4.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev4
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev4'
+
+deploy-dev5:
+  only:
+    - dev5
+  stage: deploy
+  environment:
+    name: api.dev5-cas.mart-info.ru
+    url: http://api.dev5-cas.mart-info.ru
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_backend_dev5.tar.gz
+    NAME: CAS-2-backend
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-backend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev5
+    - composer install
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME} .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-back.sh dev5'
+
+
+#success_dev:
+#  stage: notify
+#  tags: [ dev ]
+#  only:
+#    - dev
+#    - dev2
+#    - dev3
+#    - dev4
+#    - dev5
+#    - dev6
+#  script:
+#    - sh ./ci/.notify.sh ✅
+
+#error_dev:
+#  stage: notify
+#  tags: [ dev ]
+#  only:
+#    - dev
+#    - dev2
+#    - dev3
+#    - dev4
+#    - dev5
+#    - dev6
+#  script:
+#    - sh ./ci/.notify.sh ❌
+#  when: on_failure #deploy fail

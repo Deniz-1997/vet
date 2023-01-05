@@ -1,0 +1,108 @@
+@import '~@angular/material/theming';
+
+$corvet-primary: (
+  50 : #e2eaf6,
+  100 : #b6cbe9,
+  200 : #86a8db,
+  300 : #5685cc,
+  400 : #316bc1,
+  500 : #0d51b6,
+  600 : #0b4aaf,
+  700 : #0940a6,
+  800 : #07379e,
+  900 : #03278e,
+  A100 : #bac7ff,
+  A200 : #879eff,
+  A400 : #5475ff,
+  A700 : #3b61ff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text,
+  )
+);
+
+$corvet-accent: (
+  50: #fafafa,
+  100: #f7f7f7,
+  200: #eeeeee,
+  300: #e0e0e0,
+  400: #bdbdbd,
+  500: #9e9e9e,
+  600: #757575,
+  700: #616161,
+  800: #424242,
+  900: #212121,
+  A100: #ffffff,
+  A200: #eeeeee,
+  A400: #bdbdbd,
+  A700: #616161,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$corvet-warn: (
+  50 : #fdedee,
+  100 : #fbd2d4,
+  200 : #f8b5b7,
+  300 : #f5979a,
+  400 : #f38085,
+  500 : #f16a6f,
+  600 : #ef6267,
+  700 : #ed575c,
+  800 : #eb4d52,
+  900 : #e73c40,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #ffcdce,
+  A700 : #ffb3b5,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$app-corvet-primary: mat-palette($corvet-primary);
+$app-corvet-accent: mat-palette($corvet-accent, A200, A100, A400);
+$app-corvet-warn: mat-palette($corvet-warn);
+$theme: mat-light-theme($app-corvet-primary, $app-corvet-accent, $app-corvet-warn);
+
+
+

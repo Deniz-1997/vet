@@ -1,0 +1,41 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name col="7" class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.name" class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+        <app-col  col="6">
+          <ng-template #colContent>
+            <input formControlName="required" id="requiredType" type="checkbox"
+                   value="">
+            <label for="requiredType">Тип обязателен ? (Если опция включена, то пользователь не сможет отключить
+              уведомление)</label>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=templateForNotification col="12">
+          <ng-template #colContent>
+            <textarea class="textarea-st" cols="30" formControlName="template" rows="6"></textarea>
+            <label for="requiredType"></label>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+  ></app-reference-button-form>
+</form>

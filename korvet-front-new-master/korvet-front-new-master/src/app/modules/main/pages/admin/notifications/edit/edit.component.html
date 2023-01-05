@@ -1,0 +1,76 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=typeNotification>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              (selected)="onChangeType($event)"
+              [control]="formGroup.get('type')"
+              [disabled]="this.isEdit()"
+              [options]="referenceNotificationsType"
+              placeholder="Укажите тип оповещения"
+              [type]="crudType.ReferenceNotificationsType"
+              field="name"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=sendNotification>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('user')"
+              [disabled]="this.isEdit()"
+              [options]="user"
+              placeholder="Укажите получателя уведомления"
+              [type]="crudType.User"
+              field="fullName"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=title>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="header" type="text" placeholder="Регламентные работы на сервере"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" text="">
+          <ng-template #colContent>
+            <app-ckeditor (changed)="changeTemplate($event)" [data]="template"></app-ckeditor>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [isEdit]="isEdit()"
+    [goListUrl]="goListUrl()"
+    [type]="type"
+    [id]="id"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>

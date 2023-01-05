@@ -1,0 +1,38 @@
+<app-list-filter-view
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Справочники номенклатуры"
+>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Наименование</th>
+      <th>Краткое описание</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.url]">{{item.name}}</a></td>
+      <td>{{item.description}}</td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6" titleName="name">
+            <ng-template #colContent>
+              <a [routerLink]="[item.url]">{{item.name}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="" text="Краткое описание">
+            <ng-template #colContent>
+              {{item.description}}
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

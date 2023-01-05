@@ -1,0 +1,21 @@
+<app-close-dialog [textCenter]="true" [title]="data.header"></app-close-dialog>
+<mat-dialog-content align="center" class="content">
+  <k-row>
+    <ng-template #row>
+      <k-col cols="12">
+        <ng-template #col>
+          <div [innerHTML]="data.html" class="inline"></div>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+</mat-dialog-content>
+<k-row>
+  <ng-template #row>
+    <k-col class="text-center">
+      <ng-template #col>
+        <button mat-raised-button mat-dialog-close color="primary">Закрыть</button>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>

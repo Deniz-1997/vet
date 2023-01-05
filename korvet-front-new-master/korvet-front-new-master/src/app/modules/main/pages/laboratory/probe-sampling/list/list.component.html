@@ -1,0 +1,196 @@
+<app-list-filter-view [listEmptyOptions]="{
+    elementName: 'отбор проб',
+    title: 'Не найдено ни одного отбора проб ',
+    subtitle: 'Вы можете добавить отбор проб',
+    addLink: ['create']
+  }" [type]="type" [filterFields]="filterFields" filterPlaceholder="Поиск" title="Отборы проб">
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Дата и время</th>
+      <th style="width:150px">Владелец</th>
+      <th>Вид и кличка животного</th>
+      <th>Прием</th>
+      <th>Тип пробы</th>
+      <th>Маркировка</th>
+      <th>Специалист</th>
+      <th>Метод оплаты</th>
+      <th>Статус оплаты</th>
+      <th style="width:150px">Статус</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="['/laboratory', 'probe-sampling', item.id]">{{item.date}}</a></td>
+      <td>
+        <a *ngIf="item.owner" [routerLink]="['/owners', item.owner.id]">{{item.owner.name}}</a>
+      </td>
+      <td>
+        <a *ngIf="item.pet" [routerLink]="['/pets', item.pet.id]">
+          {{(item.pet && item.pet.type.name) + " " + item.pet.name}}
+          {{item.pet.aggressiveType?.level|aggressive_count_transform}}
+        </a>
+      </td>
+      <td>
+        <ng-container *ngIf="item.appointment && item.appointment.id">
+          <a [routerLink]="['/appointments', item.appointment.id]">
+            №{{item.appointment.id}} от {{item.appointment.date}}
+          </a>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].probe?.name}}</ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].code}}</ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="item.user?.surname"> {{item.user?.surname}} </ng-container>
+        <ng-container *ngIf="item.user?.name"> {{item.user?.name}} </ng-container>
+        <ng-container *ngIf="item.user?.patronymic"> {{item.user?.patronymic}} </ng-container>
+      </td>
+      <td>
+        {{item.paymentType?.title}}
+      </td>
+      <td>
+        {{item.cashReceipt ? 'Оплачен' : 'Не оплачен'}}
+      </td>
+      <td>
+        <ng-container *ngIf="item.probeItems.length && item.probeItems[0].researchDocuments.length">
+          {{item.probeItems[0].researchDocuments[0].status?.title}}</ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="3" text="Дата и время">
+              <ng-template #colContent>
+                <a [routerLink]="['/laboratory', 'probe-sampling', item.id]">{{item.date}}</a>
+              </ng-template>
+            </app-col>
+            <app-col col="3" text="Тип пробы">
+              <ng-template #colContent>
+                <ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].probe?.name}}</ng-container>
+              </ng-template>
+            </app-col>
+            <app-col col="6" text="&#160;" class="text-right">
+              <ng-template #colContent>
+                <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                  <span class="expand-lnk"></span>
+                  <span class="expand-text"></span>
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span >Владелец:&#160;</span>
+                        <a *ngIf="item.owner" [routerLink]="['/owners', item.owner.id]">{{item.owner.name}}</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span  >Вид и кличка:&#160;</span>
+                        <a *ngIf="item.pet" [routerLink]="['/pets', item.pet.id]">
+                          {{(item.pet && item.pet.type.name) + " " + item.pet.name}}
+                          {{item.pet.aggressiveType?.level|aggressive_count_transform}}
+                        </a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Прием:&#160;</span>
+                        <ng-container *ngIf="item.appointment && item.appointment.id">
+                          <a [routerLink]="['/appointments', item.appointment.id]">
+                            №{{item.appointment.id}} от {{item.appointment.date}}
+                          </a>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Маркировка:&#160;</span>
+                        <strong><ng-container *ngIf="item.probeItems.length">{{item.probeItems[0].code}}</ng-container></strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Специалист:&#160;</span>
+                        <strong>
+                          <ng-container *ngIf="item.user?.surname"> {{item.user?.surname}} </ng-container>
+                          <ng-container *ngIf="item.user?.name"> {{item.user?.name}} </ng-container>
+                          <ng-container *ngIf="item.user?.patronymic"> {{item.user?.patronymic}} </ng-container>
+                        </strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Метод оплаты:&#160;</span>
+                        <strong>{{item.paymentType?.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Статус оплаты:&#160;</span>
+                        <strong>{{item.cashReceipt ? 'Оплачен' : 'Не оплачен'}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span>Статус:&#160;</span>
+                        <ng-container *ngIf="item.probeItems.length && item.probeItems[0].researchDocuments.length">
+                          {{item.probeItems[0].researchDocuments[0].status?.title}}</ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

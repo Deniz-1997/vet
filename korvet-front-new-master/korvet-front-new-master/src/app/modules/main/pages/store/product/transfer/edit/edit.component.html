@@ -1,0 +1,56 @@
+<app-title-view title="{{getTitle()}}"></app-title-view>
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-sm-6 col-lg-3" [required]="true" titleName=stockSender formGroupName="state">
+          <ng-template #colContent>
+            <app-ui-autocomplete *ngIf="formGroup.get('state.code').value === 'DRAFT'"
+              [control]="formGroup.get('stockFrom')" [options]="referenceStocks" [type]="crudType.ReferenceStock"
+              placeholder="Укажите склад-отправитель">
+            </app-ui-autocomplete>
+            <span *ngIf="formGroup.get('state.code').value !== 'DRAFT'">
+              {{formGroup.get('stockFrom').value['name']}}
+            </span>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-sm-6 col-lg-3" [required]="true" titleName=stockRecipient formGroupName="state">
+          <ng-template #colContent>
+            <app-ui-autocomplete *ngIf="formGroup.get('state.code').value === 'DRAFT'"
+              [control]="formGroup.get('stockTo')" [options]="referenceStocks" [type]="crudType.ReferenceStock"
+              placeholder="Укажите склад-получатель">
+            </app-ui-autocomplete>
+            <span *ngIf="formGroup.get('state.code').value !== 'DRAFT'">
+              {{formGroup.get('stockTo').value['name']}}
+            </span>
+          </ng-template>
+        </app-col>
+        <app-col titleName=dateRegistration col="12 col-sm-6 col-lg-2">
+          <ng-template #colContent>
+            <app-datepicker-overview formControlName="date"></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col titleName=timeRegistration col="12 col-sm-6 col-lg-2">
+          <ng-template #colContent>
+            <input appUiMaskTime class="inp-st time-mask" formControlName="time" />
+          </ng-template>
+        </app-col>
+        <app-col titleName=createdAt col="12  col-lg-2" class="pt-2 pt-lg-0" *ngIf="formGroup.get('createdAt').value">
+          <ng-template #colContent>
+            {{ formGroup.get('createdAt').value | slice:0:-3 }}
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-product-list [documentProducts]="item.documentProducts" [formGroup]="formGroup" [state]="item.state"
+          [stock]="formGroup.get('stockFrom')" class="w-100"></app-product-list>
+        </ng-template>
+      </app-row>
+  </div>
+  <div class="form-footer">
+    <app-reference-button-form [goListUrlAfterRemove]="goListUrlAfterRemove()" [goListUrl]="goListUrl()" [id]="id"
+      [isEdit]="isEdit()" [type]="type"></app-reference-button-form>
+  </div>
+</form>

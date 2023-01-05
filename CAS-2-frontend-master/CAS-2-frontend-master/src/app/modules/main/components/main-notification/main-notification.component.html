@@ -1,0 +1,50 @@
+<div [matBadge]="!unreadedMessagesCount || unreadedMessagesCount == 0 ? '' : unreadedMessagesCount | maxNumber"
+  matBadgeColor="warn">
+  <k-icon xMedium name="notifications" class="notification-icon" [matMenuTriggerFor]="menu"
+    [class.bell_animation]="animateBell">
+  </k-icon>
+</div>
+<mat-menu #menu="matMenu">
+  <div mat-menu-item *ngIf="!messagesCount || messagesCount===0; else elseBlock">
+    Нет ни одного сообщения
+  </div>
+  <ng-template #elseBlock>
+    <ng-container *ngFor="let notification of notifications; let i=index">
+      <button mat-menu-item (click)="showUpdateModal(notification)">
+        <k-container fluid="fluid">
+          <ng-template>
+            <k-row>
+              <ng-template #row>
+                <k-col cols="1">
+                  <ng-template #col>
+                    <mat-icon [color]="!isNotificationViewed(notification) ? 'warn' : 'transparent'">{{
+                      notification?.data.icon ? notification?.data.icon : 'info' }}</mat-icon>
+                  </ng-template>
+                </k-col>
+                <k-col>
+                  <ng-template #col>
+                    <span class="menu-text">{{notification?.data.header ? notification?.data.header :
+                      UPDATE_DEFAULT_HEADER}}</span>
+                  </ng-template>
+                </k-col>
+                <k-col cols="4">
+                  <ng-template #col>
+                    <span>{{notification?.data.date}}</span>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+          </ng-template>
+        </k-container>
+      </button>
+    </ng-container>
+    <button class="text-center" *ngIf="notifications.length < messagesCount" mat-menu-item (click)="showMore($event)">
+      <mat-spinner *ngIf="loading; else loadMoreText" diameter="30"></mat-spinner>
+      <ng-template #loadMoreText>
+        <span>
+          Показать еще
+        </span>
+      </ng-template>
+    </button>
+  </ng-template>
+</mat-menu>

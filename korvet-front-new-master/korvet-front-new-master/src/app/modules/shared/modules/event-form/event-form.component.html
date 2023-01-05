@@ -1,0 +1,78 @@
+<div class="position-relative">
+
+  <ngx-loading [show]="loading"></ngx-loading>
+
+  <app-title-view [title]="title"></app-title-view>
+
+  <div class="form-wr container-fluid">
+    <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=dateHolding col="12 col-md-4">
+            <ng-template #colContent>
+              <input appUiDatepicker class="inp-st datepicker" formControlName="data" type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=time class="mb-2 mt-2 mb-md-0 mt-md-0" col="12 col-md-4">
+            <ng-template #colContent>
+              <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=expert  col="12 col-md-4">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('user')"
+                [options]="users"
+                [type]="crudType.User"
+                field="fullName"
+              ></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent formGroupName="type">
+          <app-col  titleName=selectEvent class="pb-2">
+            <ng-template #colContent>
+              <app-ui-select
+                [control]="formGroup.get('type.id')"
+                [options]="types"
+              ></app-ui-select>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=comments class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="comment" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=pet class="pb-2" *ngIf="pets" class="form-row" formGroupName="pet">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('pet')"
+                [options]="pets"
+                [ownerId]="ownerId"
+                [type]="crudType.Pet"
+              ></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div>
+        <app-reference-button-form
+          [goListUrl]="goListUrl()"
+          [isEdit]="!isEdit()"
+          [type]="types"
+          [saveButtonName]="model?.id ? 'Сохранить' : 'Добавить'"
+        ></app-reference-button-form>
+      </div>
+    </form>
+  </div>
+</div>

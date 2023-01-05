@@ -1,0 +1,39 @@
+<div *ngIf="data.length > 0">
+  <mat-form-field appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <mat-select style="width: calc(100% - 16px)"
+                (openedChange)="openedChange($event)"
+                [compareWith]="compareFn"
+                panelClass="multiple-panel"
+                [formControl]="selectFormControl"
+                disableOptionCentering
+                multiple>
+      <div class="select-search">
+        <div class="text-right" style="margin: 10px; color: blue; cursor: pointer"
+             onmouseover="this.style.textDecoration= 'underline'" onmouseout="this.style.textDecoration= 'none'">
+          <a class="lnk-ico" (click)="onDeselectAll()">Снять все</a>
+        </div>
+        <div class="select-search-header">
+          <mat-form-field appearance="outline">
+            <input #search autocomplete="off"
+                   type="text"
+                   matInput
+                   [formControl]="searchTextboxControl"
+                   [placeholder]="label">
+            <button [disableRipple]="true" *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch($event)">
+              <mat-icon >close</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-optgroup *ngIf="(filteredOptions | async).length == 0">
+            <div>No results found!</div>
+          </mat-optgroup>
+        </div>
+        <div  class="select-search-body">
+          <mat-option (onSelectionChange)="selectionChange($event)" *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </div>
+      </div>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -1,0 +1,28 @@
+:host .animal-photo-edit-item {
+  margin: 3px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #eee;
+}
+
+:host .animal-photo-edit-item:first-child {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:host .animal-photo-edit-item:first-child .animal-photo-close {
+  top: -4px;
+  left: 106px;
+}
+
+:host .animal-photo-edit img {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+}

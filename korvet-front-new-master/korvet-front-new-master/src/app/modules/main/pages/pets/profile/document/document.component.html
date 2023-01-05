@@ -1,0 +1,75 @@
+<h3 [hidden]="(loading$|async)===false">Загрузка...</h3>
+<div *ngIf="(items|async).length > 0 && (loading$|async)===false">
+  <div *ngIf="false" class="popup-wr__search popup-wr__search--ico">
+    <input [(ngModel)]="query" name="query" placeholder="Поиск по ключевому слову" type="text">
+    <input onclick="alert('Функция в разработке')" type="submit" value="Найти">
+  </div>
+  <div *ngIf="((items | async) | fullTextSearch:query:'appointment':'name').length > 0">
+    <div class="body-header">
+      <div class="body-header__name">Документы</div>
+      <div class="body-header__setting">
+        <a class="lnk-ico" href="">
+          <app-icon-print></app-icon-print>
+        </a>
+        <a class="lnk-ico" href="">
+          <app-icon-download></app-icon-download>
+        </a>
+        <a class="lnk-add" data-fancybox href="#popup-add-file">Добавить</a>
+      </div>
+    </div>
+    <div class="table-info">
+      <table class="table-info-st table-info-st--close">
+        <tr>
+          <th>Дата</th>
+          <th style="width: 20px"></th>
+          <th>Название</th>
+          <th>Тип</th>
+          <th>Формат</th>
+          <th>Размер</th>
+          <th></th>
+        </tr>
+        <ng-container *ngFor="let item of (items | async) | fullTextSearch:query:'appointment':'name' let i=index">
+          <tr *ngIf="(limit === 0 || i<limit || query)">
+            <td>{{getDate(item.createdAt)}} <span>{{getTime(item.createdAt)}}</span></td>
+            <td><a
+              href="{{ item.uploadedFile.path === null? '/uploaded' : item.uploadedFile.path}}/{{item.uploadedFile.name}}"
+              target="_blank">
+              <app-icon-calendar></app-icon-calendar>
+            </a></td>
+            <td>{{item.appointment.name}}</td>
+            <td><span>{{item.name}}</span></td>
+            <td>
+              <app-file-type-icon [mimeType]="item.uploadedFile.mimeType"></app-file-type-icon>
+            </td>
+            <td>{{item.uploadedFile.size|fileSize}}</td>
+            <td><a (click)="removeFile(item.id,$event)" class="tr-close" href=""></a></td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+    <a (click)="showAll($event)" *ngIf="limitRow >0 && limitRow < (items|async).length && !query" class="btn-show-add"
+       href="">Показать
+      все {{(items|async).length}}
+      записей</a>
+  </div>
+</div>
+<div *ngIf="(items|async).length === 0 && (loading$ | async) === false && isFirstLoaded" class="box-empty">
+  <h3>
+    Нет ни одного файла
+    <span>Вы можете добавить файлы</span>
+  </h3>
+  <div class="box-empty__btn"><a class="btn-st btn-st--plus" data-fancybox href="#popup-add-file">Добавить
+    файл</a></div>
+</div>
+<div
+  *ngIf="((items | async) | fullTextSearch:query:'appointment':'name').length === 0 && (loading$|async)===false && (items|async).length > 0"
+  class="box-empty box-empty--search">
+  <h3>
+    Ничего не найдено
+    <span>Попробуйте указать другой запрос</span>
+  </h3>
+</div>
+<ng-template [ngIf]="isFirstLoaded">
+  <app-pets-profile-document-add (addFile)="updateList()" [appointments]="appointments"
+                                 [petId]="petId"></app-pets-profile-document-add>
+</ng-template>

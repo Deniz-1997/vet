@@ -1,0 +1,21 @@
+.appointment_name .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  z-index: 100;
+  background: rgb(246, 249, 255);
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 2px;
+  max-width: 40%;
+  width: auto;
+  color: rgb(70, 70, 70);
+}
+
+.appointment_name:hover .tooltiptext {
+  visibility: visible;
+}
+
+.appointment_name {
+  max-width:200px; 
+  overflow: hidden;
+}

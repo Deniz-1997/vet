@@ -1,0 +1,13 @@
+@import "src/assets/scss/colors";
+.container-btn {
+    position: relative;
+    background-color: $white;
+    top: 5px;
+    padding: 5px 0;
+    .btn-show-more {
+       color: $black;
+    }
+    &:hover {
+        box-shadow: 0 0 5px 1px lighten($black, 80%);
+    }
+}

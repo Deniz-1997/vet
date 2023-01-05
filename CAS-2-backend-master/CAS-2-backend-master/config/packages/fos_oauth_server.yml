@@ -1,0 +1,21 @@
+fos_oauth_server:
+    db_driver: orm       # Drivers available: orm, mongodb, or propel
+    client_class:        App\Entity\OAuth\Client
+    access_token_class:  App\Entity\OAuth\AccessToken
+    refresh_token_class: App\Entity\OAuth\RefreshToken
+    auth_code_class:     App\Entity\OAuth\AuthCode
+    authorize:
+        form:
+            type: fos_oauth_server_authorize
+            handler: fos_oauth_server.authorize.form.handler.default
+            name: fos_oauth_server_authorize_form
+            validation_groups:
+                - Authorize
+                - Default
+    service:
+        storage: app.oauth.storage
+        user_provider: App\Packages\Security\Provider\AbstractUserProvider
+        options:
+            supported_scopes: default
+            access_token_lifetime: 14400
+            refresh_token_lifetime: 1209600 # 1209600 seconds = 20160 minutes = 336 hours = 14 days

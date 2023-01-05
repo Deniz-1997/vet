@@ -1,0 +1,41 @@
+<k-header>Пользователи хозяйствующих субъектов</k-header>
+<form *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="k-form container-fluid">
+    <k-row>
+      <ng-template #row>
+        <k-col xs="12" sm="12" md="6" lg="6">
+          <ng-template #col>
+            <app-ui-multi-select-field #businessEntityIds label="Хозяйствующий субъект"
+              [selectFormControl]="formGroup.get('businessEntityIds')" [type]="crudType.ReferenceBusinessEntity"
+              [disabled]="formGroup.get('usersIds').value.length > 0"
+              [message]="formGroup.get('usersIds').value.length !==0 ? 'Поле Хозяйствующий субъект заблокировано, когда выбран Пользователь' : null">
+            </app-ui-multi-select-field>
+          </ng-template>
+        </k-col>
+        <k-col xs="12" sm="12" md="6" lg="6">
+          <ng-template #col>
+            <app-ui-multi-select-field #usersIds label="Пользователь" [selectFormControl]="formGroup.get('usersIds')"
+              [type]="crudType.User" [disabled]="formGroup.get('businessEntityIds').value.length > 0"
+              [message]="formGroup.get('businessEntityIds').value.length !==0 ? 'Поле Пользователь заблокировано, когда выбран Хозяйствующий субъект' : null">
+            </app-ui-multi-select-field>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row>
+      <ng-template #row>
+        <k-col xs="12" sm="12" md="6" lg="6">
+          <ng-template #col>
+            <mat-checkbox color="primary" formControlName="excludeSupeuser">Не учитывать пользователей с правами администратора</mat-checkbox>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </div>
+</form>
+
+<div class="text-right">
+  <k-button color="primary" type="button" name="Очистить фильтры" (click)="clearForm()"></k-button>
+  <k-button [class.btn-loader]="loader" color="primary" type="button" name="Сформировать отчет" (click)="submit()">
+  </k-button>
+</div>

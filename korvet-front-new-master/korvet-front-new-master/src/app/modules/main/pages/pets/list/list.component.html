@@ -1,0 +1,149 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'животное',
+    title: 'Упс, ничего не найдено. Попробуйте указать другой запрос...',
+    subtitle: 'Вы можете добавить новое животное',
+    addLink: ['/pets', 'create']
+  }"
+  [mutableSearch]="true"
+  [type]="model"
+  filterPlaceholder="Поиск по каталогу"
+  title="Животные"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="/pets/create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th style="min-width: 50px;">Идентификатор</th>
+      <th style="min-width: 100px;">Кличка</th>
+      <th style="min-width: 100px;">Вид животного</th>
+      <th style="min-width: 130px;">Порода</th>
+      <th style="min-width: 100px;">Пол</th>
+      <th style="min-width: 150px;">Возраст</th>
+      <th>Владельцы</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}} {{item.aggressiveType?.level|aggressive_count_transform}}</a></td>
+      <td>{{item.breed.type?.name}}</td>
+      <td>{{item.breed.name}}</td>
+      <td>{{getGender(item.gender)}}</td>
+      <td>
+        <ng-container *ngIf="item.isDead">{{(item.birthday + ',' + item.dateOfDeath) | age}}</ng-container>
+        <ng-container *ngIf="!item.isDead">{{item.birthday | age}}</ng-container>
+      </td>
+      <td>{{item.owners | implode:'owner.name'}}</td>
+      <td>
+        <a *ngIf="item.owners?.length!=0" class="btn btn-outline-primary text-nowrap"
+           routerLink="/pets/{{item?.id}}/add-appointment">Записать на прием</a>
+        <a *ngIf="item.owners?.length==0" class="btn btn-outline-primary text-nowrap"
+           routerLink="/owners/create/{{item?.id}}">Добавить владельца</a>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+
+        <app-row class="d-flex p-1">
+          <ng-template #rowContent>
+            <app-col class="p-1" text="Кличка">
+              <ng-template #colContent>
+                <a [routerLink]="[item.id]">{{item.name}} {{item.aggressiveType?.level|aggressive_count_transform}}</a>
+              </ng-template>
+            </app-col>
+            <app-col class="p-1 d-none d-md-block">
+              <ng-template #colContent>
+                <a *ngIf="item.owners?.length!=0" class="lnk-open"
+                   routerLink="/pets/{{item?.id}}/add-appointment">Записать на прием</a>
+                <a *ngIf="item.owners?.length==0" class="lnk-open"
+                   routerLink="/owners/create/{{item?.id}}">Добавить владельца</a>
+              </ng-template>
+            </app-col>
+            <app-col class="p-1 text-right">
+              <ng-template #colContent>
+                <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                  <span class="expand-lnk"></span>
+                  <span class="expand-text"></span>
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row class="d-flex p-1">
+                  <ng-template #rowContent>
+                    <app-col class="p-1" text="Порода">
+                      <ng-template #colContent>
+                        <strong>{{item.breed.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col class="p-1" text="Вид">
+                      <ng-template #colContent>
+                        <strong>{{item.breed.type?.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row class="d-flex p-1">
+                  <ng-template #rowContent>
+                    <app-col class="p-1" text="Пол">
+                      <ng-template #colContent>
+                        <strong>{{getGender(item.gender)}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col class="p-1" text="Возраст">
+                      <ng-template #colContent>
+                        <strong>
+                          <ng-container *ngIf="item.isDead">{{(item.birthday + ',' + item.dateOfDeath) | age}}</ng-container>
+                          <ng-container *ngIf="!item.isDead">{{item.birthday | age}}</ng-container>
+                        </strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row class="d-flex p-1">
+                  <ng-template #rowContent>
+                    <app-col class="p-1" titleName="owner">
+                      <ng-template #colContent>
+                        <strong>{{item.owners | implode:'owner.name'}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row class="d-flex p-1">
+                  <ng-template #rowContent>
+                    <app-col class="p-1 d-block d-md-none">
+                      <ng-template #colContent>
+                        <a *ngIf="item.owners?.length!=0" class="lnk-open"
+                           routerLink="/pets/{{item?.id}}/add-appointment">Записать на прием</a>
+                        <a *ngIf="item.owners?.length==0" class="lnk-open"
+                           routerLink="/owners/create/{{item?.id}}">Добавить владельца</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

@@ -1,0 +1,10 @@
+.print-list li {
+  background: #f7f7f7;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.print-list .form-btn__check {
+  padding: 0px;
+}

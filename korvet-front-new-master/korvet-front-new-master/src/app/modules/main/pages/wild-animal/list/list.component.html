@@ -1,0 +1,147 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'безнадзорное животное',
+    title: 'Упс, ничего не найдено. Попробуйте указать другой запрос...',
+    subtitle: 'Вы можете добавить новое безнадзорное животное',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Безнадзорные животные"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>№ при поступлении</th>
+      <th>Номер чипа</th>
+      <th>Вид животного</th>
+      <th>Порода</th>
+      <th>Пол</th>
+      <th>Возраст</th>
+      <th>Стерилизовано</th>
+      <th>Номер бирки</th>
+      <th>Действие</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]" target="_blank" >{{item.animalNumber}}</a></td>
+      <td><a [routerLink]="[item.id]" target="_blank" >{{item.chipNumber}}</a></td>
+      <td>{{item.type.name}}</td>
+      <td>{{item.breed.name}}</td>
+      <td>{{getGender(item.gender)}}</td>
+      <td>{{item.birthday | age}}</td>
+      <td>
+        <ng-container *ngIf="item.isSterilized">Да</ng-container>
+        <ng-container *ngIf="item.isSterilized===false">Нет</ng-container>
+        <ng-container *ngIf="item.isSterilized===null">-</ng-container>
+      </td>
+      <td>{{item.tagNumber}}</td>
+      <td><a [routerLink]="[item.id]" target="_blank" class="btn btn-outline-primary text-nowrap ">Открыть</a></td>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive  container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="4" titleName="viewAnimal">
+            <ng-template #colContent>
+              <strong>{{item.type.name}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col col="8"  class="text-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-2">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col col="12 col-md-3" titleName="id">
+                      <ng-template #colContent>
+                        <strong>{{item.id}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" text="Номер чипа" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                      <ng-template #colContent>
+                        <strong> {{item.chipNumber}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" titleName="viewAnimal">
+                      <ng-template #colContent>
+                        <strong> {{item.type.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" titleName="breed" class="pt-2  pt-md-0">
+                      <ng-template #colContent>
+                        <strong> {{item.breed.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row class="pt-2">
+                  <ng-template #rowContent>
+                    <app-col col="12 col-md-3" titleName="gender">
+                      <ng-template #colContent>
+                        <strong> {{getGender(item.gender)}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" titleName="age" class="pt-2 pb-2 pb-md-0 pt-md-0">
+                      <ng-template #colContent>
+                        <strong> {{item.birthday | age}}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" titleName="isSterilized">
+                      <ng-template #colContent>
+                        <strong>
+                          <ng-container *ngIf="item.isSterilized">Да</ng-container>
+                          <ng-container *ngIf="item.isSterilized===false">Нет</ng-container>
+                          <ng-container *ngIf="item.isSterilized===null">-</ng-container>
+                        </strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-md-3" titleName="tagNumber" class="pt-2  pt-md-0">
+                      <ng-template #colContent>
+                        <strong> {{item.tagNumber}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row class="pt-2">
+                  <ng-template #rowContent>
+                    <app-col class="text-right">
+                      <ng-template #colContent>
+                        <a [routerLink]="[item.id]" target="_blank" class="btn btn-outline-primary text-nowrap ">Открыть</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

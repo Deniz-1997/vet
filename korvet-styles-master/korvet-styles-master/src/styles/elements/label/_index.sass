@@ -1,0 +1,14 @@
+@import './_variables.scss'
+
+// Theme
++theme(krv-label) using ($material)
+  color: map-deep-get($material, 'text', 'secondary')
+
+  &--is-disabled
+    color: map-deep-get($material, 'text', 'disabled')
+
+.krv-label
+  font-size: $label-font-size
+  line-height: $label-line-height
+  min-height: $label-min-height
+  transition: .3s map-get($transition, 'swing')

@@ -1,0 +1,491 @@
+<ngx-loading [show]="loading | async"></ngx-loading>
+
+<div class="body-header">
+  <div class="body-header__name">{{title}}
+    <ng-container *ngIf="this.item && this.item.baseDocument">
+      <div class="small">
+        <a routerLink="../../{{this.item.baseDocument.id}}">{{this.item.baseDocument.type.title}}
+          №{{this.item.baseDocument.id}} от {{this.item.baseDocument.createdAt}}</a>
+      </div>
+    </ng-container>
+  </div>
+  <div *ngIf="idCashReceipt" class="body-header__setting">
+    <ng-container *ngIf="isReturn()">
+      <button (click)="onReturn()" class="btn-st btn-st--right" type="button">
+        Сделать возврат
+      </button>
+    </ng-container>
+    <ng-container *ngIf="cashService.isNew(this.item)">
+      <button
+        (click)="onBreakCheck()"
+        [class.btn-loader]="loading | async" class="btn-st btn-st--right mr-20" type="button">
+        Пробить чек
+      </button>
+    </ng-container>
+  </div>
+  <div *ngIf="appointment || shopOrder">
+    <a class="small" *ngIf="appointment && appointment.id" [routerLink]="'/appointments/' + appointment.id">Прием №{{appointment.id}}</a>
+    <a class="small" *ngIf="shopOrder && shopOrder.id" [routerLink]="'/shop/goods-issue/' + shopOrder.id">Продажа №{{shopOrder.id}}</a>
+  </div>
+</div>
+
+<ng-container *ngIf="!cashService.isDone(this.item) && !cashService.isPrinting(this.item); else elseBlock">
+  <form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+
+    <ng-container *ngIf="isEditableItems(); else cashRegisterViewTemplate">
+      <div class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="4" [required]="true" titleName=kkm >
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('cashRegister')"
+                  [options]="referenceCashRegisterItems"
+                  [type]="crudType.ReferenceCashRegister"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+            <app-col col="4" [required]="true" titleName=typeCashReceipt formGroupName="type">
+              <ng-template #colContent>
+                <app-ui-mat-select-enum [modelValue]="item?.type" [options]="CashReceiptTypeEnum"
+                                        formControlName="code"></app-ui-mat-select-enum>
+                <!--<mat-form-field appearance="outline">
+                  <mat-select disableOptionCentering placeholder="Не выбрано" formControlName="code">
+                    <mat-option *ngFor="let product of CashReceiptTypeEnum" [value]="product.id">
+                      {{product.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>-->
+              </ng-template>
+            </app-col>
+            <app-col  *ngIf="item.fiscal" titleName=status class="pt-3">
+              <ng-template #colContent>
+                {{item.fiscal?.state?.title || '-'}}
+              </ng-template>
+            </app-col>
+            <app-col  *ngIf="item.fiscal && item.fiscal.fiscalDocumentNumber, else elseItem" title=fiscalDocumentNumber class="pt-3">
+              <ng-template #colContent>
+                {{item.fiscal.fiscalDocumentNumber}}
+              </ng-template>
+            </app-col>
+            <app-col  *ngIf="item.fiscal && item.fiscal.fiscalDocumentDateTime, else elseItem" title=fiscalDocumentDateTime class="pt-3">
+              <ng-template #colContent>
+                {{item.fiscal.fiscalDocumentDateTime}}
+              </ng-template>
+            </app-col>
+            <ng-template #elseItem>
+              <div>-</div>
+            </ng-template>
+            <ng-template #elseBlock>
+              <div>Чек не пробит на ККМ</div>
+            </ng-template>
+          </ng-template>
+        </app-row>
+
+        <ng-container *ngIf="isCorrection()">
+          <div formGroupName="correction">
+            <app-row>
+              <ng-template #rowContent>
+                <app-col  col="4" titleName=correctionType  formGroupName="type">
+                  <ng-template #colContent>
+                    <app-ui-mat-select-enum [modelValue]="item?.correctionType" [options]="CorrectionTypeEnum"
+                                            formControlName="code"></app-ui-mat-select-enum>
+                    <!--<mat-form-field appearance="outline">
+                      <mat-select formControlName="code" disableOptionCentering placeholder="Не выбрано" >
+                        <mat-option *ngFor="let option of CorrectionTypeEnum || []" [value]="option.id">
+                          {{option.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>-->
+                    <!--<select app-ui-select-field
+                            [options]="CorrectionTypeEnum"
+                            [formControl]="formGroup.get('correction.type.code')"
+                    ></select>-->
+                  </ng-template>
+                </app-col>
+                <app-col  col="4" text="Дата документа основания для коррекции"  >
+                  <ng-template #colContent>
+                    <!--              <input-->
+                    <!--                type="text"-->
+                    <!--                class="inp-st datepicker"-->
+                    <!--                appUiDatepicker-->
+                    <!--                formControlName="baseDate">-->
+                    <app-datepicker-overview
+                      [dataError]="formGroup.get('correction.baseDate').hasError('required')"
+                      formControlName="baseDate"
+                    ></app-datepicker-overview>
+                  </ng-template>
+                </app-col>
+                <app-col   text="Номер документа основания для коррекции"  >
+                  <ng-template #colContent>
+                    <input
+                      class="inp-st"
+                      formControlName="baseNumber"
+                      type="text">
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+            <app-row>
+              <ng-template #rowContent>
+                <app-col text="Описание коррекции" >
+                  <ng-template #colContent>
+                    <input
+                      class="inp-st"
+                      formControlName="description"
+                      type="text">
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </div>
+        </ng-container>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  text="Способ доставки чека покупателю" formGroupName="deliveryType">
+              <ng-template #colContent>
+                <app-ui-mat-select-enum [modelValue]="item?.deliveryType" [options]="ReceiptDeliveryTypeEnum"
+                                        formControlName="code"></app-ui-mat-select-enum>
+                <!--<mat-form-field appearance="outline">
+                  <mat-select formControlName="code" disableOptionCentering placeholder="Не выбрано" >
+                    <mat-option *ngFor="let option of ReceiptDeliveryTypeEnum || []" [value]="option.id">
+                      {{option.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>-->
+                <!--<select
+                  app-ui-select-field
+                  [options]="ReceiptDeliveryTypeEnum"
+                  formControlName="code"
+                ></select>-->
+              </ng-template>
+            </app-col>
+            <app-col  formGroupName="customer">
+              <ng-template #colContent>
+                <ng-container *ngIf="isDeliveryTypeEmail()">
+                  <div class="form-head">
+                    Email
+                  </div>
+                  <div class="form-body">
+                    <input
+                      class="inp-st"
+                      formControlName="email"
+                      type="text">
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="isDeliveryTypePhone()">
+                  <div class="form-head">
+                    Phone
+                  </div>
+                  <div class="form-body">
+                    <input
+                      class="inp-st"
+                      formControlName="phone"
+                      type="text">
+                  </div>
+                </ng-container>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+    </ng-container>
+
+    <ng-template #cashRegisterViewTemplate>
+      <div class="form-wr form-wr--mmin">
+        <div class="form__table form__table--txt">
+          <table>
+            <tr>
+              <th class="th-service">ККМ</th>
+              <th class="th-service">Тип Чека</th>
+              <th class="th-service">Статус:</th>
+              <th class="th--center" style="width: 120px">№ чека ККМ:</th>
+              <th class="th--center" style="width: 120px">Дата чека ККМ:</th>
+              <th class="th-service">Тип коррекции</th>
+              <th class="th-service">Способ доставки чека покупателю</th>
+            </tr>
+            <tr>
+              <td>
+                <div class="form-txt">
+                  <strong>{{item.cashRegister.name}}</strong>
+                </div>
+              </td>
+              <td>
+                <div><span>{{item.type.title}}</span></div>
+              </td>
+              <td [class.color-blue]="item.type.code === 'SELL_RETURN'"
+                  [class.color-red]="item.fiscal.state.code === 'ERROR'"
+              >
+                <div class="form-txt">
+                  <span>{{item.fiscal.state.title}}</span>
+                </div>
+              </td>
+              <td class="td--center">
+                <div class="form-txt form-txt--center">
+                  <span>{{item.fiscal.fiscalDocumentNumber}}</span>
+                </div>
+              </td>
+              <td class="td--center">
+                <div class="form-txt form-txt--center">
+                  <span>{{item.fiscal.fiscalDocumentDateTime}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="form-txt">
+                  <div>{{item.correctionType.title}}</div>
+                </div>
+              </td>
+              <td>
+                <div class="form-txt">
+                  <span>{{item.deliveryType.title}}</span><br>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </ng-template>
+
+
+    <ng-container *ngIf="isEditableItems(); else itemsViewTemplate">
+      <div formArrayName="items">
+        <div *ngFor="let formItem of formGroup.controls.items.controls; let i=index" [formGroupName]="i"
+             class="tab-box">
+          <a (click)="setRemoveReceipt(i)" *ngIf="formGroup.controls.items.value.length > 1"
+             class="owners-item__close"></a>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="3" text="{{i + 1}}.Номенклатура" class="pb-2">
+                <ng-template #colContent>
+                  <app-ui-autocomplete
+                    [control]="formGroup.get('items.'+i+'.product')"
+                    [fields]="productFields"
+                    [options]="referenceProductItems$"
+                    [type]="crudType.ReferenceProduct"
+                    styleClass="space-normal"
+                  ></app-ui-autocomplete>
+                  <small
+                    *ngIf="isCommodity(formItem.get('paymentObject.code').value)
+                      && formItem.value.stock
+                      && formItem.value.stock.id"
+                    class="note-product">
+                    склад:
+                    <ng-container
+                      *ngIf="formItem.value.productStock && formItem.value.productStock.length > 0; else elseStockBlock">
+                      <a [matMenuTriggerFor]="menu" class="form-span__lnk-btn">
+                        {{formItem.value.stock.name}}
+                      </a>
+                    </ng-container>
+                    <ng-template #elseStockBlock>
+                      {{formItem.value.stock.name}}
+                    </ng-template>
+
+                    <mat-menu #menu="matMenu">
+                      <table class="table-info-st">
+                        <ng-container *ngFor="let productStock of formItem.value.productStock; let j=index">
+                          <tr (click)="setStock(i, j, formItem.value)" class="cursor-pointer">
+                            <td>{{productStock.stock.name}}</td>
+                            <td>{{productStock.quantity}}</td>
+                          </tr>
+                        </ng-container>
+                      </table>
+                    </mat-menu>
+                  </small>
+                </ng-template>
+              </app-col>
+              <app-col col="3" titleName=name [required]="true">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="name" type="text">
+                </ng-template>
+              </app-col>
+              <app-col col="3" titleName=paymentObject formGroupName="paymentObject">
+                <ng-template #colContent>
+                  <app-ui-mat-select-enum [modelValue]="item?.items && item?.items[i]?.paymentObject"
+                                          [options]="PaymentObjectEnum"
+                                          formControlName="code"></app-ui-mat-select-enum>
+                  <!--<mat-form-field appearance="outline">
+                    <mat-select formControlName="code" disableOptionCentering placeholder="Не выбрано" >
+                      <mat-option *ngFor="let option of PaymentObjectEnum || []" [value]="option.id">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>-->
+                  <!--<select
+                    app-ui-select-field
+                    [options]="PaymentObjectEnum"
+                    formControlName="code"
+                    (ngModelChange)="onSetAmount()"
+                  ></select>-->
+                </ng-template>
+              </app-col>
+              <app-col col="3" titleName=productCode formGroupName="productCode">
+                <ng-template #colContent formGroupName="type">
+                  <app-ui-mat-select-enum [modelValue]="item?.productCode" [options]="ProductCodeTypeEnum"
+                                          formControlName="code"></app-ui-mat-select-enum>
+                  <!--<mat-form-field appearance="outline">
+                    <mat-select formControlName="code" disableOptionCentering placeholder="Не выбрано" >
+                      <mat-option *ngFor="let option of ProductCodeTypeEnum || []" [value]="option.id">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>-->
+                  <!--<mat-form-field appearance="outline">
+                    <mat-select disableOptionCentering placeholder="Не выбрано" formControlName="code">
+                      <mat-option [value]="null">
+                        Не выбрано
+                      </mat-option>
+                      <ng-container *ngFor="let item of ProductCodeTypeEnum">
+                        <mat-option [value]="item.id" *ngIf="item.id">
+                          {{item.name}}
+                        </mat-option>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>-->
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="4" [required]="true" titleName=price >
+                <ng-template #colContent>
+                  <!--<input type="number" class="inp-st" formControlName="priceWithCharge">-->
+                  <input class="inp-st" appPositiveNumber formControlName="price" type="number">
+                </ng-template>
+              </app-col>
+              <app-col col="1" [required]="true" titleName=quantity >
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="quantity" type="number">
+                  <small
+                    *ngIf="formItem.get('paymentObject.code').value === 'COMMODITY' && formItem.get('id').value && formItem.get('quantity').value > formItem.get('balance').value; else elseNote;"
+                    class="note note-error">
+                    Количество больше остатка {{formItem.get('balance').value}}
+                  </small>
+                  <ng-template #elseNote>
+                    <small *ngIf="formItem.get('paymentObject.code').value !== 'SERVICE'" class="note">Остаток:
+                      {{formItem.get('balance').value}}
+                    </small>
+                  </ng-template>
+                </ng-template>
+              </app-col>
+              <app-col  col="2" titleName=measurementUnits >
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="measure" type="text">
+                </ng-template>
+              </app-col>
+              <app-col  col="3" titleName=vatRate formGroupName="vatRate">
+                <ng-template #colContent>
+                  <app-ui-mat-select-enum [modelValue]="item?.vatRate" [options]="VatRateEnum"
+                                          formControlName="code"></app-ui-mat-select-enum>
+                  <!--<mat-form-field appearance="outline">
+                    <mat-select formControlName="code" disableOptionCentering placeholder="Не выбрано" >
+                      <mat-option *ngFor="let option of VatRateEnum || []" [value]="option.id">
+                        {{option.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>-->
+                  <!--<select
+                    app-ui-select-field
+                    [options]="VatRateEnum"
+                    formControlName="code"
+                  ></select>-->
+                </ng-template>
+              </app-col>
+              <app-col  col="2" text=" " >
+                <ng-template #colContent>
+                  <div class="box-pay" style="text-align: right">
+                    Сумма, ₽
+                    <strong>
+                      <ng-container
+                        *ngIf="formItem.get('priceWithCharge') && formItem.get('priceWithCharge').value; else elseBlock">
+                        {{formItem.get('priceWithCharge').value * formItem.get('quantity').value}}
+                      </ng-container>
+                      <ng-template #elseBlock>
+                        {{formItem.get('amount').value}}
+                      </ng-template>
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent *ngIf="isProductCode(i)">
+              <app-col  col="4" text="Идентификатор продукта GTIN" formGroupName="productCode">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="gtin" type="text">
+                </ng-template>
+              </app-col>
+              <app-col  col="4" text="{{getLabel(i)}}"  formGroupName="productCode">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="serial" type="text">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Только отображение номенклатуры -->
+    <ng-template #itemsViewTemplate>
+      <app-cash-receipt-items-view [item]="item"></app-cash-receipt-items-view>
+    </ng-template>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  *ngIf="isEditableItems()" class="pb-2">
+          <ng-template #colContent>
+            <a (click)="addReceipt($event)" class="form-span__lnk-btn">Добавить позицию в чек</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <div class="form-wr container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="7" >
+            <ng-template #colContent>
+            </ng-template>
+          </app-col>
+          <app-col col="3"  [required]="true" titleName=paymentType  formGroupName="paymentType">
+            <ng-template #colContent>
+              <app-ui-mat-select-enum  [modelValue]="item?.paymentType" [options]="PaymentTypeEnum"
+                                      [disabled]="item?.type?.code == 'SELL_RETURN'"
+                                      formControlName="code"></app-ui-mat-select-enum>
+            </ng-template>
+          </app-col>
+          <app-col col="2"  class="float-right">
+            <ng-template #colContent>
+              <div class="box-pay" style="text-align: right">
+                К оплате, ₽
+                <strong>
+                  {{formGroup.get('total').value}}
+                </strong>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+
+    <app-reference-button-form
+      [goListUrlAfterRemove]="goListUrl()"
+      [goListUrl]="goListUrl() + '/' + item.id"
+      [id]="id"
+      [isEdit]="isEdit()"
+      [type]="type"
+      [removeAble]="!appointment && !shopOrder"
+      [closeWithCapture]="closeWithCapture"
+    ></app-reference-button-form>
+  </form>
+</ng-container>
+
+<ng-template #elseBlock>
+  <div *ngIf="isEdit" class="form-footer">
+    <a [routerLink]="goListUrl() + '/' + item.id" class="btn-st btn-st--right btn-st--gray">Отмена</a>
+  </div>
+</ng-template>
+

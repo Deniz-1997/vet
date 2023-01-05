@@ -1,0 +1,180 @@
+animal:
+  name:
+    not_blank: "Укажите кличку животного"
+    max_length: "Длина клички должна быть равна {{ limit }} символам или меньше."
+
+  kind:
+    not_blank: "Укажите вид животного"
+
+  breed:
+    not_blank: "Укажите породу животного"
+
+  colour:
+    not_blank: "Укажите масть животного"
+
+
+name.not_blank: "Наименование не заполнено"
+appointment:
+  profession:
+    not_blank: "Специальность должна быть заполнена"
+  type:
+    incorrect_value: "Недопустимый тип приема"
+    not_blank: "Тип приема должен быть заполнен"
+  previous:
+    not_blank: "Для этого типа должен быть заполнен предыдущий прием"
+owner:
+  type:
+    not_blank: "Тип владельца не заполнен"
+    incorrect_value: "Тип владельца указан некорректно "
+  phone.not_blank: "Телефон не заполнен"
+  email:
+    not_blank: "Email не заполнен"
+    incorrect_value: "Email указан некорректно"
+  address.not_blank: "Адрес не заполнен"
+  fullName.not_blank: "Для физического лица или предпринимателя должно быть указано ФИО"
+  lastName.not_blank: "Для физического лица или предпринимателя должна быть указана фамилия"
+  name.not_blank: "Для физического лица или предпринимателя должно быть указано имя"
+  legal_entity:
+    legal_form_not_blank: "Для юридического лица должна быть указана правовая форма"
+breed.type.not_blank: "Тип животного не заполнен"
+pet:
+  type.not_blank: "Тип животного не заполнен"
+  breed.not_blank: "Порода не заполнена"
+  name.not_blank: "Кличка не заполнена"
+  gender:
+    not_blank: "Пол не заполнен"
+    incorrect_value: "Пол указан некорректно"
+  description.not_blank: "Описание и приметы не заполнены"
+pet_identifier:
+  pet.not_blank: "Животное не заполнено"
+  type.not_blank: "Тип идентификатора не заполнен"
+  value.not_blank: "Значение идентификатора не заполнено"
+password_confirmation:
+  user_not_found_by_email: 'Невалидный Email адрес'
+  confirmation_code_expired: 'Код восстановления устарел'
+  incorrect_confirmation_code: 'Неверный код'
+  incorrect_confirmation_password: 'Пароли не совпадают'
+  not_valid_email: 'Некорректный Email адрес'
+petToOwner:
+  unique_pet: 'Животное уже привязано к данному владельцу'
+file:
+  not_found: 'Файл не загружен'
+  empty_appointment: 'Прием должен быть заполнен'
+  empty_uploaded_file: 'Файл должен быть заполнен'
+
+file_owner:
+  owner:
+    not_null: 'Владелец не заполнен'
+
+file_monitored_object:
+  monitored_object:
+    not_null: 'Подконтрольный объект должен быть заполнен'
+
+uploaded_file:
+  mime_types_error: 'Файл должен иметь формат: jpg, jpeg, png, gif, bmp, zip, rar, 7z, tar, PDF, DOC, DOCX + RTF, XLS, XLSX, TXT, CSV'
+
+print_form:
+  file:
+    mime_type: 'Формат файла для печатной формы должен быть: MS Word, HTML'
+
+user:
+  unique:
+    email: 'Пользователь с данным Email уже существует'
+    phone_number: 'Пользователь с таким номером телефона уже существует'
+    username: 'Пользователь с таким логином уже существует'
+
+receipt_item:
+  price:
+    empty: 'Цена должна быть указана'
+
+wild_animal:
+  not_null: "Животное не заполнено"
+  type.not_blank: "Тип животного не заполнен"
+  breed.not_blank: "Порода не заполнена"
+  name.not_blank: "Кличка не заполнена"
+  gender:
+    not_blank: "Пол не заполнен"
+    incorrect_value: "Пол указан некорректно"
+  description.not_blank: "Описание и приметы не заполнены"
+
+contractor:
+  type:
+    not_blank: "Тип владельца не заполнен"
+    incorrect_value: "Тип контрагента указан некорректно "
+  phone.not_blank: "Телефон не заполнен"
+  address.not_blank: "Адрес не заполнен"
+  email.incorrect_value: "Email указан некорректно"
+  legal_entity:
+    legal_form_not_blank: "Для юридического лица должна быть указана правовая форма"
+
+culling:
+  date:
+    not_blank: "Дата отлова не заполнена"
+  appealDate:
+    not_blank: "Дата обращения не заполнена"
+  release_type:
+    not_blank: "Тип выбытия животного не указан"
+
+user_schedule:
+  date_from:
+    not_blank: "Начало периода не заполнено"
+  date_to:
+    not_blank: "Конец периода не заполнен"
+  user:
+    not_blank: "Сотрудник не указан"
+
+productStock:
+  unique_product_stock: 'Номенклатура не может находится в одном и том же складе дважды'
+
+inventory_document_product:
+  quantity_accounting:
+    positive_or_zero: 'Количество по учету должно быть положительным или равным нулю'
+
+document_product:
+  quantity:
+    positive: 'Дозировка/количество не может быть отрицательным или равным нулю'
+
+cash_receipt:
+  customer_phone:
+    not_valid: 'Некорректный номер телефона. Правильный формат: +79990001122'
+  customer_email:
+    not_valid: 'Некорректный формат email'
+  items:
+    not_blank: 'В чеке должна быть хотя бы одна позиция'
+
+webslon_email_bundle:
+  email_from:
+    not_blank: Поле "Отправитель" не заполнено
+    incorrect_email: Поле "Отправитель" содержит некорректный email адрес
+  email_to:
+    not_blank: Поле "Получатель" не заполнено
+    incorrect_email: Поле "Получатель" содержит некорректный email адрес
+  subject.not_blank: Тема письма не заполнена
+  reply_to.incorrect_email: Поле "Ответить кому" содержит некорректный email адрес
+  cc.incorrect_email: Поле "Копия" содержит неверный email адрес
+  bcc.incorrect_email: Поле "Скрытая копия" содержит неверный email адрес
+  template.incorrect_type: Тип поля "Шаблон" неверный, ожидается число (идентификатор шаблона письма)
+
+  theme.incorrect_type: Тип поля "Тема" неверный, ожидается число (идентификатор темы письма)
+incorrect_request_data: "Проверьте корректность заполнения данных"
+
+action:
+  type:
+    not_empty: 'Тип действия должен быть заполнен'
+legalForms:
+  type:
+    not_empty: 'Тип правовых форм должен быть заполнен'
+
+icon:
+  class:
+    not_empty: 'Класс иконки должен быть заполнен'
+
+laboratory:
+  packing:
+    not_blank: Поле "Упаковка" не заполнено
+  material_type:
+    not_blank: Поле "Тип материала" не заполнено
+  probe_sampling_state:
+    not_blank: "Статус не заполнен"
+  probe_item:
+    not_blank: "Проба не заполнена"

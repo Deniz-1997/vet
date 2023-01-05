@@ -1,0 +1,29 @@
+{
+  "shortPolling": {
+    "notifications": 120
+  },
+  "import": {
+    "maxSize": 1048576,
+    "types": ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
+    "extensions": [".xls", ".xlsx"]
+  },
+  "certificate": {
+    "maxSize": 1048576,
+    "types": [
+      "application/pkix-cert",
+      "application/x-x509-ca-cert",
+      "application/x-x509-user-cert",
+      "application/pkcs10",
+      "application/x-pkcs10",
+      "application/pkcs-12",
+      "application/x-pkcs12",
+      "application/x-pkcs7-signature",
+      "application/pkcs7-mime",
+      "application/x-pkcs7-mime",
+      "application/x-pkcs7-certreqresp",
+      "application/pkcs7-signature",
+      "application/x-pem-file"
+    ],
+    "extensions": [".cer", ".crt", ".pem", ".der", ".p7a", ".p7b", ".p7c", ".p7m", ".p7r", ".p7s", ".p10", ".p12", ".pfx"]
+  }
+}

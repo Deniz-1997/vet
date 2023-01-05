@@ -1,0 +1,7 @@
+<ng-container *ngIf="matches.length || (loading$|async)">
+  <app-title-view [title]="title"></app-title-view>
+  <div class="matches-list position-relative">
+    <ngx-loading [show]="loading$|async"></ngx-loading>
+    <ng-template ngFor let-item [ngForOf]="matches" [ngForTemplate]="itemTemplate"></ng-template>
+  </div>
+</ng-container>

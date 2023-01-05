@@ -1,0 +1,36 @@
+<div class="autorize__form">
+  <div class="autorize__form-h">Авторизация</div>
+  <form (submit)="submit()" [formGroup]="formGroup">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <input [class.error]="error$ | async" class="autorize__form-inp" formControlName="login"
+                   placeholder="Логин или Телефон"
+                   type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <input [class.error]="error$ | async" class="autorize__form-inp" formControlName="password" placeholder="Пароль"
+                   type="password">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <div class="autorize__form-btn"><input type="submit" value="ВОЙТИ"></div>
+    <div class="autorize__form-check">
+      <input formControlName="save" id="autorize-save" type="checkbox">
+      <label for="autorize-save">Не выходить из аккаунта</label>
+    </div>
+    <div class="autorize__form-footer"><a (click)="toRestore()">Забыли пароль?</a></div>
+  </form>
+  <ngx-loading [show]="tokenLoading$ | async"></ngx-loading>
+</div>
+<div *ngIf="error$ | async" class="autorize__form-error">
+  Неверные логин или пароль
+</div>

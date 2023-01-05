@@ -1,0 +1,55 @@
+<div class="form-wr">
+  <div class="form-header">Файлы</div>
+  <div class="form__table form__table--file">
+    <table>
+      <tr *ngFor="let file of files">
+        <td>
+          <app-file-type-icon [mimeType]="file.uploadedFile.mimeType"></app-file-type-icon>
+        </td>
+        <td>
+          {{file.uploadedFile.size}} кб
+        </td>
+        <td>
+          <ng-container *ngIf="file.type">
+            <a href="{{ file.uploadedFile.path === null? '/uploaded' : file.uploadedFile.path}}/{{file.uploadedFile.name}}"
+              target="_blank">{{file.type.name}}</a>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="file.type">
+          {{file.name}}
+          </ng-container>
+          <ng-container *ngIf="!file.type">
+            <a href="{{ file.uploadedFile.path === null? '/uploaded' : file.uploadedFile.path}}/{{file.uploadedFile.name}}"
+               target="_blank">{{file.type.name}}</a>
+        </ng-container>
+        </td>
+        <td style="text-align: right"><a (click)="deleteFile(file)" class="tr-close"></a></td>
+      </tr>
+      <!--<tr>
+        <td>
+          <img src="assets/img/pdf.svg" class="down-ico" alt="">
+        </td>
+        <td>
+          234 кб
+        </td>
+        <td style="opacity: .5">
+          Справочник
+        </td>
+        <td>
+          Медицинское заключение об операции
+        </td>
+        <td style="text-align: right"><a href="" class="tr-close"></a></td>
+      </tr>-->
+    </table>
+  </div>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col class="pb-2">
+        <ng-template #colContent>
+          <a (click)="addFile()" class="form-span__lnk-btn">Добавить файл</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>

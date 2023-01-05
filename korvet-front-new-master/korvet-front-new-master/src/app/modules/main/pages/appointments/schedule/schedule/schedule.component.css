@@ -1,0 +1,145 @@
+.calendar-chart {
+  flex: 1;
+  height: 710px;
+  overflow-y: scroll;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.calendar-date {
+  width: 236px;
+  padding: 0 0 0 19px;
+}
+
+.calendar {
+  display: flex;
+  width: 100%;
+}
+
+.calendar-user {
+  background: #fff;
+}
+
+.calendar-table {
+  min-width: 100%;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.calendar-table tr:hover td {
+  background: #f7f7f7;
+}
+.calendar-table td.td-clock__minutes {
+  text-align: center;
+}
+
+.calendar-table tr:hover td.td-clock__minutes:after {
+  position: absolute;
+  background: rgba(255, 94, 94, 0.7);
+  content: '';
+  top: 17px;
+  left: -2px;
+  width: calc(100% + 2px);
+  height: 2px;
+}
+
+.calendar-table tr:hover td.td-clock__minutes:before {
+  position: absolute;
+  background: rgba(255, 94, 94, 0.7);
+  content: '';
+  top: 17px;
+  left: -4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.calendar-table tr:hover td.appointment:after {
+  position: absolute;
+  background: rgba(255, 94, 94, 0.7);
+  content: '';
+  top: 17px;
+  left: -2px;
+  width: calc(100% + 2px);
+  height: 2px;
+}
+
+.calendar-table td {
+  position: relative;
+  border-top: 2px solid #f7f7f7;
+  border-right: 2px solid #f7f7f7;
+  height: 17px;
+  padding: 4px;
+}
+
+.calendar-table td.appointment {
+  min-width: 100px;
+}
+
+.calendar-table td.disabled {
+  background: #eeeeee;
+  cursor: not-allowed;
+}
+
+.calendar-table td.tr-border {
+  border-top: 2px solid #c8c8c8;
+}
+
+.calendar-table .tr-border-top td {
+  border-top: 2px solid #c8c8c8;
+}
+
+.td-clock__day {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 0.75;
+  color: #2f3540;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.td-event {
+  position: relative;
+  padding: 3px 8px 1px;
+  font-size: 10px;
+  line-height: 1.2;
+  color: white;
+  left: 0;
+  right: 0;
+  top: 0;
+  overflow: hidden;
+  display: block;
+  cursor: move;
+  z-index: 20;
+  text-decoration: none !important;
+  height: 42px;
+}
+
+.td-event:hover {
+  min-height: 42px;
+  height: auto;
+  cursor: move;
+}
+
+.td-event strong {
+  display: inline-block;
+  margin-bottom: 2px;
+  cursor: move;
+}
+
+.calendar-table__header th {
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: top;
+  padding: 10px 0 12px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 21;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.3);
+}
+
+.ng-star-inserted {
+  cursor: pointer;
+}

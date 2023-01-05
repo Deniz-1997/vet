@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "bin",
+    "target": "ESNext",
+    "module": "CommonJS",
+    "strict": true,
+    "importHelpers": true,
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitThis": true,
+    "resolveJsonModule": true,
+    "allowUmdGlobalAccess": true,
+    "baseUrl": ".",
+    "lib": ["ESNext"],
+    "typeRoots": ["../node_modules/@types", "../shims-*.d.ts"]
+  },
+  "include": ["**/*.ts"]
+}

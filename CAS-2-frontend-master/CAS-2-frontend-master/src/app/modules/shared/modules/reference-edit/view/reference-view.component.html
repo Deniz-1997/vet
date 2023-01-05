@@ -1,0 +1,66 @@
+<div class="flexContainer">
+  <ng-container *ngFor="let property of properties">
+    <ng-container [ngSwitch]="property.objectType">
+      <ng-template [ngSwitchCase]="propertyViewObjectType.ANY">
+        <div class="child">
+          <div class="text-body-2">{{property.title}}</div>
+          <strong>{{item[property.name] !==  null ? item[property.name] : '-'}}</strong>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="propertyViewObjectType.BOOLEAN">
+        <div class="child">
+          <ng-container [ngSwitch]="type">
+            <ng-template ngSwitchCase="user">
+              <div class="text-body-2">{{property.title}}</div>
+                    <span [style]="item[property.name] ? 'color: green': 'color: red'">
+                      {{item[property.name] ? 'Активна': 'Неактивна'}}
+                    </span>
+            </ng-template>
+            <ng-template ngSwitchDefault>
+              <div class="text-body-2">{{property.label}}</div>
+              <strong>{{item[property.name] ? 'Да': 'Нет'}}</strong>
+            </ng-template>
+          </ng-container>
+        </div>
+      </ng-template>
+      <ng-template [ngSwitchCase]="propertyViewObjectType.OBJECT">
+        <div class="child">
+          <div class="text-body-2">{{property.title}}</div>
+          <ng-container *ngIf="item[property.name] !== undefined && item[property.name] !== null; else elseBlock">
+            <strong>{{item[property.name][property.objectName]}}</strong>
+          </ng-container>
+          <ng-template #elseBlock>
+            <strong>-</strong>
+          </ng-template>
+        </div>
+
+      </ng-template>
+      <ng-template [ngSwitchCase]="propertyViewObjectType.ARRAY_OBJECT">
+        <div class="child">
+          <div class="text-body-2">{{property.title}}</div>
+          <ng-container *ngIf="item[property.name]?.length; else elseBlock">
+            <ng-container *ngIf="property.linkString; else elseLink">
+              <a target="_blank"
+                 *ngFor="let value of item[property.name]"
+                 [routerLink]="[property.linkString, value.id]">
+                {{value[property.objectName] + '; '}}</a>
+            </ng-container>
+            <ng-template #elseLink>
+              <strong *ngFor="let value of item[property.name]">{{value[property.objectName] + '; '}}</strong>
+            </ng-template>
+          </ng-container>
+          <ng-template #elseBlock>
+            <strong>-</strong>
+          </ng-template>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</div>
+
+
+
+
+
+
+

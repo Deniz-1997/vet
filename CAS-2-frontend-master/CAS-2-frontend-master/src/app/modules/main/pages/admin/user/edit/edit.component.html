@@ -1,0 +1,160 @@
+<ng-container *ngIf="openDialog">
+  <app-close-dialog [title]="title"></app-close-dialog>
+</ng-container>
+<form (submit)="submit($event)" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <k-container fluid>
+    <ng-template #templateRef>
+      <k-row style="overflow: hidden">
+        <ng-template #row>
+          <k-col [cols]="colSizeParent">
+            <ng-template #col>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="12">
+                    <ng-template #col>
+                      <k-text-field label="Логин" required [control]="formGroup.get('username')" type="text"></k-text-field>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+
+              </k-row>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field label="Фамилия" required   type="text" [control]="formGroup.get('surname')" ></k-text-field>
+                    </ng-template>
+
+                  </k-col>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field label="Имя" required   type="text" [control]="formGroup.get('name')" ></k-text-field>
+                    </ng-template>
+
+                  </k-col>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field label="Отчество" type="text" [control]="formGroup.get('patronymic')" ></k-text-field>
+                    </ng-template>
+
+                  </k-col>
+                </ng-template>
+
+              </k-row>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field label="ИНН" type="number" [control]="formGroup.get('additionalFields').get('inn')"  maxLength="12"></k-text-field>
+                    </ng-template>
+                  </k-col>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field (change)="getMatches.emit(formGroup.value)" minlength="1" maxLength="16" [control]="formGroup.get('phoneNumber')"
+                                      label="Номер телефона" type="text" ></k-text-field>
+                    </ng-template>
+                  </k-col>
+                  <k-col cols="4">
+                    <ng-template #col>
+                      <k-text-field required label="Email" type="email" [control]="formGroup.get('email')" textError="Некорректный тип email@mail.com" ></k-text-field>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+
+              </k-row>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="6">
+                    <ng-template #col>
+                      <k-text-field type="password" required  [control]="formGroup.get('plainPassword')"   label="Пароль"></k-text-field>
+                    </ng-template>
+                  </k-col>
+                  <k-col cols="6">
+                    <ng-template #col>
+                      <k-text-field type="password" required  [control]="formGroup.get('repeat_password')" label="Повторите пароль"></k-text-field>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+
+              </k-row>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="6">
+                    <ng-template #col>
+                      <mat-form-field appearance="fill">
+                        <mat-label>Группы</mat-label>
+                        <mat-select required [compareWith]="compareFn" disableOptionCentering formControlName="groups" multiple
+                                    panelClass="multiple-panel">
+                          <mat-option *ngFor="let group of (groups$ | async)" [value]="group">{{group.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-template>
+                  </k-col>
+                  <k-col cols="6" >
+                    <ng-template #col>
+                      <app-ui-multi-select-field
+                        label="Станции"
+                        [selectFormControl]="formGroup.get('stations')"
+                        [type]="crudType.ReferenceStation">
+                      </app-ui-multi-select-field>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+              </k-row>
+              <k-row>
+                <ng-template #row>
+                  <k-col cols="6">
+                    <ng-template #col>
+                      <p><mat-checkbox color="primary"  formControlName="status">Активна</mat-checkbox></p>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+              </k-row>
+            </ng-template>
+          </k-col>
+          <k-col *ngIf="bussinesEntityNameList.length" [cols]="colSizeChild" class="border-column">
+            <ng-template #col>
+              <k-row >
+                <ng-template #row>
+                  <k-col cols="12">
+                    <ng-template #col>
+                      <div class="container-text">
+                        <strong>
+                          {{bussinesEntityNameList.length > 1 ?
+                          'Список хоз. субъектов':
+                          'Хозяйствующий субъект'}}
+                        </strong>
+                      </div>
+                      <div *ngFor="let item of bussinesEntityNameList">
+                        <div class="container-text">
+                          <span class="parent" (click)="goBussinesEntity(item.id)">
+                            {{item.name}}
+                            <mat-icon class="icon">edit</mat-icon>
+                          </span>
+                          <div *ngIf="item.users" class="child">
+                            <span  *ngFor="let user of item.users">
+                              {{user.username + ', '}}
+                            </span>
+                          </div>
+                          <mat-divider></mat-divider>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </k-col>
+                </ng-template>
+              </k-row>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+    </ng-template>
+  </k-container>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>
+

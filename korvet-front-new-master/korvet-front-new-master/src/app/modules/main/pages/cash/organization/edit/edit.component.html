@@ -1,0 +1,51 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" placeholder="ООО РАДУГА"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=inn>
+          <ng-template #colContent>
+            <input appNumberOnly class="inp-st" formControlName="inn" maxlength="10" numberType="integer" type="text"
+              placeholder="995848999"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-4">
+      <ng-template #rowContent>
+        <app-col titleName=taxationType>
+          <ng-template #colContent>
+            <div formGroupName="taxationType">
+              <select [options]="TaxationTypeEnum" app-ui-select-field formControlName="code">
+              </select>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

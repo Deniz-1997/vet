@@ -1,0 +1,30 @@
+:host .owl-item {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #cccccc;
+}
+
+:host .owl-item img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+:host .showModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+strong {
+  font-weight: 500;
+}
+
+.info-edit {
+  opacity: 1;
+  z-index: 1000;
+}

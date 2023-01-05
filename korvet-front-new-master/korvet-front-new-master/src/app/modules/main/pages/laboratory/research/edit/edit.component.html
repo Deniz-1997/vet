@@ -1,0 +1,227 @@
+<app-title-view [title]="title">
+  <ng-template #actionsTemplate>
+    <span>
+      <ng-container *ngIf="model.editor?.surname"> {{model.editor?.surname}} </ng-container>
+      <ng-container *ngIf="model.editor?.name"> {{model.editor?.name}} </ng-container>
+      <ng-container *ngIf="model.editor?.patronymic"> {{model.editor?.patronymic}} </ng-container>
+    </span>
+  </ng-template>
+</app-title-view>
+
+<ngx-loading [show]="loading$|async"></ngx-loading>
+
+<div class="position-relative" *ngIf="formGroup">
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <app-research-header [model]="model"></app-research-header>
+    <app-title-view title="Результат исследования">
+    </app-title-view>
+    <div class="form-wr container-fluid" *ngIf="!lockForm()">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-3" formGroupName="probeItem">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input formControlName="corrupted" id="corrupted" placeholder="" type="checkbox">
+                <label for="corrupted">Проба испорчена</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <ng-container *ngIf="probeCorrupted()">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" titleName="corruptDate" formGroupName="probeItem" col="12 col-lg-2">
+              <ng-template #colContent>
+                <app-datepicker-overview [dataError]="formGroup.get('probeItem').get('corruptedDate').invalid"
+                  [maxDate]="toDay" formControlName="corruptedDate">
+                </app-datepicker-overview>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName="time" col="12 col-lg-2" formGroupName="probeItem">
+              <ng-template #colContent>
+                <input appUiMaskTime class="inp-st time-mask" formControlName="corruptedTime" type="text">
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" col="12 col-lg-8" titleName="corruptReason" formGroupName="probeItem">
+              <ng-template #colContent>
+                <ng-container>
+                  <app-ui-autocomplete [control]="formGroup.get('probeItem').get('corruptReason')"
+                    [type]="crudType.ProbeCorruptReason"></app-ui-autocomplete>
+                </ng-container>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="pb-3">
+          <ng-template #rowContent>
+            <app-col titleName="comments" col="12">
+              <ng-template #colContent>
+                <textarea [value]="model.result | firstLetter" class="textarea-st" cols="30" formControlName="result"
+                  rows="6"></textarea>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </ng-container>
+      <ng-container
+        *ngIf="!probeCorrupted() && (formGroup.get('status').value?.code ==='PROCESSING' || formGroup.get('status').value?.code ==='DONE')">
+        <app-row *ngIf="!model.laboratory.external">
+          <ng-template #rowContent>
+            <app-col titleName="equipment">
+              <ng-template #colContent>
+                <app-ui-autocomplete [control]="formGroup.get('researchEquipment')" [type]="crudType.ResearchEquipment"
+                  styleClass="space-normal"></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <ng-container *ngIf="!model.laboratory.external && model.laboratory.stock">
+          <ng-container *ngFor="let item of formGroup.get('documentProducts')['controls']; let i = index;">
+            <app-row>
+              <ng-template #rowContent>
+                <app-col titleName="expendableMaterial" col="12 col-lg-8">
+                  <ng-template #colContent>
+                    <app-ui-autocomplete [control]="item.get('product')" [required]="true"
+                      [addFilter]="productStockFilter" [type]="crudType.ReferenceProduct" styleClass="space-normal">
+                    </app-ui-autocomplete>
+                  </ng-template>
+                </app-col>
+                <app-col [required]="true" titleName="quantity" col="12 col-lg-3">
+                  <ng-template #colContent>
+                    <input [formControl]="item.get('quantity')" class="inp-st" type="number" />
+                    <small class="note">Остаток: {{getProductStockCount(item.get('product').value)}}</small>
+                  </ng-template>
+                </app-col>
+                <app-col col="12 col-lg-1">
+                  <ng-template #colContent>
+                    <a (click)="removeDocumentProduct(i)" class="tr-close ml-3 mt-3 d-none d-lg-block"></a>
+                    <a (click)="removeDocumentProduct(i)" class="lnk-delete d-block d-lg-none">удалить</a>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-container>
+          <app-row class="pb-3 pt-2 pl-3">
+            <ng-template #rowContent>
+              <app-col>
+                <ng-template #colContent>
+                  <a (click)="addDocumentProduct()" class="form-span__lnk-btn d-none d-lg-block">Добавить расходный материал</a>
+                  <a (click)="addDocumentProduct()" class="lnk-open d-block d-lg-none">+ Добавить расходный материал</a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </ng-container>
+        <app-row class="pb-3">
+          <ng-template #rowContent>
+            <app-col titleName="conclusion" col="12">
+              <ng-template #colContent>
+                <textarea [value]="model.result | firstLetter" class="textarea-st" cols="30" formControlName="result"
+                  rows="6"></textarea>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="pb-3 pt-2 pl-3">
+          <ng-template #rowContent>
+            <app-col>
+              <ng-template #colContent>
+                <a (click)="addFile()" class="form-span__lnk-btn d-none d-lg-block">Добавить файл</a>
+                <a (click)="addFile()" class="lnk-open d-block d-lg-none">+ Добавить файл</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <div class="w-100 text-center">
+          <div *ngIf="fileLoading" class="loader"></div>
+        </div>
+      <div class="delivery">
+        <table class="table-info-st table-info-st--close" *ngIf="!fileLoading && petFiles.length">
+          <tr>
+            <th>Дата</th>
+            <th style="width: 20px"></th>
+            <th>Название</th>
+            <th>Тип</th>
+            <th>Формат</th>
+            <th>Размер</th>
+            <th></th>
+          </tr>
+          <ng-container *ngFor="let item of petFiles; let i=index">
+            <tr>
+              <td>{{item.createdAt}}</td>
+              <td>
+                <a *ngIf="item.appointment" [routerLink]="['/appointments', item.appointment.id]">
+                  <app-icon-calendar></app-icon-calendar>
+                </a>
+              </td>
+              <td><a
+                  href="{{ item.uploadedFile.path === null? '/uploaded' : item.uploadedFile.path}}/{{item.uploadedFile.name}}"
+                  target="_blank">{{item.name}}</a></td>
+              <td>
+                <ng-container *ngIf="item.type && item.type.name">{{item.type.name}}</ng-container>
+              </td>
+              <td>
+                <app-file-type-icon [mimeType]="item.uploadedFile.mimeType"></app-file-type-icon>
+              </td>
+              <td>{{item.uploadedFile.size|fileSize}}</td>
+              <td><a (click)="setRemoveFile(item);" class="tr-close" data-fancybox href="#remove-file"></a></td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
+        <div class="delivery-grid">
+          <div class="form-wr form-wr--adaptive container-fluid" *ngIf="!fileLoading && petFiles.length">
+            <ng-container *ngFor="let item of petFiles; let i=index">
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col text="Дата">
+                    <ng-template #colContent>
+                      {{item.createdAt}} <a *ngIf="item.appointment" [routerLink]="['/appointments', item.appointment.id]">
+                      <app-icon-calendar></app-icon-calendar>
+                    </a>
+                    </ng-template>
+                  </app-col>
+                  <app-col text="Название">
+                    <ng-template #colContent>
+                      <a href="{{ item.uploadedFile.path === null? '/uploaded' : item.uploadedFile.path}}/{{item.uploadedFile.name}}"
+                         target="_blank">{{item.name}}</a>
+                    </ng-template>
+                  </app-col>
+                  <app-col text="Тип">
+                    <ng-template #colContent>
+                      <ng-container *ngIf="item.type && item.type.name">{{item.type.name}}</ng-container>
+                    </ng-template>
+                  </app-col>
+                  <app-col text="Формат">
+                    <ng-template #colContent>
+                      <app-file-type-icon [mimeType]="item.uploadedFile.mimeType"></app-file-type-icon>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col>
+                    <ng-template #colContent>
+                      <a (click)="setRemoveFile(item);" class="lnk-delete" data-fancybox href="#remove-file">удалить файл</a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+  <app-research-result [model]="model" *ngIf="lockForm()"></app-research-result>
+  <div class="form-footer">
+    <app-reference-button-form [isEdit]="model.id" [goListUrl]="goListUrl()" [saveButtonName]="getSaveButtonName()"
+      (buttonClick)="submit()" [removeAble]="false" [type]="type" [showSaveButton]="!lockForm()"
+      [showExtraButton]="model?.status?.code === 'PROCESSING'  && !probeCorrupted()"
+      ExtraButtonName="Завершить исследование" (extraButtonClick)="submit(true)">
+    </app-reference-button-form>
+  </div>
+  <app-research-history-list [id]="model.id"></app-research-history-list>
+</div>

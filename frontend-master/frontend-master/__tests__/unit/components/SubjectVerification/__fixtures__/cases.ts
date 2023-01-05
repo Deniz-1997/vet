@@ -1,0 +1,92 @@
+export default [
+  {
+    created: '11.12.2012 12:12',
+    id: 1,
+    difference: 'difference between us',
+    subject: {
+      subject_id: 3,
+      short_name: 'ООО "Моя оборона"',
+      last_verification_date: '12.12.2012 12:12',
+    },
+    violation_type: {
+      id: 2,
+      description: 'the dead weather',
+      name: 'VIOLATION',
+      code: 'VIOLATION',
+      startDate: '13.12.2012 12:12',
+      endDate: '14.12.2012 12:12',
+    },
+  },
+  {
+    created: '11.01.2012 12:12',
+    id: 12,
+    difference: 'TEST 2 difference between us',
+    subject: {
+      subject_id: 32,
+      short_name: 'TEST 2 ООО "Моя оборона"',
+      last_verification_date: '12.02.2012 12:12',
+    },
+    violation_type: {
+      id: 22,
+      description: 'TEST 2 the dead weather',
+      name: 'TEST 2 VIOLATION',
+      code: 'TEST 2 CODE VIOLATION',
+      startDate: '13.03.2012 12:12',
+      endDate: '14.04.2012 12:12',
+    },
+  },
+  {
+    created: '11.02.2012 12:12',
+    id: 12,
+    difference: 'TEST 3 difference between us',
+    subject: {
+      subject_id: 32,
+      short_name: 'TEST 3 ООО "Моя оборона"',
+      last_verification_date: '12.02.2012 12:12',
+    },
+    violation_type: {
+      id: 22,
+      description: 'TEST 3 the dead weather',
+      name: 'TEST 3 TEST 3 VIOLATION',
+      code: 'TEST 3 VIOLATION',
+      startDate: '13.02.2012 12:12',
+      endDate: '14.02.2012 12:12',
+    },
+  },
+  {
+    created: '11.03.2012 12:12',
+    id: 13,
+    difference: 'TEST 4 difference between us',
+    subject: {
+      subject_id: 33,
+      short_name: 'ООО "Моя оборона"TEST 4',
+      last_verification_date: '12.03.2012 12:12',
+    },
+    violation_type: {
+      id: 23,
+      description: 'TEST 4 the dead weatherTEST 4',
+      name: 'VIOLATION TEST 4',
+      code: 'TEST 4 VIOLATION',
+      startDate: '13.03.2012 12:12',
+      endDate: '14.03.2012 12:12',
+    },
+  },
+  {
+    created: '11.04.2012 12:12',
+    id: 14,
+    difference: 'TEST 5 difference between us',
+    subject: {
+      subject_id: 34,
+      short_name: 'TEST 5 ООО "Моя оборона"',
+      last_verification_date: '12.04.2012 12:12',
+    },
+    violation_type: {
+      id: 24,
+      description: 'TEST 5 the dead weather',
+      name: 'TEST 5 VIOLATION',
+      code: 'TEST 5 VIOLATION',
+      startDate: '13.04.2012 12:12',
+      endDate: '14.04.2012 12:12',
+    },
+  },
+];

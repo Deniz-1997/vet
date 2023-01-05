@@ -1,0 +1,57 @@
+<div class="fancybox-slide--html">
+  <div id="close-id" class="popup-wr">
+    <div class="popup-wr__head" *ngIf="data.head">
+      <span [innerHTML]="data.head"></span>
+      <!--<div class="popup-wr__head-comment" [innerHTML]="data.headComment" *ngIf="data.headComment"></div>-->
+    </div>
+
+    <div class="popup-body" *ngIf="data.info">
+
+      <div *ngFor='let key of objectKeys(data.info)'>
+
+        <ng-container *ngIf="data.info[key].length; else elseBlock">
+
+          <div class="form-txt">
+            {{getKey(key)}}: <strong>{{getValue(data.info[key])}}</strong>
+          </div>
+
+        </ng-container>
+
+        <ng-template #elseBlock>
+
+          <div class="form-header">
+            {{getKey(key)}}:
+          </div>
+
+          <div class="form-txt" *ngFor='let obj of objectKeys(data.info[key])'>
+            {{getKey(obj)}}:
+
+            <ng-container *ngIf="!ttt(data.info[key][obj]); else elseInteriorBlock">
+              <strong>{{getValue(data.info[key][obj])}}</strong>
+            </ng-container>
+
+            <ng-template #elseInteriorBlock>
+              <div class="form-txt" *ngFor='let item of objectKeys(data.info[key][obj])'>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{getKey(item)}}:
+                <strong>{{getValue(data.info[key][obj][item])}}</strong>
+              </div>
+            </ng-template>
+
+          </div>
+
+        </ng-template>
+
+        <br/>
+
+      </div>
+
+    </div>
+    <div class="popup-wr__footer" *ngIf="data.actions && data.actions.length">
+      <button *ngFor="let action of data.actions" [ngClass]="action.class"
+              [mat-dialog-close]="action.action">{{action.title}}
+      </button>
+    </div>
+    <app-button-close></app-button-close>
+  </div>
+</div>
+

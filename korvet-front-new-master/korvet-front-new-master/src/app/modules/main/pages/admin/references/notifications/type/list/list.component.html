@@ -1,0 +1,36 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'тип оповещения',
+    title: 'Не найдено ни одного типа оповещений',
+    subtitle: 'Вы можете добавить типа оповещений',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Типы оповещения"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Шаблон</th>
+      <th>Обязательное</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td *ngIf="item.template.length > 50 ">{{item.template.slice(0, 50) + '..'}}</td>
+      <td *ngIf="item.template.length <= 50 ">{{item.template}}</td>
+      <td *ngIf="item.required">Да</td>
+      <td *ngIf="!item.required">Нет</td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

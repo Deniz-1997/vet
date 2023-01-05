@@ -1,0 +1,7 @@
+parameters:
+  webslon_cashier_equipment.organization_entity_class: 'App\Entity\Reference\Organization'
+  webslon_cashier_equipment.unit_entity_class: 'App\Entity\Reference\Unit'
+  webslon_cashier_equipment.user_entity_class: 'App\Entity\User\User'
+  webslon_cashier_equipment.product_entity_class: 'App\Entity\Reference\Product'
+  webslon_cashier_equipment.stock_entity_class: 'App\Entity\Reference\Stock'
+  webslon_cashier_equipment.cash_receipt_register_expires_in: '%env(int:CASH_RECEIPT_REGISTER_EXPIRES_IN)%'

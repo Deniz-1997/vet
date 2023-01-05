@@ -1,0 +1,42 @@
+<div class="body-header">
+  <div class="body-header__name">Плановые мероприятия</div>
+  <div *ngIf="(events$ | async)?.length===0" class="box-empty">
+    <h3>
+      Нет ни одного мероприятия.
+      <span>Вы можете добавить мероприятие</span>
+    </h3>
+    <div class="box-empty__btn"><a class="btn-st btn-st--inline btn-st--plus"
+                                   routerLink="/pets/{{(pet$|async)?.id}}/events/create">Добавить
+      мероприятие</a></div>
+  </div>
+  <div *ngIf="(events$ | async)?.length>0" class="body-header__setting">
+    <a class="lnk-ico" href="">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a class="lnk-ico" href="">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="/pets/{{(pet$|async)?.id}}/events/create">Добавить</a>
+  </div>
+</div>
+<div *ngIf="(events$ | async)?.length>0" class="table-info">
+  <table class="table-info-st">
+    <tr>
+      <th>Дата</th>
+      <th>Мероприятие</th>
+      <th>Специалист</th>
+      <th>Статус</th>
+    </tr>
+    <ng-container *ngFor="let event of events$ | async let i=index">
+      <tr *ngIf="(limit === 0 || i<limit) && event && event.pet">
+        <td>{{getDate(event.date)}} <span>{{getTime(event.date)}}</span></td>
+        <td><a [routerLink]="'/pets/' + event.pet.id + '/events/' + event.id">{{event.type.name}}</a></td>
+        <td>{{userApiService.getFullName(event.user)}}</td>
+        <td>{{getStatus(event.status)}}</td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+<a (click)="showAll($event)" *ngIf="limit >0 && limit < (events$|async).length" class="btn-show-add" href="">Показать
+  все {{(events$|async).length}}
+  записей</a>

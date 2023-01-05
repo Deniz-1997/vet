@@ -1,0 +1,122 @@
+<ng-container [ngSwitch]="tableType">
+
+  <ng-container *ngSwitchCase="'mat'">
+    <k-material-table [columns]="columns" [table]="table" [headers]="headers" [headersName]="headersName"
+      [dataSource]="dataSource" [form]="form" [rowIdName]="rowIdName" [showFooter]="showFooter"
+      [showTotalRow]="showTotalRow">
+      <ng-template #tableHeaderContent let-column="column">
+        <ng-template [ngTemplateOutlet]="headerContent" [ngTemplateOutletContext]="{column: column}">
+        </ng-template>
+      </ng-template>
+      <ng-template #tableRowContent let-row="row" let-column="column" let-rowIndex="rowIndex">
+        <ng-template [ngTemplateOutlet]="rowContent"
+          [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}">
+        </ng-template>
+      </ng-template>
+    </k-material-table>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'table'">
+    <k-table [columns]="columns" [table]="table" [headers]="headers" [dataSource]="dataSource" [form]="form"
+      [headersName]="headersName" [rowIdName]="rowIdName" [showFooter]="showFooter" [headersArray]="headersArray"
+      [showTotalRow]="showTotalRow">
+      <ng-template #tableHeaderContent let-column="column">
+        <ng-template [ngTemplateOutlet]="headerContent" [ngTemplateOutletContext]="{column: column}">
+        </ng-template>
+      </ng-template>
+      <ng-template #tableRowContent let-row="row" let-column="column" let-rowIndex="rowIndex">
+        <ng-template [ngTemplateOutlet]="rowContent"
+          [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}">
+        </ng-template>
+      </ng-template>
+    </k-table>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'blocky'">
+    <k-blocky-table [columns]="columns" [table]="table" [headers]="headers" [dataSource]="dataSource" [form]="form"
+      [headersName]="headersName" [rowIdName]="rowIdName" [showFooter]="showFooter" [showTotalRow]="showTotalRow">
+      <ng-template #tableHeaderContent let-column="column">
+        <ng-template [ngTemplateOutlet]="headerContent" [ngTemplateOutletContext]="{column: column}">
+        </ng-template>
+      </ng-template>
+      <ng-template #tableRowContent let-row="row" let-column="column" let-rowIndex="rowIndex">
+        <ng-template [ngTemplateOutlet]="rowContent"
+          [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}">
+        </ng-template>
+      </ng-template>
+    </k-blocky-table>
+  </ng-container>
+</ng-container>
+
+<k-button name="Добавить строку" *ngIf="isAddRow && !isReadonly" (click)="addRow()" class="btn-add-row"></k-button>
+
+
+
+<ng-template #rowContent let-row="row" let-column="column" let-rowIndex="rowIndex">
+    <ng-container [ngSwitch]="column.type">
+
+      <ng-container *ngSwitchCase="1">
+        <mat-form-field appearance="fill" [style.maxWidth.px]="maxWidthInput">
+          <input matInput placeholder="{{column.placeholder ? column.placeholder : 'Введите значение'}}" type="text"
+                 [readonly]="column.disabled"
+                 [formControl]="form.get([rowIndex, column.name])" autocomplete="off"
+                 [required]="column?.validateRules?.required">
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="2">
+        <mat-form-field appearance="fill" [style.maxWidth.px]="maxWidthInput">
+          <input matInput placeholder="{{column.placeholder ? column.placeholder : 'Введите значение'}}" type="number"
+                 [readonly]="column.disabled"
+                 [formControl]="form.get([rowIndex, column.name])" autocomplete="off"
+                 [required]="column?.validateRules?.required">
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="3">
+        <mat-form-field appearance="fill">
+          <mat-label>Выберите значение</mat-label>
+          <mat-select [formControl]="form.get([rowIndex, column.name])"
+                      [required]="column?.validateRules?.required"
+                      [disabled]="column.disabled">
+            <option value=""></option>
+            <option *ngFor="let option of table.getOptionsForSelect(column.name)" [value]="option.value">
+              {{ option.viewValue }}
+            </option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="4">
+        {{row[column.name]}}
+      </ng-container>
+
+      <ng-container *ngSwitchCase="5">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Выберите дату</mat-label>
+          <input matInput [formControl]="form.get([rowIndex, column.name])" [matDatepicker]="picker"
+                 [readonly]="column.disabled"
+                 [required]="column?.validateRules?.required">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="7">
+        <k-autocomplete
+          label="Выберите значение"
+          [disabled]="column.disabled"
+          (selected)="autoFillValue($event, rowIndex, column?.autofill)"
+          (asyncValue)="asyncFilterAutocomplete($event, column?.crudType)"
+          [filteredOptions]="autocompleteList"
+          [control]="form.get([rowIndex, column.name])"
+        >
+        </k-autocomplete>
+      </ng-container>
+
+  </ng-container>
+</ng-template>
+
+<ng-template #headerContent let-column="column">
+  {{headers | filterBy: ['name']: column.name | pluck: 'title'}}
+</ng-template>

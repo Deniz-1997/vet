@@ -1,0 +1,23 @@
+<div class="autorize__form">
+  <div class="mb-4 text-center blue--text text--lighten-5" style="vertical-align: middle">Авторизация</div>
+  <form (submit)="submit()" [formGroup]="formGroup" class="account-form">
+      <mat-form-field appearance="fill" class="input-color">
+        <mat-label>Логин или телефон</mat-label>
+        <input type="text" matInput formControlName="login" [class.error]="error$ | async">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="input-color">
+        <mat-label>Пароль</mat-label>
+        <input type="password" matInput formControlName="password" [class.error]="error$ | async">
+      </mat-form-field>
+    <div class="autorize__form-btn"><input type="submit" value="ВОЙТИ"></div>
+    <div class="checkBoxBlock">
+      <mat-checkbox formControlName="save" class="checkBoxStyle">Не выходить из аккаунта</mat-checkbox>
+    </div>
+    <div class="mt-2 text-center text-subtitle-2 blue--text text--lighten-5"><a (click)="toRestore()">Забыли пароль?</a>
+    </div>
+  </form>
+  <ngx-loading [show]="tokenLoading$ | async"></ngx-loading>
+</div>
+<div *ngIf="error$ | async" class="autorize__form-error">
+  Неверные логин или пароль
+</div>

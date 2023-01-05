@@ -1,0 +1,200 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<div class="header">
+  <div class="header__name">{{referenceName}}</div>
+</div>
+<div class="form-wr container-fluid">
+  <app-row>
+    <ng-template #rowContent>
+      <app-col [required]="true" titleName=name class="pb-2">
+        <ng-template #colContent>
+          <input type="text" value="{{referenceName}}" (keyup)="onKey($event)" class="inp-st" />
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>
+<div class="pb-4 text-right">
+  <button (click)="save($event)" class="btn btn-primary">Сохранить</button>
+</div>
+
+<app-list-filter [type]="type" [hidden]="(totalCount$|async) === null" [placeholder]="filterPlaceholder"
+  (outFilter)="filterList($event)" [filterFields]="filterFields" [mutableSearch]="mutableSearch">
+</app-list-filter>
+
+
+<ng-container *ngIf="totalCount===0 ">
+  <div class="box-empty">
+    <h3>
+      Упс ничего не найдено
+    </h3>
+  </div>
+</ng-container>
+
+<div *ngIf="totalCount !==0">
+  <div class="body-header">
+    <div class="body-header__name">Значения</div>
+    <div class="body-header__setting">
+      <a class="lnk-add" (click)="createData($event)">
+        Добавить значение
+      </a>
+    </div>
+  </div>
+  <table class="table table-borderless table-d">
+    <thead>
+      <tr>
+        <th *ngIf="allCount <= limit && type !== crudType.Notifications"></th>
+        <th>Идентификатор</th>
+        <th>Наименование</th>
+        <th *ngIf="item?.active !=null">Статус</th>
+        <th class="text-right">Редактирование</th>
+        <th></th>
+      </tr>
+    </thead>
+    <ng-container *ngIf="allCount > limit || type == crudType.Notifications ">
+      <tbody *ngIf="reference">
+        <ng-container *ngFor="let item of reference">
+          <tr class="accordion-toggle collapsed center-block" data-toggle="collapse"
+            [attr.data-target]="c + d + item?.id">
+            <td class="col-md">{{item?.id}}</td>
+            <td class="col-md">
+              <ng-container *ngIf="type == crudType.Notifications">
+                {{item.data?.header ? item.data.header : item.type.name}}
+              </ng-container>
+              <ng-container>
+                {{item?.name}}
+              </ng-container>
+            </td>
+            <ng-container *ngIf="item?.active !=null">
+              <td class="col-sm" *ngIf="item.active;else notActive">Активен</td>
+              <ng-template #notActive>
+                <td class="col-sm">Отключен</td>
+              </ng-template>
+            </ng-container>
+            <td class="col-xd align-middle">
+              <a (click)="patchData(item.id)" class="lnk-open float-right ml-2 ml-xl-0 mt-xl-0">Изменить</a>
+              <a (click)="deleteData(item.id)" class="lnk-delete float-right mr-0 mt-xl-0  mr-xl-2">Удалить</a>
+            </td>
+            <td class="col-sm">
+              <p><i class="expand-button"></i></p>
+            </td>
+          </tr>
+          <tr class="collapse  border-bottom" [attr.id]="d + item?.id">
+            <td colspan="12" class="hiddenRow">
+              <div>
+                <app-reference-view *ngIf="item" [type]="type" [item]="item"></app-reference-view>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </ng-container>
+    <ng-container *ngIf="allCount <= limit && type !== crudType.Notifications">
+      <tbody *ngIf="reference" cdkDropList (cdkDropListDropped)="drop($event)">
+        <ng-container *ngFor="let item of reference">
+          <tr class="accordion-toggle collapsed" data-toggle="collapse" [attr.data-target]="c + d + item?.id" cdkDrag
+            cdkDragLockAxis="y">
+            <td class="col-sm">
+              <app-icon-drag-and-drop></app-icon-drag-and-drop>
+            </td>
+            <td class="col-md">{{item?.id}}</td>
+            <td class="col-md">
+              <ng-container>
+                {{item?.name}}
+              </ng-container>
+              <ng-container *ngIf="type == crudType.Settings ">
+                {{settingsService.tr(item.key)}}
+              </ng-container>
+            </td>
+            <ng-container *ngIf="item?.active !=null">
+              <td class="col-sm" *ngIf="item.active;else notActive">Активен</td>
+              <ng-template #notActive>
+                <td class="col-sm">Отключен 123123</td>
+              </ng-template>
+            </ng-container>
+            <td class="col-md">
+              <a (click)="patchData(item.id)" class="lnk-open float-right ml-2 ml-xl-0 mt-xl-0">Изменить</a>
+              <a (click)="deleteData(item.id)" class="lnk-delete float-right mr-0 mt-xl-0  mr-xl-2">Удалить</a>
+            </td>
+            <td class="col-sm">
+              <p><i class="expand-button"></i></p>
+            </td>
+          </tr>
+          <tr class="collapse border-bottom" [attr.id]="d + item?.id">
+            <td colspan="12">
+              <div>
+                <app-reference-view *ngIf="item" [type]="type" [item]="item"></app-reference-view>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </ng-container>
+
+  </table>
+  <ng-container>
+    <div class="table-grid">
+      <ng-container *ngFor="let item of reference">
+        <div class="form-wr form-wr--adaptive ">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="4" titleName="name">
+                <ng-template #colContent>
+                  <strong>
+                    <ng-container *ngIf="type == crudType.Notifications">
+                      {{item.data?.header ? item.data.header : item.type.name}}
+                    </ng-container>
+                    <ng-container>
+                      {{item?.name}}
+                    </ng-container>
+                    <ng-container *ngIf="type == crudType.Settings ">
+                      {{settingsService.tr(item.key)}}
+                    </ng-container>
+                  </strong>
+                </ng-template>
+              </app-col>
+              <app-col col="8" class="text-right">
+                <ng-template #colContent>
+                  <a data-toggle="collapse" [attr.data-target]="c + d + item?.id" data-target="#collapseExample"
+                    aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                    <span class="expand-lnk"></span>
+                    <span class="expand-text"></span>
+                  </a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="12" class="pb-2">
+                <ng-template #colContent>
+                  <div class="collapse" [attr.id]="d + item?.id" id="collapseExample">
+                    <div class="row">
+                      <div class="col-12 pt-2">
+                        <app-reference-view *ngIf="item" [type]="type" [item]="item"></app-reference-view>
+                      </div>
+                      <div class="col-6 pb-2 text-left pt-4">
+                        <a (click)="patchData(item.id)" class="lnk-open">Изменить</a>
+                      </div>
+                      <div class="col-6 pb-2 text-right pt-4">
+                        <a (click)="deleteData(item.id)" class="lnk-delete">Удалить</a>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<app-show-more-button [limit]="limit" [offset]="offset" [type]="type" [items]="items$|async"
+  [appendLoading]="appendLoading$|async" [totalCount]="totalCount$|async" (outAppend)="appendList($event)">
+</app-show-more-button>
+
+
+<div style="text-align: center" *ngIf="totalCount ===0">
+  <button (click)="createData($event)" class="btn btn-primary">Добавить значение</button>
+</div>

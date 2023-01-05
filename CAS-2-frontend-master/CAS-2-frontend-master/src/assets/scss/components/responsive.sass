@@ -1,0 +1,100 @@
+@import '../light'
+@import "~@korvet/styles/src/styles/tools/functions"
+@import "~@korvet/styles/src/styles/tools/theme"
+
+$main-transition: 0.2s map-get($transition, 'fast-out-slow-in') !default
+
+// TODO: remove in v3
+$content-transition: $main-transition !default
+
+// Theme
++theme(krv-application) using ($material)
+  background: map-get($material, 'background')
+  color: map-deep-get($material, 'text', 'primary')
+
+  .text
+    &--primary
+      color: map-deep-get($material, 'text', 'primary') !important
+
+    &--secondary
+      color: map-deep-get($material, 'text', 'secondary') !important
+
+    &--disabled
+      color: map-deep-get($material, 'text', 'disabled') !important
+
+.krv-application
+  display: flex
+  position: relative
+  text-decoration: none
+
+  a
+    cursor: pointer
+
+  a:hover
+    text-decoration: underline
+
+  &--is-rtl
+    direction: rtl
+
+  &--wrap
+    flex: 1 1 auto
+    backface-visibility: hidden
+    display: flex
+    flex-direction: column
+    min-height: 100vh
+    max-width: 100%
+    position: relative
+
+// Firefox overrides
+@-moz-document url-prefix()
+  @media print
+    .krv-application
+      display: block
+
+      &--wrap
+        display: block
+
+@mixin firefox()
+  @-moz-document url-prefix()
+    @content
+
+.krv-main
+  +bootable()
+
+  display: flex
+  flex: 1 0 auto
+  max-width: 100%
+  transition: $main-transition
+
+  &__wrap
+    flex: 1 1 auto
+    max-width: 100%
+    position: relative
+
+  +firefox()
+    @media print
+      display: block
+
+$responsive-transition: padding-bottom 0.2s map-get($transition, 'swing') !default
+
+.krv-responsive
+  position: relative
+  overflow: hidden
+  flex: 1 0 auto
+  max-width: 100%
+  display: flex
+
+  &__content
+    flex: 1 0 0px
+    max-width: 100%
+
+  &__sizer ~ &__content
+    +ltr()
+      margin-left: -100%
+
+    +rtl()
+      margin-right: -100%
+
+  &__sizer
+    transition: padding-bottom 0.2s map-get($transition, 'swing')
+    flex: 1 0 0px

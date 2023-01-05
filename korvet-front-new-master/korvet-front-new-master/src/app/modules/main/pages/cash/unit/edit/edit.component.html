@@ -1,0 +1,88 @@
+
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" placeholder="Клиника ДРУГ"/>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=fullName col="6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="full_name" type="text" placeholder="Укажите полное наименование"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=phone col="3">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="phone" type="text" placeholder="+79999999999"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=email col="3">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="email" type="text" placeholder="info@mail.ru"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=websiteUrl>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="website_url" type="text" placeholder="https://info.ru"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=address>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="address" type="text" placeholder="г. Москва, ул. Тверская, д. 9"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=coordinates col="3">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="coordinates" type="text" placeholder="99°45′21″:99°39′04″"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pt-4 pb-4">
+      <ng-template #rowContent>
+        <app-col col="6">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="is_around_clock" id="is-around-clock" type="checkbox">
+              <label for="is-around-clock">Работает круглосуточно</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="6">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="without_registry" id="without-registry" type="checkbox">
+              <label for="without-registry">Работает без регистратуры</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

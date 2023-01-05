@@ -1,0 +1,11 @@
+strong {
+    font-weight: 500;
+}
+
+@media print
+{    
+    a[target='blank']
+    {
+        display: none !important;
+    }
+}

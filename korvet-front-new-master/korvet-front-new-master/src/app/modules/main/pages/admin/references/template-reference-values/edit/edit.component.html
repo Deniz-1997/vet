@@ -1,0 +1,36 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.name" class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=referenceConstructor class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('templateReference')"
+              [options]="templateReferenceItems"
+              [type]="crudType.TemplateReference"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="crudType.TemplateReferenceValues"
+  ></app-reference-button-form>
+</form>

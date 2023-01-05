@@ -1,0 +1,90 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+
+<div class="delivery">
+  <table class="table table-borderless">
+    <tr>
+      <th>Наименование</th>
+      <th>Краткое описание</th>
+      <th>Кол-во записей</th>
+    </tr>
+    <ng-container *ngFor="let item of catalog$ | async">
+      <tr>
+        <td>
+          <ng-container
+            *ngIf="item.type && (item.type.code === 'ENTITY_LIST_URL' || item.type.code === 'URL'), else default">
+            <a [routerLink]="[item.url]">{{item.name}}</a>
+          </ng-container>
+          <ng-template #default>
+            {{item.name}}
+          </ng-template>
+        </td>
+        <td>{{item.description}}</td>
+        <td>{{item.itemsCount}}</td>
+      </tr>
+    </ng-container>
+  </table>
+  <div *ngIf="loading$|async" style="text-align: center">Загрузка...</div>
+</div>
+<div class="delivery-grid">
+    <ng-container *ngFor="let item of catalog$ | async">
+      <div class="form-wr form-wr--adaptive">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col>
+            <ng-template #colContent>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col  titleName="name">
+                    <ng-template #colContent>
+                      <ng-container
+                        *ngIf="item.type && (item.type.code === 'ENTITY_LIST_URL' || item.type.code === 'URL'), else default">
+                        <a [routerLink]="[item.url]">{{item.name}}</a>
+                      </ng-container>
+                      <ng-template #default>
+                        {{item.name}}
+                      </ng-template>
+                    </ng-template>
+                  </app-col>
+                  <app-col  class="text-right">
+                    <ng-template #colContent>
+                      <a  data-toggle="collapse" [attr.data-target]="c + d + item?.sort"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                        <span class="expand-lnk"></span>
+                        <span class="expand-text"></span>
+                      </a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.sort" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Краткое описание">
+                      <ng-template #colContent>
+                        {{item.description}}
+                      </ng-template>
+                    </app-col>
+                    <app-col text="Кол-во записей">
+                      <ng-template #colContent>
+                        {{item.itemsCount}}
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+  </div>
+    </ng-container>
+    <div *ngIf="loading$|async" style="text-align: center">Загрузка...</div>
+
+</div>

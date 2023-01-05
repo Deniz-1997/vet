@@ -1,0 +1,262 @@
+enum:
+  created: Создано
+  wait: Ожидание (в работе)
+  done: Выполнено
+  error: Ошибка
+  nullable:
+    value: 'Не выбрано...'
+
+  action_type:
+    none: 'Без действия'
+    url: 'Переход по ссылке'
+    entity_url_list: 'Переход по ссылке в список сущности'
+    entity: 'Действие с сущностью'
+
+  cash_flow:
+    cash_in: 'Внесение'
+    cash_out: 'Выплата'
+
+  cash_receipt_type:
+    sell: 'Чек прихода'
+    buy: 'Чек расхода'
+    sell_return: 'Чек возврата прихода'
+    buy_return: 'Чек возврата расхода'
+    sell_correction: 'Чек коррекции прихода'
+    buy_correction: 'Чек коррекции расхода'
+    sell_return_correction: 'Чек коррекции возврата прихода (ФФД 1.1)'
+    buy_return_correction: 'Чек коррекции возврата расхода (ФФД 1.1)'
+
+  correction_type:
+    self: 'Самостоятельно'
+    instruction: 'По предписанию'
+
+  fiscal_receipt_type:
+    new: 'Создан'
+    printing: 'Идет печать'
+    done: 'Распечатан'
+    error: 'Ошибка'
+
+  payment_method_type:
+    full_prepayment: 'Предоплата 100%'
+    prepayment: 'Предоплата'
+    advance: 'Аванс'
+    full_paiment: 'Полный расчет'
+    partial_payment: 'Частичный расчет и кредит'
+    credit: 'Передача в кредит'
+    credit_payment: 'Оплата кредита'
+
+  payment_object:
+    commodity: 'Товар'
+    excise: 'Подакцизный товар'
+    job: 'Работа'
+    service: 'Услуга'
+    gambling_bet: 'Ставка азартной игры'
+    gambling_prize: 'Выигрыш азартной игры'
+    lottery: 'Лотерейный билет'
+    lottery_prize: 'Выигрыш лотереи'
+    intellectual_activity: 'Предоставление результатов интеллелектуальной деятельности'
+    payment: 'Платеж'
+    agent_commission: 'Агентское вознаграждение'
+    proprietary_law: 'Имущественное право'
+    non_operating_income: 'Внереализационный доход'
+    insuranse_contribution: 'Страховые взносы'
+    merchant_tax: 'Торговый сбор'
+    resort_fee: 'Курортный сбор'
+    deposit: 'Залог'
+    composite: 'Составной предмет расчета'
+    another: 'Иной предмет расчета'
+    medicines: 'Лекарства'
+    consumables: 'Расходные материалы'
+
+  payment_type:
+    nullable: 'Не выбрано'
+    cash: 'Наличными'
+    electronicaly: 'Безналичными'
+    prepaid: 'Предварительная оплата (аванс)'
+    credit: 'Последующая оплата (кредит)'
+    other: 'Иная форма оплаты (встречное предоставление)'
+
+  product_code_type:
+    furs: 'Меховые изделия'
+    medicines: 'Лекарства'
+    tobacco: 'Табачная продукция'
+    shoes: 'Обувь'
+
+  receipt_delivery_type:
+    print: 'Печатный чек'
+    email: 'Электронный чек (email)'
+    phone: 'Электронный чек (sms)'
+
+  shift_state:
+    new: 'Новая'
+    open: 'Открыта'
+    close: 'Закрыта'
+
+  taxation_type:
+    osn: 'Общая'
+    usn_income: 'Упрощенная (Доход)'
+    usn_outcome: 'Упрощенная (Доход минус Расход)'
+    envd: 'ЕНВД'
+    esn: 'Единый сельскохозяйственный налог'
+    patent: 'Патентная'
+
+  vat_rate:
+    none: 'НДС не облагается'
+    vat_0: 'НДС 0%'
+    vat_10: 'НДС 10%'
+    vat_18: 'НДС 18%'
+    vat_110: 'НДС 10/110'
+    vat_118: 'НДС 18/118'
+    vat_20: 'НДС 20%'
+    vat_120: 'НДС 20/120'
+
+  legal_forms:
+    ip: 'ИП'
+    ooo: 'ООО'
+    ao: 'АО'
+    pao: 'ПАО'
+    nko: 'НКО'
+    op: 'ОП'
+    zao: 'ЗАО'
+
+  appointment_type:
+    primary: 'Первичный'
+    secondary: 'Повторный'
+
+  payment_state:
+    not_paid: 'Не оплачен'
+    paid: 'Оплачен'
+
+  ftp_history:
+    import_stock: 'Импорт файла склада с фтп'
+    import_stock_move: 'Импорт файла по перемещениям с фтп'
+    import_service: 'Импорт файла услуг с фтп'
+    export: 'Экспорт на фтп'
+
+  status:
+    draft: 'Черновик'
+    registered: 'Зарегистрирован'
+    error: 'Ошибка'
+
+  document:
+    operation:
+      import: 'Поступление товаров'
+      transfer: 'Перемещение товаров'
+      expense: 'Списание товаров'
+      appointment: 'Прием'
+      inventory: 'Инвентаризация товаров'
+      shop: 'Магазин'
+      laboratory: 'Лаборатория'
+  field_type:
+      text: 'Текстовое поле'
+      number: 'Числовое поле'
+      list: 'Список'
+      date_time: 'Дата/Время'
+      switcher: 'Переключатель'
+      reference: 'Справочник'
+      textarea: 'Поле для ввода многострочного текста'
+
+  research_state:
+    corrupted: 'Испорчено'
+    create: 'Ожидает отправки'
+    sent: 'Отправлено'
+    received: 'Принято'
+    processing: 'Ведется исследование'
+    done: 'Завершено'
+
+  report_status:
+    new: 'Черновик'
+    sent: 'Подан'
+    returned: 'Возвращен на доработку'
+    done: 'Принят'
+  
+  queue_status:
+    saved: 'Ожидает загрузки'
+    uploaded: 'Загружен'
+    pending: 'В процессе расшифровки'
+    finished_with_errors: 'Завершен с ошибкой'
+    finished: 'Завершен'
+  
+  vaccination_upload_status:
+    uploaded: 'Загружен'
+    pending: 'В процессе'
+    finished_with_errors: 'Закончено с ошибками'
+    finished: 'Закончено'
+    forming_response: 'Формирование ответа'
+    response_formed: 'Ответ сформирован'
+    response_uploaded: 'Ответ загружен'
+    sys_error: 'Ошибка'
+
+  animal_gender:
+    male: 'Самец'
+    female: 'Самка'
+
+wild_animal:
+  age:
+    under_one_year: "До 1 года"
+    one_year: "1 год"
+    two_years: "2 года"
+    three_years: "3 года"
+    four_years: "4 года"
+    five_years: "5 лет"
+    greater_than_five_years: "Более 5 лет"
+  file_type_enum:
+    photo: "Фото животного"
+    death_photo: "Фото смерти животного"
+
+wild_animal_release_type:
+  shelter: Приют
+  street: На улицу
+  new_owners: Новые хозяева
+  euthanasia: Эвтаназия
+  natural_death: Смерть по естественным причинам
+  old_owners: Старые хозяева
+
+culling_registration:
+  file_type_enum:
+    photo: "Фото отлова"
+    vaccination: "Вакцинация"
+    sterilization: "Стерилизация"
+    tag: "Биркование"
+    release: "Фото выбытия"
+    quarantine: "Период карантинирования"
+
+document_type:
+  ussr_citizen_passport: "Паспорт гражданина СССР"
+  ussr_citizen_international_passport: "Загранпаспорт гражданина СССР"
+  birth_certificate: "Свидетельство о рождении"
+  officer_identity_card: "Удостоверение личности офицера"
+  release_from_prison_certificate: "Справка об освобождении из места лишения свободы"
+  navy_ministry_passport: "Паспорт Минморфлота"
+  military_id: "Военный билет"
+  temporary_id_instead_of_military_id: "Временное удостоверение, выданное взамен военного билета"
+  diplomatic_passport: "Дипломатический паспорт"
+  foreign_citizen_passport: "Паспорт иностранного гражданина"
+  certificate_application_refugee: "Свидетельство о рассмотрении ходатайства о признании лица беженцем на территории Российской Федерации по существу"
+  residence_permit: "Вид на жительство в Российской Федерации"
+  refugee_certificate: "Удостоверение беженца"
+  rf_citizen_temporary_identity_card: "Временное удостоверение личности гражданина Российской Федерации"
+  temporary_residence_permit: "Разрешение на временное проживание в Российской Федерации"
+  temporary_asylum_certificate: "Свидетельство о предоставлении временного убежища на территории Российской Федерации"
+  rf_citizen_passport: "Паспорт гражданина Российской Федерации"
+  rf_citizen_international_passport: "Загранпаспорт гражданина Российской Федерации"
+  foreign_state_birth_certificate: "Свидетельство о рождении, выданное уполномоченным органом иностранного государства"
+  rf_serviceman_identity_card: "Удостоверение личности военнослужащего Российской Федерации"
+  sailor_passport: "Паспорт моряка"
+  stock_officer_military_card: "Военный билет офицера запаса"
+  residence_place_confirm_docs: "Документы, подтверждающие факт регистрации по месту жительства"
+  residence_place_registration_certificate: "Свидетельство о регистрации по месту жительства"
+  foreign_citizen_residence_permit: "Вид на жительство иностранного гражданина"
+  death_certificate: "Свидетельство о смерти"
+  other_docs: "Иные документы"
+
+document_state:
+  draft: Черновик
+  registered: Зарегистрирован
+  error: Ошибка
+  adjustment: Корректировка
+
+error:
+  enum_item:
+    not_found:  'Недопустимое ENUM значение, передано: {{value}}, допустимо: {{allow_values}}'
+

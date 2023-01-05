@@ -1,0 +1,845 @@
+ <ngx-loading [show]="loading$|async"></ngx-loading>
+
+    <form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col>
+            <ng-template #colContent>
+              <div class="header">
+                <div class="header__name">
+                  <app-icon-animal [type]="petType"></app-icon-animal>
+                  {{petName}}
+                  <span class="subheader_name">ID:{{idPets}}</span>
+                </div>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template  #rowContent>
+          <app-col class="text-right">
+            <ng-template #colContent>
+              <app-owner-and-pet-created [ownerId]="ownerId" [owner]="owner"></app-owner-and-pet-created>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="form-wr  container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" titleName=date col="12 col-lg-3">
+              <ng-template #colContent>
+                <app-datepicker-overview
+                  [dataError]="formGroup.controls['data'].hasError('required')"
+                  formControlName="data"
+                ></app-datepicker-overview>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName=time col="12 col-lg-3">
+              <ng-template #colContent>
+                <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-3" [required]="true" titleName=owner >
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('owner')"
+                  [options]="owners$"
+                  [petId]="idPets"
+                  [type]="crudType.Owner"
+                  (selected)="getOwnerId()"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-3" [required]="true" titleName=pet >
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('pet')"
+                  [ownerId]="ownerId"
+                  [type]="crudType.Pet"
+                  (selected)="getPetId()"></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-6" [required]="true" titleName=professions >
+              <ng-template #colContent>
+                <app-ui-autocomplete
+                  [control]="formGroup.get('profession')"
+                  [options]="professions$"
+                  [type]="crudType.ReferenceProfession"
+                  field="name"
+                ></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-6" titleName=expert >
+              <ng-template #colContent>
+                <ng-container *ngIf="hasProfession()">
+                  <app-ui-autocomplete
+                    [addFilter]="isProfession()"
+                    [control]="formGroup.get('user')"
+                    [options]="users$"
+                    [type]="crudType.User"
+                    field="fullName"
+                  ></app-ui-autocomplete>
+                </ng-container>
+                <ng-container *ngIf="!hasProfession()">
+                  <input class="inp-st" disabled type="text">
+                </ng-container>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" titleName=name col="12 col-lg-6" formGroupName="type">
+              <ng-template #colContent>
+                <mat-form-field appearance="outline">
+                  <mat-select disableOptionCentering formControlName="code" name="type">
+                    <mat-option value="PRIMARY">Первичный</mat-option>
+                    <mat-option value="SECONDARY">Повторный</mat-option>
+                    <mat-option value="EVSD">эВСД</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-6">
+              <ng-template #colContent>
+                <ng-container *ngIf="formGroup.get('type.code').value === 'SECONDARY'">
+                  <div class="form-head">Предыдущий прием</div>
+                  <div class="form-body" formGroupName="previous">
+                    <mat-form-field appearance="outline">
+                      <mat-select disableOptionCentering formControlName="id" placeholder="Не выбрано">
+                        <mat-option *ngFor="let item of (previousLeaving$ | async)" [value]="item.id">
+                          {{item.date}}: {{item.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+      <div class="form-wr container-fluid">
+
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=petitions >
+              <ng-template #colContent>
+                <textarea [value]="formGroup.get('name').value | firstLetter" class="textarea-st" cols="30"
+                                                 formControlName="name" name=""
+                                                 rows="6"></textarea>
+
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=survey *ngIf="leavingPermission.isVisible('survey') | async">
+              <ng-template #colContent>
+                <textarea [value]="formGroup.get('survey').value | firstLetter" class="textarea-st" cols="30"
+                                                 formControlName="survey" name=""
+                                                 rows="6"></textarea>
+
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" titleName=temperature col="5 col-lg-3">
+              <ng-template #colContent>
+                <input appNumberOnly class="inp-st" formControlName="temperature" placeholder="00.00" type="text">
+                <div *ngIf="model.pet?.actualTemperature" class="mt-1">
+                  <span class="d-block small-text">Последнее значение:</span><br/>
+                  <span class="d-block small-text">
+                      {{model.pet.actualTemperature.date}}
+                    {{(model.pet.birthday + ',' + model.pet.actualTemperature.date) | age}}
+                    : {{model.pet.actualTemperature.value}}</span>
+                </div>
+              </ng-template>
+            </app-col>
+            <input id="ert" type="checkbox"/>
+            <app-col col="7 col-lg-2" class="pt-3">
+              <ng-template #colContent>
+                <div class="check-st" style="margin-top: 20px;">
+                  <div class="check-st__col">
+                    <input formControlName="temperature_check" id="temperature_check_registry" type="checkbox">
+                    <label class="text-nowrap" for="temperature_check_registry">Не измерялось</label>
+                  </div>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName=weight col="5 col-lg-3">
+              <ng-template #colContent>
+                <input [numberType]="integer" appNumberOnly class="inp-st" formControlName="weight" type="text">
+                <div *ngIf="model.pet?.actualWeight" class="mt-1">
+                  <span class="d-block small-text">Последнее значение:</span><br/>
+                  <span class="d-block small-text">
+                            {{model.pet.actualWeight.date}}
+                    {{(model.pet.birthday + ',' + model.pet.actualWeight.date) | age}}
+                    : {{model.pet.actualWeight.value | weight}}</span>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col  col="7 col-lg-2" class="pt-3">
+              <ng-template #colContent>
+                <div class="check-st" style="margin-top: 20px;">
+                  <div class="check-st__col">
+                    <input formControlName="weight_check" id="weight_check_registry" type="checkbox">
+                    <label class="text-nowrap" for="weight_check_registry">Не измерялось</label>
+                  </div>
+                </div>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=diagnosis *ngIf="leavingPermission.isVisible('diagnosis') | async">
+              <ng-template #colContent>
+                <textarea [value]="formGroup.get('diagnosis').value | firstLetter" class="textarea-st" cols="30"
+                                                 formControlName="diagnosis"
+                                                 rows="6"></textarea>
+
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=prescription *ngIf="leavingPermission.isVisible('prescription') | async">
+              <ng-template #colContent>
+                <textarea [value]="formGroup.get('prescription').value | firstLetter" class="textarea-st" cols="30"
+                                                 formControlName="prescription"
+                                                 rows="6"></textarea>
+
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <ng-container *ngIf="formGroup.controls.dateEnd.value">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  titleName=timeEnd >
+                <ng-template #colContent>
+                  <app-datepicker-overview
+                    formControlName="dateEnd"
+                  ></app-datepicker-overview>
+                </ng-template>
+              </app-col>
+              <app-col text="&#x20;">
+                <ng-template #colContent>
+                  <input appUiMaskTime class="inp-st time-mask" formControlName="timeEnd" type="text">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </ng-container>
+      </div>
+
+
+
+      <app-appointments-add-form-template *ngIf="showFormTemplates()"
+      (addFormTemplate)="initFormTemplate(null, $event)"
+      >
+      </app-appointments-add-form-template>
+
+
+      <ng-container *ngIf="showFormTemplates()">
+        <div *ngFor="let formTemplate of formGroup.get('appointmentFormTemplate').controls; let i = index"
+             class="form-wr container-fluid"
+             formArrayName="appointmentFormTemplate">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="10 col-lg-11">
+                <ng-template #colContent>
+                  <div class="form-header">{{formTemplate.get('formTemplate').get('name').value }}</div>
+                  <div [formGroup]="formTemplate">
+                    <div *ngFor="let formFieldValue of formTemplate.get('formFieldValues').controls; let j = index"
+                         class=""
+                         formArrayName="formTemplate">
+                      <app-row>
+                        <ng-template #rowContent [formGroup]=formFieldValue>
+                          <app-col col="12 col-lg-3">
+                            <ng-template #colContent>
+                              <strong [innerHTML]="formFieldValue.get('innerHTML').value" class="inline text-middle"></strong>
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-4"  *ngIf="formFieldValue.get('type').value === 'text'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <input class="inp-st"
+                                     formControlName="value"
+                                     type="text"
+                                     value="{{formFieldValue.get('value').value}}">
+                              <div *ngIf="!formFieldValue.get('value').valid" class="note note-error">
+                                <small>{{formFieldErrorHandler(formFieldValue.get('value').errors)}}</small>
+                              </div>
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-4" *ngIf="formFieldValue.get('type').value === 'number'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <input appNumeric
+                                     class="inp-st"
+                                     decimals="{{formFieldValue.get('precision').value}}"
+                                     formControlName="value"
+                                     signed="{{formFieldValue.get('signed').value}}"
+                                     type="text"
+                              >
+                              <div *ngIf="!formFieldValue.get('value').valid" class="note note-error">
+                                <small>{{formFieldErrorHandler(formFieldValue.get('value').errors)}}</small>
+                              </div>
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-5" *ngIf="formFieldValue.get('type').value === 'textarea'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                          <textarea class="textarea-st" formControlName="value"
+                                    rows="3">{{formFieldValue.get('value').value}}</textarea>
+
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-5" *ngIf="formFieldValue.get('type').value === 'reference'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <ng-container *ngIf="formFieldValue.get('extraData').value['parentReference']">
+                                <app-ui-select-reference
+                                  (selected)="onChangeParentReference($event, formFieldValue, j, i)"
+                                  [crudType]="formFieldValue.get('extraData').value['parentReference']['crudType']"
+                                  [title]="formFieldValue.get('extraData').value['parentReference']['title']"
+                                  [value]="formFieldValue.get('extraData').value['parentReference']['value']"
+                                ></app-ui-select-reference>
+                              </ng-container>
+
+                              <!-- SubParent entity-->
+                              <ng-container *ngIf="
+                        formFieldValue.get('extraData').value['subParentReference']
+                        && (formFieldValue.get('extraData').value['parentReference'] && formFieldValue.get('extraData').value['parentReference']['value'])">
+                                <app-ui-select-reference
+                                  (selected)="onChangeSubParentReference($event, formFieldValue, j, i)"
+                                  [crudType]="formFieldValue.get('extraData').value['subParentReference']['crudType']"
+                                  [filter]="formFieldValue.get('extraData').value['subParentReference']['filter']"
+                                  [title]="formFieldValue.get('extraData').value['subParentReference']['title']"
+                                  [value]="formFieldValue.get('extraData').value['subParentReference']['value']"
+                                ></app-ui-select-reference>
+                              </ng-container>
+
+                              <!-- Main entity-->
+                              <ng-container>
+                                <app-ui-select-reference
+                                  [control]="formFieldValue.get('value')"
+                                  [crudType]="formFieldValue.get('crudType').value"
+                                  [filter]="formFieldValue.get('extraData').value['filter']"
+                                  [index]="+(j + '' + i)"
+                                  [multiSelect]="formFieldValue.get('multiSelect').value"
+                                  [value]="formFieldValue.get('value').value"
+                                  [viewType]="formFieldValue.get('extraData').value['viewType']"
+                                ></app-ui-select-reference>
+                              </ng-container>
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-5" *ngIf="formFieldValue.get('type').value === 'template_reference'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <!-- Main entity-->
+                              <ng-container>
+                                <app-ui-select-reference
+                                  [control]="formFieldValue.get('value')"
+                                  [crudType]="formFieldValue.get('crudType').value"
+                                  [filter]="formFieldValue.get('extraData').value['filter']"
+                                  [index]="+(j + '' + i)"
+                                  [multiSelect]="formFieldValue.get('multiSelect').value"
+                                  [showDeleted]="formTemplate.get('showDeleted').value"
+                                  [value]="formFieldValue.get('value').value"
+                                  [viewType]="formFieldValue.get('extraData').value['viewType']"
+                                ></app-ui-select-reference>
+                              </ng-container>
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-5" *ngIf="formFieldValue.get('type').value === 'date'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <div
+                                *ngIf="formFieldValue.get('type').value === 'date'"
+                                class="inline-block"
+                              >
+                                <app-datepicker-overview
+                                  [maxDate]="formFieldValue.get('extraData').value.date['max']"
+                                  [minDate]="formFieldValue.get('extraData').value.date['min']"
+                                  formControlName="date"
+                                ></app-datepicker-overview>
+                              </div>
+                              <input
+                                *ngIf="formFieldValue.get('showDateTime').value"
+                                appUiMaskTime
+                                class="inp-st time-mask"
+                                formControlName="time"
+                                type="text"
+                                value="{{formFieldValue.get('time').value}}"
+                              >
+                            </ng-template>
+                          </app-col>
+                          <app-col col="12 col-lg-5" *ngIf="formFieldValue.get('type').value === 'multi_date'" class="{{formFieldValue.get('required').value ? 'title-required': ''}}">
+                            <ng-template #colContent>
+                              <div class="inline-block">
+                                <app-datepicker-overview
+                                  (changed)="onChangeMinDate($event, formFieldValue, j, i)"
+                                  [maxDate]="formFieldValue.get('extraData').value.dateMin['max']"
+                                  [minDate]="formFieldValue.get('extraData').value.dateMin['min']"
+                                  formControlName="dateMin"
+                                >
+                                </app-datepicker-overview>
+                              </div>
+                              <input
+                                (ngModelChange)="onChangeDateMinTime($event, formFieldValue, j, i)"
+                                *ngIf="formFieldValue.get('showDateMinTime').value"
+                                appUiMaskTime
+                                class="inp-st time-mask inline"
+                                formControlName="dateMinTime"
+                                type="text"
+                                value="{{formFieldValue.get('dateMinTime').value}}"
+                              >
+                              <div class="form-head inline"><strong>-</strong></div>
+                              <div class="form-body inline date-group--inline">
+                                <div class="inline-block">
+                                  <app-datepicker-overview
+                                    (changed)="onChangeMaxDate($event, formFieldValue, j, i)"
+                                    [maxDate]="formFieldValue.get('extraData').value.dateMax['max']"
+                                    [minDate]="formFieldValue.get('extraData').value.dateMax['min']"
+                                    formControlName="dateMax"
+                                  >
+                                  </app-datepicker-overview>
+                                </div>
+                                <input
+                                  (ngModelChange)="onChangeDateMaxTime($event, formFieldValue, j, i)"
+                                  *ngIf="formFieldValue.get('showDateMaxTime').value"
+                                  appUiMaskTime
+                                  class="inp-st time-mask"
+                                  formControlName="dateMaxTime"
+                                  type="text"
+                                  value="{{formFieldValue.get('dateMaxTime').value}}"
+                                >
+                              </div>
+                            </ng-template>
+                          </app-col>
+                        </ng-template>
+                      </app-row>
+                    </div>
+                    <pre *ngIf="template.length" [innerHTML]="template[0]" class="inline"></pre>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col col="2 col-lg-1">
+                <ng-template #colContent>
+                  <button (click)="removeFormTemplate(formTemplate, i)" class="field-close float-right" type="button">&times;</button>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="['DRAFT','ERROR'].indexOf(model.state?.code) >= 0; else viewItemsBlock">
+        <div class="form-wr container-fluid">
+          <div class="form-header">Оказанные услуги, лекарственные препараты, расходные материалы</div>
+
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  col="7 col-lg-2" text=" " >
+                <ng-template #colContent>
+                  <div class="check-st">
+                    <input (ngModelChange)="onSetAmount()" formControlName="isExtraCharge" id="checkbox" tabindex="-1"
+                           type="checkbox" value="">
+                    <label for="checkbox">Наценка на услуги, % </label>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col  col="5 col-lg-1">
+                <ng-template #colContent>
+                  <input class="inp-st"
+                         formControlName="extraCharge"
+                         type="number">
+                </ng-template>
+              </app-col>
+              <app-col col="12 col-lg-9" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <app-appointments-add-templates
+                    (addProductItems)="initProductItems($event, true)"
+                  ></app-appointments-add-templates>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+
+          <div class="form__table delivery" formArrayName="productItems">
+            <table *ngIf="formGroup.controls.productItems['controls'].length">
+              <tr>
+                <th class="th-service" style="width: 50%;">Наименование</th>
+                <th class="form-span--2">Дозировка/количество</th>
+                <th class="th--center">Цена</th>
+                <th *ngIf="formGroup.get('isExtraCharge').value" class="th--center">Наценка</th>
+                <th><span>Единица измерения</span></th>
+                <th class="text-right"><span>Сумма</span></th>
+                <th *ngIf="formGroup.get('isExtraCharge').value" class="text-right"><span>Сумма с наценкой</span></th>
+                <th></th>
+              </tr>
+              <ng-container *ngFor="let item of formGroup.controls['productItems']['controls']; let i=index"
+                            [formGroupName]="i">
+                <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                              [ngTemplateOutlet]="productItemRow"></ng-container>
+                <ng-container
+                  *ngFor="let childItem of formGroup.controls['productItems']['controls'][i]['controls']['items']['controls']; let j=index">
+                  <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                                [ngTemplateOutlet]="productItemRow"></ng-container>
+                </ng-container>
+                <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                              [ngTemplateOutlet]="addProductItemRow"></ng-container>
+              </ng-container>
+            </table>
+          </div>
+          <div class="delivery-grid container-fluid" formArrayName="productItems">
+            <div class="row" *ngIf="formGroup.controls.productItems['controls'].length">
+            </div>
+            <ng-container *ngFor="let item of formGroup.controls['productItems']['controls']; let i=index"
+                          [formGroupName]="i">
+              <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                            [ngTemplateOutlet]="productItemRow2"></ng-container>
+              <ng-container
+                *ngFor="let childItem of formGroup.controls['productItems']['controls'][i]['controls']['items']['controls']; let j=index">
+                <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                              [ngTemplateOutlet]="productItemRow2"></ng-container>
+              </ng-container>
+              <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                            [ngTemplateOutlet]="addProductItemRow2"></ng-container>
+            </ng-container>
+          </div>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col class="pb-2">
+                <ng-template #colContent>
+                  <a (click)="addProductItem($event,'SERVICE', null)" class="form-span__lnk-btn" href="#">Добавить услугу</a>
+                  <ng-container *ngIf="referenceStocks.length">
+                    <a [matMenuTriggerFor]="menu" class="form-span__lnk-btn">
+                      <span>Добавить из склада...</span>
+                    </a>
+                    <mat-menu #menu="matMenu">
+                      <ng-container *ngFor="let stock of referenceStocks">
+                        <a (click)="addProductItem($event,'COMMODITY', stock.id)"
+                           href="#" mat-menu-item
+                        >{{'№' + stock.id + ': ' + stock.name}}</a>
+                      </ng-container>
+                    </mat-menu>
+                  </ng-container>
+                  <span *ngIf="this.formGroup.valid && formGroup.controls.productItems['controls'].length" style="float:right">
+                <app-appointments-save-as-template
+                  [productItems]="formGroup.controls.productItems"
+                  [unitId]="unitId.id"
+                ></app-appointments-save-as-template>
+              </span>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+
+      <ng-template #viewItemsBlock>
+        <app-leaving-view-items
+          [leaving]="model"
+          [showFormTotal]="false">
+        </app-leaving-view-items>
+      </ng-template>
+
+      <ng-container
+        *ngIf="formGroup.controls.productItems['controls'].length
+        && (!model.cashReceipt || (model.cashReceipt && model.cashReceipt.fiscal.state.code !== 'DONE'))"
+      >
+        <div *ngIf="getProductItemSumAndCount() as result" class="form-wr form-wr--mmin">
+          <div class="form-header form-header--inline">Итого:
+            <span>Позиций: {{result.count}}</span>
+          </div>
+          <div class="form-total">
+            {{result.sum | price}}
+          </div>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  titleName=paymentType col="12 col-lg-3" formGroupName=paymentType>
+                <ng-template #colContent>
+                  <app-ui-mat-select-enum [formControl]="formGroup.get('paymentType.code')" [modelValue]="model.paymentType"
+                                          [options]="PaymentTypeEnum"></app-ui-mat-select-enum>
+                </ng-template>
+              </app-col>
+              <app-col  titleName=paymentState col="12 col-lg-3" formGroupName="paymentState">
+                <ng-template #colContent>
+                  <app-ui-mat-select-enum [formControl]="formGroup.get('paymentState.code')"
+                                          [modelValue]="model?.paymentState"
+                                          [options]="PaymentStateTypeEnum"></app-ui-mat-select-enum>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+
+    </form>
+
+    <app-appointment-files [leaving]="model"></app-appointment-files>
+
+
+ <div class="container-fluid">
+   <div class="row">
+     <div class="col-6 text-left">
+       <a [routerLink]="'/leaving/' + model.id" class="btn btn-large btn-outline-secondary">Отмена</a>
+     </div>
+     <div class="col-6 text-right">
+       <a (click)="submit()" class="btn btn-large btn-primary">Сохранить</a>
+     </div>
+   </div>
+ </div>
+
+    <ng-template #addProductItemRow let-i="index" let-item="item" let-parent="parent">
+      <ng-container *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent">
+        <tr style="border-bottom: 1px solid #e3e2e2;">
+          <td colspan="6">
+            <div>
+              <a [matMenuTriggerFor]="menu">
+                <span>+ Добавить товар из склада</span>
+              </a>
+              <mat-menu #menu="matMenu">
+                <ng-container *ngFor="let stock of referenceStocks">
+                  <a (click)="addProductItem($event,'COMMODITY', stock.id, item)"
+                     href="#" mat-menu-item
+                  >{{'№' + stock.id + ': ' + stock.name}}</a>
+                </ng-container>
+              </mat-menu>
+            </div>
+          </td>
+          <td *ngIf="formGroup.get('isExtraCharge').value" colspan="2"></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+      </ng-container>
+    </ng-template>
+   <ng-template #addProductItemRow2 let-i="index" let-item="item" let-parent="parent">
+     <ng-container *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent">
+       <div class="row">
+         <div class="col pb-4 pt-2">
+           <a [matMenuTriggerFor]="menu">
+             <span>+ Добавить товар из склада</span>
+           </a>
+           <mat-menu #menu="matMenu">
+             <ng-container *ngFor="let stock of referenceStocks">
+               <a (click)="addProductItem($event,'COMMODITY', stock.id, item)"
+                  href="#" mat-menu-item
+               >{{'№' + stock.id + ': ' + stock.name}}</a>
+             </ng-container>
+           </mat-menu>
+         </div>
+         <div *ngIf="formGroup.get('isExtraCharge').value" class="col-2"></div>
+       </div>
+     </ng-container>
+   </ng-template>
+    <ng-template #productItemRow let-i="index" let-item="item" let-parent="parent">
+      <tr>
+        <td>
+          <div style="display: flex; align-items: center">
+            <div *ngIf="parent" style="height: 100%">
+              <i class="material-icons" style="padding-bottom: 1.5em">
+                subdirectory_arrow_right
+              </i>
+            </div>
+            <div style="width: 100%;">
+              <app-ui-autocomplete
+                [addFilter]="getFilterProduct(item)"
+                [control]="item.get('product')"
+                [fields]="productFields"
+                [options]="referenceProductItems$"
+                [petId]="idPets"
+                [type]="crudType.ReferenceProduct"
+                styleClass="space-normal"
+              ></app-ui-autocomplete>
+              <small *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent" class="note-product">
+                услуга
+              </small>
+              <small
+                *ngIf="item.get('paymentObject').value === 'COMMODITY'"
+                class="note-product">
+                {{'склад: ' + getStockById(item.get('stock.id').value)?.name}}
+              </small>
+            </div>
+          </div>
+        </td>
+        <td style="vertical-align: top">
+          <input (input)="changeItemQuantity(item, $event.target.value)"
+                 [attr.disabled]="item.get('balance').value === 0 && item.get('paymentObject').value === 'COMMODITY' ? true : null"
+                 [formControl]="item.get('quantity')"
+                 [max]="item.get('balance').value"
+                 class="inp-st"
+                 min="0"
+                 type="number"/>
+          <small *ngIf="item.get('paymentObject').value === 'COMMODITY' && item.get('id').value
+                 && item.get('quantity').value > item.get('balance').value; else elseNote;"
+                 class="note note-error">Количество больше
+            остатка {{item.get('balance').value}}</small>
+          <ng-template #elseNote>
+            <small *ngIf="item.get('paymentObject').value !== 'SERVICE'"
+                   class="note">Остаток: {{item.get('balance').value}}</small>
+          </ng-template>
+        </td>
+        <td class="td--center">
+          <strong>{{ item.get('price').value | price }}</strong>
+        </td>
+        <td *ngIf="formGroup.get('isExtraCharge').value" class="td--center">
+          <ng-container
+            *ngIf="item.get('paymentObject').value === 'SERVICE'
+             && formGroup.get('isExtraCharge').value; else elseBlock">
+            {{ item.get('price').value * formGroup.get('extraCharge').value / 100 | price }}
+          </ng-container>
+          <ng-template #elseBlock>
+            <span>-</span>
+          </ng-template>
+        </td>
+        <td>
+          <span>{{item.get('product').value?.measurementUnits?.name ? item.get('product').value?.measurementUnits?.name : 'шт'}}</span>
+        </td>
+        <td style="text-align: right;">
+          <strong>
+            {{ (item.get('price').value * item.get('quantity').value) | price }}
+          </strong>
+        </td>
+        <td *ngIf="formGroup.get('isExtraCharge').value" style="text-align: right;">
+          <strong>
+            <ng-container
+              *ngIf="item.get('paymentObject').value === 'SERVICE' && formGroup.get('isExtraCharge').value && formGroup.get('extraCharge').value; else elsePrice">
+              {{ item.get('price').value * item.get('quantity').value * (1 + formGroup.get('extraCharge').value / 100) | price }}
+            </ng-container>
+            <ng-template #elsePrice>
+              -
+            </ng-template>
+          </strong>
+        </td>
+        <td><a (click)="removeProductItem(i, $event, parent)" class="tr-close"></a></td>
+      </tr>
+    </ng-template>
+     <ng-template #productItemRow2 let-i="index" let-item="item" let-parent="parent">
+       <app-row>
+         <ng-template #rowContent>
+           <app-col col="12" class="text-right">
+             <ng-template #colContent>
+               <a (click)="removeProductItem(i, $event, parent)" class="btn btn-small btn-danger">Удалить запись</a>
+             </ng-template>
+           </app-col>
+         </ng-template>
+       </app-row>
+       <app-row>
+         <ng-template #rowContent>
+           <app-col col="12" text="Наименование">
+             <ng-template #colContent>
+               <div class="flexer" style="align-items: center">
+                 <div *ngIf="parent" style="height: 100%">
+                   <i class="material-icons" style="padding-bottom: 1.5em">
+                     subdirectory_arrow_right
+                   </i>
+                 </div>
+                 <div style="width: 100%;">
+                   <app-ui-autocomplete
+                     [addFilter]="getFilterProduct(item)"
+                     [control]="item.get('product')"
+                     [fields]="productFields"
+                     [options]="referenceProductItems$"
+                     [petId]="idPets"
+                     [type]="crudType.ReferenceProduct"
+                     styleClass="space-normal"
+                   ></app-ui-autocomplete>
+                   <small *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent" class="note-product">
+                     услуга
+                   </small>
+                   <small
+                     *ngIf="item.get('paymentObject').value === 'COMMODITY'"
+                     class="note-product">
+                     {{'склад: ' + getStockById(item.get('stock.id').value)?.name}}
+                   </small>
+                 </div>
+               </div>
+             </ng-template>
+           </app-col>
+         </ng-template>
+       </app-row>
+       <app-row>
+         <ng-template #rowContent>
+           <app-col col="6" text="Дозировка/количество">
+             <ng-template #colContent>
+               <input (input)="changeItemQuantity(item, $event.target.value)"
+                      [attr.disabled]="item.get('balance').value === 0 && item.get('paymentObject').value === 'COMMODITY' ? true : null"
+                      [formControl]="item.get('quantity')"
+                      [max]="item.get('balance').value"
+                      class="inp-st"
+                      min="0"
+                      type="number"/>
+               <small *ngIf="item.get('paymentObject').value === 'COMMODITY' && item.get('id').value
+                     && item.get('quantity').value > item.get('balance').value; else elseNote;"
+                      class="note note-error">Количество больше
+                 остатка {{item.get('balance').value}}</small>
+               <ng-template #elseNote>
+                 <small *ngIf="item.get('paymentObject').value !== 'SERVICE'"
+                        class="note">Остаток: {{item.get('balance').value}}</small>
+               </ng-template>
+             </ng-template>
+           </app-col>
+           <app-col col="6" text="Единица измерения" class="text-center" style="vertical-align: bottom">
+             <ng-template #colContent>
+               <span>{{item.get('product').value?.measurementUnits?.name ? item.get('product').value?.measurementUnits?.name : 'шт'}}</span>
+             </ng-template>
+           </app-col>
+         </ng-template>
+       </app-row>
+       <app-row>
+         <ng-template #rowContent>
+           <app-col col="6" text="Цена" class="text-center">
+             <ng-template #colContent>
+               <strong>
+                 {{ (item.get('price').value * item.get('quantity').value) | price }}
+               </strong>
+             </ng-template>
+           </app-col>
+           <app-col col="6" text="Сумма" class="text-center">
+             <ng-template #colContent>
+               <strong>{{ item.get('price').value | price }}</strong>
+             </ng-template>
+           </app-col>
+         </ng-template>
+       </app-row>
+       <app-row *ngIf="formGroup.get('isExtraCharge').value">
+         <ng-template #rowContent>
+           <app-col col="6"  text="Наценка" class="text-center">
+             <ng-template #colContent>
+               <ng-container
+                 *ngIf="item.get('paymentObject').value === 'SERVICE'
+                 && formGroup.get('isExtraCharge').value; else elseBlock">
+                 {{ item.get('price').value * formGroup.get('extraCharge').value / 100 | price }}
+               </ng-container>
+               <ng-template #elseBlock>
+                 <span>-</span>
+               </ng-template>
+             </ng-template>
+           </app-col>
+           <app-col col="6"  text="Сумма с наценкой" class="text-center">
+             <ng-template #colContent>
+               <strong>
+                 <ng-container
+                   *ngIf="item.get('paymentObject').value === 'SERVICE' && formGroup.get('isExtraCharge').value && formGroup.get('extraCharge').value; else elsePrice">
+                   {{ item.get('price').value * item.get('quantity').value * (1 + formGroup.get('extraCharge').value / 100) | price }}
+                 </ng-container>
+                 <ng-template #elsePrice>
+                   -
+                 </ng-template>
+               </strong>
+             </ng-template>
+           </app-col>
+         </ng-template>
+       </app-row>
+     </ng-template>

@@ -1,0 +1,92 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<div [ngSwitch]="page" class="autorize__form">
+
+  <ng-template [ngSwitchCase]="'restore'">
+    <div class="position-relative">
+      <div class="autorize__form-h">Восстановление <br>пароля</div>
+      <form (submit)="submitLogin()" [formGroup]="loginFormGroup">
+        <div class="autorize__form-comment">
+          Укажите почту или телефон,
+          <br>на который зарегистрирован
+          <br>аккаунт
+        </div>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col >
+              <ng-template #colContent>
+                <input [class.error]="isError | async" class="autorize__form-inp" formControlName="login"
+                       placeholder="Почта или Телефон"
+                       type="text">
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <div class="autorize__form-btn autorize__form-btn--m-t"><input type="submit" value="Восстановить"></div>
+      </form>
+    </div>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="'restore-code'">
+    <div class="autorize__form-h">Восстановление <br>пароля</div>
+    <form (submit)="submitCode()" [formGroup]="codeFormGroup">
+      <div class="autorize__form-comment">
+        Введите полученный
+        <br>4х-значный код
+      </div>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col>
+            <ng-template #colContent>
+              <input [class.error]="isError | async" class="autorize__form-inp autorize__form-inp--code"
+                     formControlName="code"
+                     placeholder="Код" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="autorize__form-btn autorize__form-btn--m-t"><input type="submit" value="Подтвердить"></div>
+    </form>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="'restore-password'">
+    <div class="autorize__form-h">Обновите пароль</div>
+    <form (submit)="submitNewPassword()" [formGroup]="newPasswordFormGroup">
+      <div class="autorize__form-comment">
+        Задайте новый пароль
+      </div>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col>
+            <ng-template #colContent>
+              <input [class.error]="isError | async" class="autorize__form-inp" formControlName="newPassword"
+                     placeholder="Пароль"
+                     type="password" value="">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [ngClass]="{'check': newPasswordFormGroup.controls.newPassword.value && newPasswordFormGroup.controls.newPassword.value === newPasswordFormGroup.controls.newPasswordConfirm.value}">
+            <ng-template #colContent>
+              <input [class.error]="isError | async" class="autorize__form-inp" formControlName="newPasswordConfirm"
+                     placeholder="Повторите пароль" type="password"
+                     value="">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="autorize__form-btn autorize__form-btn--m-t"><input
+        [disabled]="!newPasswordFormGroup.controls.newPassword.value || newPasswordFormGroup.controls.newPassword.value !== newPasswordFormGroup.controls.newPasswordConfirm.value"
+        type="submit" value="Сохранить"></div>
+    </form>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="'restore-complete'">
+    <div class="autorize__pass-fin">
+      Пароль успешно
+      <br>обновлен!
+    </div>
+    <div class="autorize__form-btn autorize__form-btn--m-t"><input (click)="toAuth()" value="Авторизоваться"></div>
+  </ng-template>
+</div>

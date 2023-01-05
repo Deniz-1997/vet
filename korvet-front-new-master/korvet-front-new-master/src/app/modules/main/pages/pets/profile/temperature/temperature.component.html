@@ -1,0 +1,53 @@
+<div class="body-header">
+  <div class="body-header__name">Температура</div>
+  <div class="body-header__setting">
+    <a class="lnk-add" data-fancybox href="#add-temperature">Добавить</a>
+  </div>
+</div>
+<div *ngIf="(temperatures$|async).length>0" class="table-info">
+  <table class="table-info-st">
+    <tr>
+      <th>Дата измерения</th>
+      <th>Возраст</th>
+      <th>Температура</th>
+    </tr>
+    <tr>
+      <td>{{getDateFormat(currentTemperatures.date)}}</td>
+      <td>{{getAge(currentTemperatures.date)}}</td>
+      <td>{{currentTemperatures.value}}</td>
+    </tr>
+  </table>
+  <div class="info-lnk info-lnk--left"><a data-fancybox="" href="#popup-temperature_changes">История изменений</a>
+  </div>
+</div>
+<div *ngIf="(temperatures$|async).length === 0" class="table-info">
+  <div class="no_data"><span>Нет данных</span>
+  </div>
+</div>
+<div class="popup-hide">
+  <div class="popup-history_changes popup-wr" id="popup-temperature_changes">
+    <div class="popup-wr__head">История изменений</div>
+    <div class="popup-wr__body">
+      <ul class="menu-icon-lnk">
+        <li><a href=""><span><app-icon-print></app-icon-print></span>Напечатать</a></li>
+        <li><a href=""><span><app-icon-download></app-icon-download></span>Скачать</a></li>
+      </ul>
+    </div>
+    <div class="popup-wr__table">
+      <table>
+        <tr>
+          <th>Дата измерения</th>
+          <th>Возраст</th>
+          <th>Температура</th>
+        </tr>
+        <tr *ngFor="let item of temperatures$|async">
+          <td>{{getDateFormat(item.date)}}</td>
+          <td>{{getAge(item.date)}}</td>
+          <td>{{item.value}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <app-pets-profile-temperature-add (addTemperature)="addTemperature($event)"
+                                    [petId]="petId"></app-pets-profile-temperature-add>
+</div>

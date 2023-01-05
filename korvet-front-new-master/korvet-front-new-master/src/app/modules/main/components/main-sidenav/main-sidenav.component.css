@@ -1,0 +1,39 @@
+.d-block {
+  display: block;
+}
+
+label {
+  color: white;
+}
+
+.modify-checkbox input + label:before {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 0 BLACK;
+  width: 17px;
+  height: 17px;
+}
+
+.modify-checkbox input:checked + label:after {
+  border: 1px solid white;
+  border-radius: 100%;
+  top: -2px;
+  width: 17px;
+  height: 17px;
+  background-color: #81c784;
+}
+
+.modify-checkbox label {
+  cursor: pointer;
+  font-size: 12px !important;
+  padding: 2px 0 0 23px !important;
+}
+.support-link{
+  font-size: 16px;
+  color: #f7f7f7;
+}
+.manual-link{
+  font-size: 14px;
+  color: #f7f7f7;
+}
+

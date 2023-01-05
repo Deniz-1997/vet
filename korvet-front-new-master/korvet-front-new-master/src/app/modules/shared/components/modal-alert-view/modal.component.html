@@ -1,0 +1,15 @@
+<div class="fancybox-slide--html">
+  <div class="popup-close-id popup-wr" id="popup_modal">
+    <div *ngIf="data.header" class="popup-wr__head">
+      <span [innerHTML]="data.header"></span>
+    </div>
+    <div class="popup-wr__body">
+      <div [innerHTML]="data.html" class="inline"></div>
+    </div>
+    <div class="popup-wr__footer d-flex container justify-content-around">
+      <button (click)="close()" class="btn-st">Закрыть</button>
+    </div>
+  </div>
+
+  <app-button-close></app-button-close>
+</div>

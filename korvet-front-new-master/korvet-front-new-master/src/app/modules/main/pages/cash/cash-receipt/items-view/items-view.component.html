@@ -1,0 +1,60 @@
+<div class="form-wr form-wr--mmin">
+
+  <div class="form__table form__table--txt">
+    <table>
+      <tr>
+        <th class="th-service">Номенклатура</th>
+        <th>Предмет расчета</th>
+        <th class="th--center">Цена</th>
+        <th class="th--center">Количество</th>
+        <th class="th--center">Единица измерения</th>
+        <th class="th--center">Сумма</th>
+      </tr>
+      <ng-container *ngFor="let product of item.items; let i=index">
+        <tr>
+          <td>
+            <div class="form-txt">
+              <strong>{{i + 1}}. {{product.name}}</strong>
+            </div>
+          </td>
+          <td>
+            <div class="form-txt">
+              <span>{{product.paymentObject.title}}</span>
+            </div>
+          </td>
+          <td class="td--center">
+            <div class="form-txt form-txt--center">
+              <span>{{product.priceWithCharge?.toString()|price:''}}</span>
+            </div>
+          </td>
+          <td class="td--center">
+            <div class="form-txt form-txt--center">
+              <span>{{product.quantity}}</span>
+            </div>
+          </td>
+          <td class="td--center">
+            <div class="form-txt form-txt--center">
+              <span>{{product.measure}}</span>
+            </div>
+          </td>
+          <td class="td--center">
+            <div class="form-txt form-txt--center">
+              <span>
+                <ng-container
+                  *ngIf="product.priceWithCharge; else elseBlock">
+                  {{(product.priceWithCharge * product.quantity)?.toString()|price:''}}
+                </ng-container>
+                <ng-template #elseBlock>
+                  {{product.amount?.toString()|price:''}}
+                </ng-template>
+              </span>
+            </div>
+          </td>
+        </tr>
+
+      </ng-container>
+
+    </table>
+  </div>
+</div>
+

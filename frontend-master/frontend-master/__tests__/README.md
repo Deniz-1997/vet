@@ -1,0 +1,4 @@
+- [Jest](https://jestjs.io/docs/getting-started)
+- [Vue Test Utils](https://vue-test-utils.vuejs.org/ru/guides/)
+- Покрываем только новый функционал
+- Минимальное покрытие 80%

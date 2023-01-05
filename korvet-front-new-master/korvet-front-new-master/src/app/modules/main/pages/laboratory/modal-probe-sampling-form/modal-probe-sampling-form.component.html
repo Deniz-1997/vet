@@ -1,0 +1,15 @@
+<div class="fancybox-slide--html">
+  <div id="popup_laboratory_modal" class="popup-wr">
+    <div *ngIf="data.header" class="popup-wr__head">
+      <span [innerHTML]="data.header"></span>
+    </div>
+    <app-probe-sampling-form 
+      [appointment] = "data.appointment" 
+      [isModal] = "true"
+      [model] = "data.probeSampling" 
+      (afterSave)="afterSave($event)"></app-probe-sampling-form>
+    <button type="button" class="fancybox-button fancybox-close-small" title="Close" mat-dialog-close>
+      <!-- <app-icon-close></app-icon-close> -->
+    </button>
+  </div>
+</div>

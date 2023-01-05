@@ -1,0 +1,221 @@
+<div class="header">
+  <div *ngIf="id === 'create'; else elseBlock" class="header__name">Создать номенклатуру</div>
+
+  <ng-template #elseBlock>
+    <div class="header__name">{{title}}</div>
+  </ng-template>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid pb-2">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3 pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <app-button-active [control]="formGroup.get('active')"></app-button-active>
+          </ng-template>
+        </app-col>
+        <app-col class="align-self-center">
+          <ng-template #colContent>
+            Импортировано из файла: <b>{{item.imported ? 'Да' : 'Нет'}}</b>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name col="12 pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" placeholder="Ватные палочки"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=fullName col="12 pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="fullName" type="text" placeholder="Ватные палочки белые диаметр 12 мм"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=paymentObject col="12 col-lg-4 pb-2 pb-lg-0" formGroupName="paymentObject">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum [modelValue]="item?.paymentObject" [options]="PaymentObjectEnum"
+                                    formControlName="code"></app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true"  text="Цена, ₽" col="6 col-lg-4">
+          <ng-template #colContent>
+            <input class="inp-st" id="dis" appPositiveNumber [attr.disabled]="isEnabled ? '': null"
+              formControlName="price" type="number" placeholder="99,99">
+          </ng-template>
+        </app-col>
+        <app-col text=" "  col="6 col-lg-4">
+          <ng-template #colContent>
+            <div class="check-st" style="margin-top: 20px;">
+              <div class="check-st__col">
+                <input formControlName="budgetDrug" id="budgetDrug" type="checkbox">
+                <label class="text-nowrap" for="budgetDrug">Бюджетный</label>
+              </div>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=measurementUnits col="12 col-md-6 col-lg-4 pt-2 pt-md-0" formGroupName="measurementUnits">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum  [options]="referenceMeasurementUnits" formControlName="id">
+            </app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+        <app-col titleName=vatRate col="12 col-md-6 col-lg-4" formGroupName="vatRate">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum [modelValue]="item?.vatRate"  [disabled]="isEnabled"  [options]="VatRateEnum" formControlName="code">
+            </app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=productCode col="12 col-lg-4" formGroupName="productCode">
+          <ng-template #colContent>
+            <div formGroupName="type">
+              <app-ui-mat-select-enum [modelValue]="item?.productCode" [options]="ProductCodeTypeEnum"
+                                      formControlName="code"></app-ui-mat-select-enum>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="Идентификатор продукта GTIN" col="12 col-md-6 col-lg-4 pb-2 pb-md-0" *ngIf="isProductCode()" formGroupName="productCode">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="gtin" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [text]="getLabel()" col="12 col-md-6 col-lg-4 pb-2 pt-2 pt-md-0 pb-md-0" *ngIf="isProductCode()" formGroupName="productCode">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="serial" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col   titleName="disease">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeholder="Выбрать заболевание"
+              [selectFormControl]="formGroup.get('disease')"
+              [type]="crudType.ReferenceDisease">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=category col="12">
+          <ng-template #colContent>
+            <app-ui-autocomplete [fields]="categoryFields" [control]="formGroup.get('categoryNomenclature')"
+                                 [type]="crudType.ReferenceCategoryNomenclature"
+                                 placeholder="Укажите категорию"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  titleName=manufacturer col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [addFilter]="filter('manufacturer')"
+              [control]="formGroup.get('manufacturer')"
+              [type]="crudType.ReferenceManufacturer"
+              placeholder="Укажите производителя"
+              [fields]="manufacturerFields"
+              field="name">
+            </app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col  titleName=country col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [addFilter]="filter('countries')"
+              [control]="formGroup.get('countries')"
+              [type]="crudType.ReferenceCountries"
+              placeholder="Укажите страну"
+              [fields]="countriesFields"
+              field="name">
+            </app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=releaseForm col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('releaseForm')" [type]="crudType.ReferenceReleaseForm"
+               placeholder="Укажите форму выпуска">
+            </app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=nomenclaturesType col="12 col-lg-6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="itemType" type="text" placeholder="Укажите тип номенклатуры"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=clinic col="12 pt-2 pt-lg-0" formGroupName="unit">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum [options]="referenceUnits" formControlName="id"></app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="item.productStock && item.productStock.length !== 0">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6">
+            <ng-template #colContent>
+              Склад
+            </ng-template>
+          </app-col>
+          <app-col col="6">
+            <ng-template #colContent>
+              Количество
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row *ngFor="let product of formGroup.controls.productStock.controls; let i=index">
+        <ng-template #rowContent>
+          <app-col col="6">
+            <ng-template #colContent>
+              {{ item.productStock[i].stock.name }}
+            </ng-template>
+          </app-col>
+          <app-col col="6">
+            <ng-template #colContent>
+              <span>{{ item.productStock[i].quantity }}</span>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+  </div>
+
+  <app-product-to-services-form *ngIf="false" [product]="item"></app-product-to-services-form>
+
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type">
+  </app-reference-button-form>
+</form>

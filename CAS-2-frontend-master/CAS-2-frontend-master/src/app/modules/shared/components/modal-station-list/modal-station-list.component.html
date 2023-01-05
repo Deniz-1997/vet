@@ -1,0 +1,60 @@
+<k-row>
+  <ng-template #row>
+    <k-col>
+      <ng-template #col>
+        <app-close-dialog [textCenter]="true" title="Список закрепленных станций пользователя"></app-close-dialog>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>
+<ng-container *ngIf="stationListConvert.length; else blockElse">
+  <k-row>
+    <ng-template #row>
+      <k-col>
+        <ng-template #col>
+          <div mat-dialog-content class="modal-station-content">
+          <ng-container *ngFor="let station of stationListConvert">
+            <k-row>
+              <ng-template #row>
+                <k-col cols="12">
+                  <ng-template #col>
+                    <mat-checkbox [ngStyle]="station.padding"
+                                  (change)="changeChildrenCheckedValue($event.checked, station)"
+                                  [checked]="station.checked"
+                                  color="primary">
+                      <span class="pre-wrap">{{station.name}}</span>
+                    </mat-checkbox>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+          </ng-container>
+          </div>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+
+</ng-container>
+<ng-template #blockElse>
+  <k-row>
+    <ng-template #row>
+      <k-col>
+        <ng-template #col>
+          <p class="subtitle-2 center">За пользователем нет закрепленных станций</p>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+</ng-template>
+<k-row>
+  <ng-template #row>
+    <k-col class="center">
+      <ng-template #col>
+        <k-button color="primary" [type]="buttonType" [name]="buttonName" (click)="close()"></k-button>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>
+
+

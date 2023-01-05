@@ -1,0 +1,90 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "paths": {
+      "utils/helpers": [
+        "./utils/helpers"
+      ],
+      "badge": [
+        "dist/badge/badge",
+        "dist/badge"
+      ],
+      "button": [
+        "dist/button/button",
+        "dist/button"
+      ],
+      "icon": [
+        "dist/icon/k-icon",
+        "dist/icon"
+      ],
+      "breadcrumbs": [
+        "dist/breadcrumbs/breadcrumbs",
+        "dist/breadcrumbs"
+      ],
+      "grid": [
+        "dist/grid/grid",
+        "dist/grid"
+      ],
+      "grids": [
+        "dist/grids/grids",
+        "dist/grids"
+      ],
+      "divider": [
+        "dist/divider/divider",
+        "dist/divider"
+      ],
+      "directives": [
+        "dist/directives/directives",
+        "dist/directives"
+      ],
+      "pipes": [
+        "dist/pipes/pipes",
+        "dist/pipes"
+      ],
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ],
+      "list": [
+        "dist/list/list",
+        "dist/list"
+      ],
+      "navigation": [
+        "dist/navigation/navigation",
+        "dist/navigation"
+      ],
+      "ui-elements": [
+        "dist/ui-elements/ui-elements",
+        "dist/ui-elements"
+      ],
+      "subheader": [
+        "dist/subheader/subheader",
+        "dist/subheader"
+      ]
+    },
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}

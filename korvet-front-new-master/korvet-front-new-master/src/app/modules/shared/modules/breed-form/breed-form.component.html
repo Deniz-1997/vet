@@ -1,0 +1,33 @@
+<app-title-view [title]="title"></app-title-view>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup" appFormFocus>
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name class="pb-2">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent formGroupName="type">
+        <app-col titleName=viewAnimal class="pb-2">
+          <ng-template #colContent>
+            <select [options]="petTypes" app-ui-select-field formControlName="id"></select>
+            <!--<select name="type" formControlName="id" [(ngModel)]="item.type.id" appUiSelect>
+              <option value="null">Не выбрано</option>
+              <option *ngFor="let option of petTypesItems | async" value="{{option.id}}">{{option.name}}</option>
+            </select>-->
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <div class="form-footer">
+    <button (click)="submit()" class="btn-st btn-st--right" type="button">Сохранить</button>
+    <button class="btn-st btn-st--right btn-st--gray" type="button">Отмена</button>
+    <button class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold" type="button">Удалить</button>
+  </div>
+</form>

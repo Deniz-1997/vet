@@ -1,0 +1,70 @@
+<div class="container-fluid">
+  <app-row class="row fancybox-slide--html">
+    <ng-template #rowContent>
+      <app-col class="ml-2">
+        <ng-template #colContent>
+          <app-title-view class="text-center" title="Сообщение в техническую поддержку"></app-title-view>
+          <app-button-close></app-button-close>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>
+<form (submit)="submit()" [formGroup]="formGroup" appFormFocus>
+  <div class="container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=textAppeal>
+          <ng-template #colContent>
+                  <textarea [value]="formGroup.get('message').value | firstLetter" class="textarea-st" cols="30"
+                            formControlName="message" rows="10" placeholder="Не работает вход в личный кабинет"></textarea>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col class="mb-2">
+          <ng-template #colContent>
+            <a class="form-span__lnk-btn" href="#" (click)="chooseFile($event)">Добавить изображение</a>
+            <input type="file" hidden #file (change)="changeFile($event)" [accept]="acceptTypes" name="file"
+                   formControlName="file" />
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row *ngIf="imageData">
+      <ng-template #rowContent>
+        <app-col class="text-center">
+          <ng-template #colContent>
+            <img [src]="imageData" id="smallImage">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <a class="form-span__lnk-btn text-dark" target="_blank" href="https://youtrack.mart-info.ru/articles/SUPPORT-A-18/%D0%9F%D0%B5%D1%80%D0%B5%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D0%B4%D1%80%D0%B0%D0%B9%D0%B2%D0%B5%D1%80%D0%B0-%D0%9A%D0%9A%D0%9C">Решение проблем с кассой:</a>
+            <ul class="list-group mb-2 mt-2">
+              <a class="text-left" target="_blank" href="https://youtrack.mart-info.ru/articles/SUPPORT-A-18/%D0%9F%D0%B5%D1%80%D0%B5%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D0%B4%D1%80%D0%B0%D0%B9%D0%B2%D0%B5%D1%80%D0%B0-%D0%9A%D0%9A%D0%9C">Не открывается смена – не вылезает чек</a>
+              <a class="text-left" target="_blank" href="https://youtrack.mart-info.ru/articles/SUPPORT-A-18/%D0%9F%D0%B5%D1%80%D0%B5%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D0%B4%D1%80%D0%B0%D0%B9%D0%B2%D0%B5%D1%80%D0%B0-%D0%9A%D0%9A%D0%9C">Чек не печатается – выдаётся ошибка</a>
+              <a class="text-left" target="_blank" href="https://youtrack.mart-info.ru/articles/SUPPORT-A-18/%D0%9F%D0%B5%D1%80%D0%B5%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D0%B4%D1%80%D0%B0%D0%B9%D0%B2%D0%B5%D1%80%D0%B0-%D0%9A%D0%9A%D0%9C">Не печатается «отчёт без гашения»</a>
+            </ul>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</form>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-outline-primary" mat-dialog-close type="button" (click)="close()">Закрыть</button>
+    </div>
+    <div class="col text-sm-right pt-2 pt-sm-0">
+      <button class="btn btn-primary" (click)="submit()" [class.btn-loader]="loading">Отправить</button>
+    </div>
+  </div>
+</div>

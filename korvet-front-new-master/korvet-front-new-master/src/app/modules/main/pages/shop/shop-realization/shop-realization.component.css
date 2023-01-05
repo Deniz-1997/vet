@@ -1,0 +1,11 @@
+.tr-close{
+   opacity: 1;
+}
+.shortCell{
+  width: 200px;
+}
+
+.radio-box input + label:before
+{
+  border: 2px solid #0c51b6;
+}

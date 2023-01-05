@@ -1,0 +1,276 @@
+image: node:latest
+
+stages:
+  - deploy
+
+deploy-prod:
+  only:
+  - master
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: 89.108.112.145
+    USER: dev
+    ARCHIVE: build_frontend.tar.gz
+    NAME: CAS-2-frontend
+  except:
+  - tags
+  tags: [ prod ]
+
+  before_script:
+  - rm -rf ${FOLDER}/${NAME}
+  - rm -f ${FOLDER}/${ARCHIVE}
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - chmod 600 ~/.ssh/known_hosts
+  - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+  - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+  - cd ${FOLDER}/${NAME} && npm install
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build --prod
+  - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+  - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+  - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh'
+  script:
+  - echo "" > ~/.ssh/known_hosts
+
+deploy-dev:
+  only:
+  - dev
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev.tar.gz
+    NAME: CAS-2-frontend
+  except:
+  - tags
+  tags: [ dev ]
+
+  before_script:
+  - rm -rf ${FOLDER}/${NAME}
+  - rm -f ${FOLDER}/${ARCHIVE}
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - chmod 600 ~/.ssh/known_hosts
+  - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+  - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+  - cd ${FOLDER}/${NAME}
+  - git checkout dev
+  - npm install
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+  - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+  - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+  - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev'
+  script:
+  - echo "" > ~/.ssh/known_hosts
+
+# TODO: переписать на один общий dev
+deploy-dev1:
+  only:
+  - dev1
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev1.tar.gz
+    NAME: CAS-2-frontend
+  except:
+  - tags
+  tags: [ dev ]
+
+  before_script:
+  - rm -rf ${FOLDER}/${NAME}
+  - rm -f ${FOLDER}/${ARCHIVE}
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - touch ~/.ssh/known_hosts
+  - chmod 600 ~/.ssh/known_hosts
+  - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+  - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+  - cd ${FOLDER}/${NAME}
+  - git checkout dev1
+  - npm install
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+  - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+  - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+  - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+  - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev1'
+  script:
+  - echo "" > ~/.ssh/known_hosts
+
+deploy-dev2:
+  only:
+    - dev2
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev2.tar.gz
+    NAME: CAS-2-frontend
+  except:
+    - tags
+  tags: [ dev ]
+
+  before_script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev2
+    - npm install
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev2'
+  script:
+    - echo "" > ~/.ssh/known_hosts
+
+deploy-dev3:
+  only:
+    - dev3
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev3.tar.gz
+    NAME: CAS-2-frontend
+  except:
+    - tags
+  tags: [ dev ]
+
+  before_script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev3
+    - npm install
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev3'
+  script:
+    - echo "" > ~/.ssh/known_hosts
+
+deploy-dev4:
+  only:
+    - dev4
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev4.tar.gz
+    NAME: CAS-2-frontend
+  except:
+    - tags
+  tags: [ dev ]
+
+  before_script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev4
+    - npm install
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev4'
+  script:
+    - echo "" > ~/.ssh/known_hosts
+
+deploy-dev5:
+  only:
+    - dev5
+  stage: deploy
+  variables:
+    FOLDER: /projects/new_cas
+    PORT: 40029
+    SERVER: dev-cas.mart-info.ru
+    USER: dev-cas
+    ARCHIVE: build_frontend_dev5.tar.gz
+    NAME: CAS-2-frontend
+  except:
+    - tags
+  tags: [ dev ]
+
+  before_script:
+    - rm -rf ${FOLDER}/${NAME}
+    - rm -f ${FOLDER}/${ARCHIVE}
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa gitlab.mart-info.ru >> ~/.ssh/known_hosts
+
+    - cd ${FOLDER} && git clone git@gitlab.mart-info.ru:mart-info/CAS-2-frontend.git
+    - cd ${FOLDER}/${NAME}
+    - git checkout dev5
+    - npm install
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng lint
+    - node --max_old_space_size=5096 ${FOLDER}/${NAME}/node_modules/@angular/cli/bin/ng build
+    - tar -czvf ${FOLDER}/${ARCHIVE} -C ${FOLDER}/${NAME}/dist/corvet .
+    - scp -P ${PORT} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ${FOLDER}/${ARCHIVE} ${USER}@${SERVER}:~/
+    - ssh ${USER}@${SERVER} -o StrictHostKeyChecking=no -p ${PORT} './build-front.sh dev5'
+  script:
+    - echo "" > ~/.ssh/known_hosts

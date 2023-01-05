@@ -1,0 +1,9 @@
+<app-wild-animal-card-view
+  [item]="wildAnimal$ | async"
+  [loading]="loading$ | async"
+></app-wild-animal-card-view>
+
+<app-wild-animal-register-edit
+  [wildAnimalId]="id"
+  [wildAnimal]="wildAnimal$ | async"
+></app-wild-animal-register-edit>

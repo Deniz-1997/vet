@@ -1,0 +1,144 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+  [show]="loading$|async"></ngx-loading>
+
+<div class="header">
+  <div class="header__name">
+    <ng-container *ngIf="!item.id">Добавить безнадзорное животное</ng-container>
+    <ng-container *ngIf="item && item.id && formGroup">
+      {{formGroup.get('type').value.name}},
+      {{formGroup.get('breed').value.name}}
+    </ng-container>
+  </div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-2">
+          <ng-template #colContent>
+            <div class="animal-photo-edit-list">
+              <div class="animal-photo-edit-item">
+                <ng-container *ngIf="currentPhoto; else no_photo">
+                  <img  src="{{currentPath}}/{{currentPhoto}}" class="w-100 cover-fill">
+                </ng-container>
+                <ng-template #no_photo>
+                  <img src="assets/img/no_photo.png" class="w-100 cover-fill">
+                </ng-template>
+              </div>
+
+              <div (mouseenter)="mouseEnter(image.uploadedFile.name, image['uploadedFile']['path'])" (mouseleave)="mouseLeave()"
+                *ngFor="let image of (wildAnimalFile$|async)" class="animal-photo-edit-item">
+                <ng-container>
+                  <img alt="" src="{{currentPath}}/{{image.uploadedFile.name}}" class="w-100 cover-fill">
+                  <a (click)="onDelete($event, image)" class="animal-photo-close"><span></span></a>
+                </ng-container>
+              </div>
+
+              <div (mouseenter)="mouseEnter(image.name, image['uploadedFile']['path'])" (mouseleave)="mouseLeave()" *ngFor="let image of arrayImages"
+                class="animal-photo-edit-item">
+                <ng-container>
+                  <img alt="" src="{{currentPath}}/{{image.name}}" class="w-100 cover-fill">
+                  <a (click)="onDelete($event, image)" class="animal-photo-close"><span></span></a>
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="animal-photo-add"><a (click)="photoClick($event)">Добавить фото</a></div>
+            <input #photoInput (change)="photoUpload($event)" accept="image/jpeg,image/png,image/gif"
+              class="ava-edit-input" type="file">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-10" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <div class="container-fluid">
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col titleName=chipNumber col="12 col-lg-6">
+                    <ng-template #colContent>
+                      <input class="inp-st" formControlName="chipNumber" type="text"
+                      placeholder="ndKHk989">
+                    </ng-template>
+                  </app-col>
+                  <app-col [required]="true"  titleName="view"  col="12 col-lg-6" class="pt-2 pt-lg-0">
+                    <ng-template #colContent>
+                      <app-ui-autocomplete (selected)="onChangeType()" [control]="formGroup.get('type')"
+                        [options]="petTypesItems" [type]="crudType.ReferencePetType"
+                        placeholder="Собака"></app-ui-autocomplete>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col titleName=breed col="12 col-lg-6">
+                    <ng-template #colContent>
+                      <app-ui-autocomplete [control]="formGroup.get('breed')" [options]="breedItems"
+                        [petId]="formGroup.value.type?.id" [type]="crudType.ReferenceBreed"
+                         placeholder="Сенбернар"></app-ui-autocomplete>
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=gender col="12 col-lg-6">
+                    <ng-template #colContent>
+                      <mat-form-field appearance="outline">
+                        <mat-select disableOptionCentering formControlName="gender" placeholder="Не выбрано">
+                          <mat-option value="FEMALE">Самка</mat-option>
+                          <mat-option value="MALE">Самец</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col titleName=numberOfYears col="12 col-lg-3">
+                    <ng-template #colContent>
+                      <input (input)="setBirthdayByYearsAndMonth()" class="inp-st" formControlName="numberOfYears"
+                        max="30" min="0" name="numberOfYears" type="number" placeholder="9">
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=numberOfMonths col="12 col-lg-3">
+                    <ng-template #colContent>
+                      <input (input)="setBirthdayByYearsAndMonth()" class="inp-st" formControlName="numberOfMonths"
+                        max="11" min="0" name="numberOfMonths" type="number" placeholder="11">
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=animalNumber col="12 col-lg-6">
+                    <ng-template #colContent>
+                      <input class="inp-st" formControlName="animalNumber" type="text" placeholder="199">
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="7 col-lg-4" text=" ">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="aggressive" id="aggressive" type="checkbox" value="">
+              <label for="aggressive">Животное агрессивно</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=description col="12">
+          <ng-template #colContent>
+            <textarea [value]="formGroup.get('description').value" class="textarea-st" formControlName="description"
+              name="" rows="6" placeholder="Рыжее пятно на правом ухе"></textarea>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-reference-button-form [goListUrl]="goListUrl()" [goListUrlAfterRemove]="'/culling'" [id]="id"
+      [isEdit]="isEdit()" [type]="type"></app-reference-button-form>
+  </div>
+</form>

@@ -1,0 +1,33 @@
+<k-container fluid="fluid">
+  <ng-template #templateRef>
+    <k-row class="mt-5">
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <mat-card class="text-left">
+              <mat-card-subtitle>Синхронизация пользователей из CAS</mat-card-subtitle>
+              <mat-card-content>
+                <p>Данная кнопка  позволяет администратору произвести синхронизацию уже зарегистрированных в  личном кабинете пользователей.
+                  <br>
+                  Конкретно, подгружает станции привязанные к пользователю в системе CAS в личный кабинет.
+                </p>
+              </mat-card-content>
+              <mat-divider inset></mat-divider>
+              <mat-card-actions class="mt-2 ml-1">
+                <button mat-raised-button color="primary"
+                        (click)="synchronize()"
+                        [disabled]="disabled">
+                  Синхронизировать
+                </button>
+              </mat-card-actions>
+              <mat-card-footer>
+                <mat-progress-bar *ngIf="disabled" mode="indeterminate"></mat-progress-bar>
+              </mat-card-footer>
+            </mat-card>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </ng-template>
+</k-container>
+

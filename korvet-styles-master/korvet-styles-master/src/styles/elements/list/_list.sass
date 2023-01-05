@@ -1,0 +1,98 @@
+@import './_variables.scss'
+@import './_mixins.sass'
+
+// Theme
+.krv-list
+  &.primary,
+  &.secondary,
+  &.accent,
+  &.success,
+  &.error,
+  &.warning,
+  &.info
+    > .krv-list-item
+      color: map-deep-get($material-dark, 'text', 'primary')
+
++theme(krv-list) using ($material)
+  background: map-get($material, 'cards')
+  color: map-deep-get($material, 'text','primary')
+
+  .krv-list--disabled
+    color: map-deep-get($material, 'text', 'disabled')
+
+  .krv-list-group--active:before,
+  .krv-list-group--active:after
+    background: map-get($material, 'dividers')
+
+// Sheet
++sheet(kvr-list, $list-elevation, $list-border-radius, $list-shaped-border-radius)
+
+// Block
+.krv-list
+  display: block
+  padding: $list-padding
+  position: static
+  +elevationTransition()
+
+// Modifier
+.krv-list--disabled
+  pointer-events: none
+
+.krv-list--flat
+  .krv-list-item:before
+    display: none
+
+.krv-list--dense
+  .krv-subheader
+    font-size: $list-dense-subheader-font-size
+    height: $list-dense-subheader-height
+    padding: $list-dense-subheader-padding
+
+.krv-list--nav,
+.krv-list--rounded
+  .krv-list-item:not(:last-child):not(:only-child)
+    margin-bottom: $list-nav-rounded-item-margin-bottom
+
+  &.krv-list--dense .krv-list-item,
+  .krv-list-item--dense
+    &:not(:last-child):not(:only-child)
+      margin-bottom: $list-nav-rounded-dense-item-margin-bottom
+
+.krv-list--nav
+  padding-left: $list-nav-padding-left
+  padding-right: $list-nav-padding-right
+
+  .krv-list-item
+    padding: $list-nav-item-padding
+
+  .krv-list-item,
+  .krv-list-item:before
+    border-radius: $list-nav-border-radius
+
+.krv-list.krv-sheet--shaped
+  +list-shaped($list-item-min-height)
+
+  &.krv-list--two-line
+    +list-shaped($list-item-two-line-min-height)
+
+  &.krv-list--three-line
+    +list-shaped($list-item-three-line-min-height)
+
+  +ltr()
+    padding-right: $list-shaped-padding
+
+  +rtl()
+    padding-left: $list-shaped-padding
+
+.krv-list--rounded
+  padding: 8px
+  +list-rounded($list-item-min-height)
+
+  &.krv-list--two-line
+    +list-rounded($list-item-two-line-min-height)
+
+  &.krv-list--three-line
+    +list-rounded($list-item-three-line-min-height)
+
+.krv-list--subheader
+  padding-top: $list-subheader-padding-top

@@ -1,0 +1,173 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<div *ngIf="appointment.pet">
+  <div class="header">
+    <div class="header__name d-inline">
+      <app-icon-animal [type]="appointment.pet.type?.icon?.code"></app-icon-animal>
+      {{appointment.pet.name}}
+    </div>
+    <div class="body-header__setting">
+      <app-print-list [appointmentId]="id" partition="Appointment"></app-print-list>
+      <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+        <app-icon-download></app-icon-download>
+      </a>
+      <a class="lnk-edit" routerLink="edit">
+        <span class="lnk-edit__ico">
+          <app-icon-edit></app-icon-edit>
+        </span>
+        Редактировать
+      </a>
+    </div>
+  </div>
+  <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+    <mat-tab label="Приём">
+      <div *ngIf="appointment.id" class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=dateAppointment col="6 col-lg-6" class="pb-2 pb-lg-0">
+              <ng-template #colContent>
+                <strong>{{appointment.date}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=owner col="6 col-lg-6">
+              <ng-template #colContent>
+                <strong><a [routerLink]="'/owners/'+appointment.owner.id">{{appointment.owner.name}}</a></strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=professions col="6 col-lg-6">
+              <ng-template #colContent>
+                <strong>{{appointment.profession?.name}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=expert col="6 col-lg-6">
+              <ng-template #colContent>
+                <strong *ngIf="appointment.user">
+                  <ng-container *ngIf="appointment.user.surname"> {{appointment.user.surname}} </ng-container>
+                  <ng-container *ngIf="appointment.user.name"> {{appointment.user.name}} </ng-container>
+                  <ng-container *ngIf="appointment.user.patronymic"> {{appointment.user.patronymic}} </ng-container>
+                </strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=typeOfAppeal col="6 col-lg-6">
+              <ng-template #colContent>
+                <strong>
+                  {{appointment.type?.title}}
+                </strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=dateEndContract col="6 col-lg-6">
+              <ng-template #colContent>
+                <strong *ngIf="appointment.owner.contractDateTo">{{appointment.owner.contractDateTo.split(' ')[0] |
+                  defaultValue}}</strong>
+                <strong *ngIf="!appointment.owner.contractDateTo">-</strong>
+              </ng-template>
+            </app-col>
+
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=previousAppointment *ngIf="appointment.previous">
+              <ng-template #colContent>
+                <strong>
+                  <ng-container *ngIf="appointment.previous.date">{{appointment.previous.date}}</ng-container>
+                  :
+                  <ng-container *ngIf="appointment.previous.name">{{appointment.previous.name}}</ng-container>
+                </strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+
+      <div class="tab-box">
+        <app-pets-view-detail [pet]="appointment?.pet"></app-pets-view-detail>
+      </div>
+
+      <div class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=petitions >
+              <ng-template #colContent>
+                <span *ngIf="appointment.name" [innerText]="appointment.name"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=survey>
+              <ng-template #colContent>
+                <span *ngIf="appointment.survey" [innerText]="appointment.survey"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=diagnosis>
+              <ng-template #colContent>
+                <span *ngIf="appointment.diagnosis" [innerText]="appointment.diagnosis"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-12" titleName=prescription>
+              <ng-template #colContent>
+                <span *ngIf="appointment.prescription" [innerText]="appointment.prescription"></span>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+
+      <!-- Блок шаблоны форм -->
+      <app-form-template-appointment-view [appointment]="appointment"></app-form-template-appointment-view>
+
+      <app-appointments-view-items [appointmentLogs]="appointmentLogs" [appointment]="appointment">
+      </app-appointments-view-items>
+
+      <app-appointment-files [appointment]="appointment"></app-appointment-files>
+    </mat-tab>
+    <mat-tab label="История обращений">
+      <ngx-loading [show]="getLoading"></ngx-loading>
+      <div *ngIf="appointments.length !== 0; then thenBlock; else elseBlock"></div>
+      <ng-template #thenBlock>
+        <div *ngFor="let appointment of appointments">
+          <app-appointment-history  [appointment]="appointment"></app-appointment-history>
+        </div>
+      </ng-template>
+      <ng-template #elseBlock>
+        <app-list-view
+          [emptyOptions]="{title: 'Не найдено ни одной истории обращения!'}"
+        >
+        </app-list-view>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Анализы">
+      <ngx-loading [show]="getResearchLoading"></ngx-loading>
+      <ng-container *ngIf="researchList.length; else elseResearchBlock">
+        <div *ngFor="let reserch of researchList" class="mb-3">
+          <app-research-header [model] = "reserch" [showResult] = "true"></app-research-header>
+        </div>
+      </ng-container>
+      <ng-template #elseResearchBlock>
+        <app-list-view
+          [emptyOptions]="{title: 'Не найдено анализов для данного обращения!'}"
+        >
+        </app-list-view>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

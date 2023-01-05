@@ -1,0 +1,117 @@
+<div class="position-relative">
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="form-wr container-fluid">
+      <app-personal-contact [formGroup]="formGroup" [emailRequired]="false"></app-personal-contact>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=individualEntrepreneurName col="12 col-lg-12">
+            <ng-template #colContent>
+              <input [value]="formGroup.get('name').value | titleCaseName" class="inp-st" formControlName="name"
+                type="text" placeholder="ООО СПЕКТР">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=inn col="12 col-lg-4" class="pb-2 pb-lg-0">
+            <ng-template #colContent>
+              <input (change)="getMatches.emit(formGroup.value)" class="inp-st" data-max="10" data-min="0"
+                formControlName="inn" type="text" placeholder="19-24-083745-99">
+            </ng-template>
+          </app-col>
+          <app-col titleName=egrip col="12 col-lg-4" formGroupName="entrepreneur">
+            <ng-template #colContent>
+              <input [maskNumberMax]="10" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                formControlName="egrip" type="text" placeholder="С ГГ КК ХХХХХХХХХ Ч">
+            </ng-template>
+          </app-col>
+          <app-col titleName=ogrnip col="12 col-lg-4" class="pt-2 pt-lg-0" formGroupName="entrepreneur">
+            <ng-template #colContent>
+              <input [maskNumberMax]="10" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                formControlName="ogrnip" type="text" placeholder="С ГГ КК ХХХХХХХХХ Ч">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=address col="12 col-lg-2"  formGroupName="address">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text"
+                placeholder="г. Москва, ул. Тверская, д. 9">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-12" class="pl-4">
+            <ng-template #colContent>
+              <app-ya-maps-field [coordinatesControl]="formGroup.controls['address']['controls']['coordinates']">
+              </app-ya-maps-field>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row formGroupName="individualPerson" class="align-items-center">
+        <ng-template #rowContent>
+          <app-col titleName=householdAddress col="12 col-sm-7 col-lg-8" >
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st" formControlName="householdAddress" type="text"
+                placeholder="г. Москва, ул. Тверская, д. 9">
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-sm-5 col-lg-4" class="pt-4 pt-lg-4">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input [dependControl]="formGroup.controls['individualPerson']['controls']['householdAddress']"
+                  [mainControl]="formGroup.controls['address']['controls']['full']" appSameField
+                  formControlName="householdAddressIsPersonAddress" id="address-residence" type="checkbox">
+                <label for="address-residence">Совпадает с адресом проживания</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row class="pb-3">
+        <ng-template #rowContent>
+          <app-col titleName=selectActivities col="12 col-lg-6">
+            <ng-template #colContent>
+              <app-ui-multi-select-field [(choices)]="choicesActivities" [control]="formGroup.get('activity')"
+              [searchInput]="true"></app-ui-multi-select-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=specifyYourActivities col="12 col-lg-6" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="customActivities" type="text"
+                placeholder="Реализация животных">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+    <app-owner-file-view *ngIf="formGroup.value['id']" [fileTypes$]="fileTypes$" [files]="files$|async" [owner]="model">
+    </app-owner-file-view>
+  </form>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <app-reference-button-form
+            goListUrl='/owners'
+            goListUrlAfterRemove='/owners'
+            [backButton]="true"
+            [hidden]="backButton"
+            [id]="formGroup.value['id']"
+            (buttonClick)="submit()"
+            [isEdit]="formGroup.value['id'] ? true : false"
+            [type]="type"
+            [saveButtonName]="formGroup.value['id'] ? 'Сохранить':'Добавить'"
+            removeButtonName="УДАЛИТЬ ВЛАДЕЛЬЦА">
+          </app-reference-button-form>
+        </div>
+      </div>
+    </div>
+</div>

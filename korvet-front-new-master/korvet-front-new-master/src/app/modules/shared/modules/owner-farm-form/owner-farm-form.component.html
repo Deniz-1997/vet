@@ -1,0 +1,264 @@
+<div class="position-relative">
+  <ngx-loading [show]="loading"></ngx-loading>
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="form-wr container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=name col="12 col-lg-12">
+            <ng-template #colContent>
+              <input [value]="formGroup.get('name').value | titleCaseName" class="inp-st" formControlName="name"
+                type="text" placeholder="ООО РАДУГА">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=inn col="12 col-lg-4">
+            <ng-template #colContent>
+              <input (change)="getMatches.emit(formGroup.value)" class="inp-st inp-namber" formControlName="inn"
+                type="text" placeholder="7731347089">
+            </ng-template>
+          </app-col>
+          <app-col titleName=egrip col="12 col-lg-4" class="pt-2 pt-lg-0" formGroupName="farm">
+            <ng-template #colContent>
+              <input [maskNumberMax]="10" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                formControlName="egrip" type="text" placeholder="1177746126099">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=phone col="12 col-lg-4">
+            <ng-template #colContent>
+              <input appUiMaskPhone class="inp-st" formControlName="phone" type="text"
+                placeholder="+79999999999">
+            </ng-template>
+          </app-col>
+          <app-col titleName=email col="12 col-lg-4" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="email" type="text" placeholder="info@mail.ru">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row formGroupName="address">
+        <ng-template #rowContent>
+          <app-col titleName=address col="12 col-lg-12">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text"
+                placeholder="г. Москва, ул. Тверская, д. 9">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-12" class="pl-4">
+            <ng-template #colContent>
+              <app-ya-maps-field [coordinatesControl]="formGroup.controls['address']['controls']['coordinates']">
+              </app-ya-maps-field>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row formGroupName="individualPerson" class="align-items-center">
+        <ng-template #rowContent>
+          <app-col titleName=householdAddress col="12 col-sm-7 col-lg-8">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st" formControlName="householdAddress" type="text"
+                placeholder="г. Москва, ул. Тверская, д. 9">
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-sm-5 col-lg-4" class="pt-4">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input [dependControl]="formGroup.controls['individualPerson']['controls']['householdAddress']"
+                  [mainControl]="formGroup.controls['address']['controls']['full']" appSameField
+                  formControlName="householdAddressIsPersonAddress" id="address-residence" type="checkbox">
+                <label for="address-residence">Совпадает с адресом КФХ</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+
+      <div class="form-header">Глава КФХ</div>
+      <fieldset formGroupName="farm">
+        <fieldset formGroupName="head">
+          <fieldset formGroupName="person">
+            <app-row formGroupName="fullName">
+              <ng-template #rowContent>
+                <app-col titleName=lastName col="12 col-lg-4" class="pb-2 pb-lg-0">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('farm.head.person.fullName.lastName')"
+                       field='surname'
+                       placeholder='Иванов'
+                       parts='SURNAME'>
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+                <app-col  titleName=firstName col="12 col-lg-4">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('farm.head.person.fullName.name')"
+                       field='name'
+                       placeholder='Иван'
+                       parts='NAME'
+                    (selectedGender)="getGenderFarmHead($event)">
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+                <app-col titleName=middleName col="12 col-lg-4" class="pt-2 pt-lg-0">
+                  <ng-template #colContent>
+                    <app-dadata
+                      [control]="formGroup.get('farm.head.person.fullName.middleName')"
+                       field='patronymic'
+                       placeholder='Иванович'
+                       parts='PATRONYMIC'>
+                    </app-dadata>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </fieldset>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=phone col="12 col-lg-4" class="pb-2 pb-lg-0" formGroupName="person">
+                <ng-template #colContent>
+                  <input appUiMaskPhone class="inp-st" formControlName="phone" type="text"
+                    placeholder='+79999999999'>
+                </ng-template>
+              </app-col>
+              <app-col titleName=email col="12 col-lg-4" formGroupName="person">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="email" type="text" placeholder='info@mail.ru'>
+                </ng-template>
+              </app-col>
+              <app-col titleName=share col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="share" type="number" placeholder='100%'>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </fieldset>
+      </fieldset>
+      <fieldset class="form-header" formGroupName="farmMembers">
+        <div class="form-header">Участники КФХ</div>
+        <ng-container *ngFor="let m of formGroup.controls['farmMembers']['controls']; let i = index;">
+          <fieldset [formGroupName]="i">
+            <div formGroupName="member">
+              <fieldset formGroupName="person">
+                <app-row formGroupName="fullName">
+                  <ng-template #rowContent>
+                    <app-col titleName=lastName col="12 col-lg-4" class="pb-2 pb-lg-0">
+                      <ng-template #colContent>
+                        <app-dadata
+                          [control]="formGroup.get('farmMembers.'+i+'.member.person.fullName.lastName')"
+                           field='surname'
+                           placeholder='Иванов'
+                           parts='SURNAME'>
+                        </app-dadata>
+                      </ng-template>
+                    </app-col>
+                    <app-col  titleName=firstName col="12 col-lg-4">
+                      <ng-template #colContent>
+                        <app-dadata
+                          [control]="formGroup.get('farmMembers.'+i+'.member.person.fullName.name')"
+                          field='name'
+                          placeholder='Иван'
+                          parts='NAME'>
+                        </app-dadata>
+                      </ng-template>
+                    </app-col>
+                    <app-col titleName=middleName col="12 col-lg-4" class="pt-2 pt-lg-0">
+                      <ng-template #colContent>
+                        <app-dadata
+                          [control]="formGroup.get('farmMembers.'+i+'.member.person.fullName.middleName')"
+                          field='patronymic'
+                          placeholder='Иванович'
+                          parts='PATRONYMIC'>
+                        </app-dadata>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </fieldset>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col titleName=phone col="12 col-lg-4" class="pb-2 pb-lg-0" formGroupName="person">
+                    <ng-template #colContent>
+                      <input appUiMaskPhone class="inp-st" formControlName="phone" type="text"
+                        placeholder="+79999999999">
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=email col="12 col-lg-4" formGroupName="person">
+                    <ng-template #colContent>
+                      <input class="inp-st" formControlName="email" type="text" placeholder="info@mail.ru">
+                    </ng-template>
+                  </app-col>
+                  <app-col titleName=share col="12 col-lg-4" class="pt-2 pt-lg-0">
+                    <ng-template #colContent>
+                      <input class="inp-st" formControlName="share" type="number" placeholder="+79999999999">
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </div>
+          </fieldset>
+        </ng-container>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  class="pb-2">
+              <ng-template #colContent>
+                <a (click)="addMember()" class="form-span__lnk-btn">Добавить участника</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </fieldset>
+
+      <app-row class="pb-3">
+        <ng-template #rowContent>
+          <app-col titleName=selectActivities col="12 col-lg-6">
+            <ng-template #colContent>
+              <app-ui-multi-select-field [(choices)]="choicesActivities" [control]="formGroup.controls['activity']"
+              [searchInput]="true"></app-ui-multi-select-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=specifyYourActivities col="12 col-lg-6" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="customActivities" type="text"
+                placeholder="Реализация животных">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+    <app-owner-file-view *ngIf="formGroup.value['id']" [fileTypes$]="fileTypes$" [files]="files" [owner]="model">
+    </app-owner-file-view>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <app-reference-button-form
+            [goListUrl]="'/owners'"
+            [backButton]="true"
+            [hidden]="backButton"
+            [goListUrlAfterRemove]="'/owners'"
+            [id]="formGroup.value['id']"
+            (buttonClick)="submit()"
+            [isEdit]="formGroup.value['id'] ? true : false"
+            [type]="type"
+            [saveButtonName]="formGroup.value['id'] ? 'Сохранить':'Добавить'"
+            removeButtonName="УДАЛИТЬ ВЛАДЕЛЬЦА">
+          </app-reference-button-form>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>

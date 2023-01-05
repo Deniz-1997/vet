@@ -1,0 +1,33 @@
+<app-row class="d-flex flex-wrap justify-content-between">
+  <form [formGroup]="formGroup">
+    <ng-template #rowContent>
+      <app-col lg="4" col="12">
+        <ng-template #colContent>
+          <app-dadata [control]="formGroup.get('LastName')"
+            field="surname"
+            parts="SURNAME"
+            label="Фамилия">
+          </app-dadata>
+        </ng-template>
+      </app-col>
+      <app-col lg="4" col="12">
+        <ng-template #colContent>
+          <app-dadata [control]="formGroup.get('FirstName')"
+                      field="name"
+                      parts="NAME"
+                      label="Имя">
+          </app-dadata>
+        </ng-template>
+      </app-col>
+      <app-col lg="4" col="12">
+        <ng-template #colContent>
+          <app-dadata [control]="formGroup.get('PatronymicName')"
+                      field="patronymic"
+                      parts="PATRONYMIC"
+                      label="Отчество">
+          </app-dadata>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </form>
+</app-row>

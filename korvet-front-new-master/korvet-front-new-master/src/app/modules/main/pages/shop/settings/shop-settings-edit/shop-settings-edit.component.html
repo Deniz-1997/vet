@@ -1,0 +1,40 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{this.SHOP_STOCK_SETTING_HEADER}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view title='{{this.SHOP_STOCK_SETTING_HEADER}}'></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div [class.form-wr]="!data?.openDialog">
+    <app-row class="pb-2">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=stock>
+          <ng-template #colContent>
+            <app-ui-autocomplete [addFilter]="{unit:{id: filterUnitId}}" [fields]="fieldsStock"
+              placeholder="Выберите склад" [control]="formGroup.get('data')" [type]="crudType.ReferenceStock">
+            </app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-2">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=clinic>
+          <ng-template #colContent>
+            <app-ui-autocomplete [addFilter]="{id:filterUnitId}" placeholder="Выберите клинику"
+              [control]="formGroup.get('unit')" [type]="crudType.ReferenceUnit"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

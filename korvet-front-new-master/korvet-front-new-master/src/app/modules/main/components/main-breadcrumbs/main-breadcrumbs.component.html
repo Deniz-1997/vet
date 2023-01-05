@@ -1,0 +1,13 @@
+<ul class="crubs">
+  <li id="toggle_main_sidenav">
+    <a (click)="ShowSideBarMenu()">Меню</a>
+  </li>
+  <ng-container *ngIf="breadcrumbs$|async as breadcrumbs">
+    <ng-container *ngFor="let breadcrumb of breadcrumbs; let i=index">
+      <li *ngIf="breadcrumb.label">
+        <a *ngIf="i+1<breadcrumbs.length" routerLink="{{breadcrumb.url}}">{{breadcrumb.label}}</a>
+        <span *ngIf="i+1 === breadcrumbs.length">{{breadcrumb.label}}</span>
+      </li>
+    </ng-container>
+  </ng-container>
+</ul>

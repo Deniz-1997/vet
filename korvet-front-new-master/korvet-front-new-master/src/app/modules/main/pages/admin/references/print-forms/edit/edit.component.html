@@ -1,0 +1,136 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name >
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=type col="6">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select disableOptionCentering formControlName="type" placeholder="Не выбрано">
+                <mat-option value="Owner+Appointment+Pet">Владелец и прием и животное</mat-option>
+
+                <mat-option value="Owner">Владелец</mat-option>
+                <mat-option value="Pet">Животное</mat-option>
+                <mat-option value="Appointment">Прием</mat-option>
+
+                <mat-option value="Owner+Pet">Владелец и Животное</mat-option>
+                <mat-option value="Owner+Appointment">Владелец и Прием</mat-option>
+                <mat-option value="Pet+Appointment">Животное и прием</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <!--<select name="type" formControlName="type" appUiSelect>
+            <option value="Owner">Владелец</option>
+            <option value="Owner+Pet">Владелец с животным</option>
+            <option value="Appointment">Приём</option>
+          </select>-->
+          </ng-template>
+        </app-col>
+        <app-col  text="&nbsp;" class="pt-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="enabled" id="address-residence" type="checkbox">
+              <label for="address-residence">
+                <ng-container *ngIf="formGroup.controls.enabled.value">Активна</ng-container>
+                <ng-container *ngIf="!formGroup.controls.enabled.value">Не активна</ng-container>
+              </label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <div class="form-header">
+      <h2 class="title-required">Список всех печатных форм</h2>
+    </div>
+    <app-row *ngIf="printForms && printForms.files">
+      <ng-template #rowContent >
+        <app-col col="5">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select disableOptionCentering formControlName="selectedPrintForm"
+                          panelClass="multiple-panel"
+                          placeholder="Не выбрано">
+                <div class="select-search">
+                  <div class="select-search-header">
+                    <mat-form-field appearance="outline">
+                      <input autocomplete="off" formControlName="actionsSearch"
+                             matInput
+                             placeholder="Найти действие" type="text">
+                    </mat-form-field>
+                  </div>
+                  <div class="select-search-body">
+                    <mat-option *ngFor="let printForm of printForms.files; let i=index"
+                                [value]="printForm">{{printForm}}</mat-option>
+                  </div>
+                </div>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+        <app-col>
+          <ng-template #colContent>
+            <button (click)="uploadPrintFile($event)"
+                    [disabled]="formGroup.get('selectedPrintForm').value === ''"
+                    class="btn btn-st"
+                    type="button"> Загрузить форму
+            </button>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col >
+          <ng-template #colContent>
+            <button (click)="uploadNewFile($event)" class="btn btn-st" type="button">Загрузить новый файл</button>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  *ngIf="formGroup.controls.file && formGroup.controls.file.controls.name.value">
+          <ng-template #colContent>
+            <a
+              href="{{ formGroup.controls['file']['controls']['path']?.value === null? '/uploaded' : formGroup.controls['file']['controls']['path']?.value}}/{{formGroup.controls['file']['controls']['name']?.value}}"
+              target="_blank">
+              {{formGroup.controls['file']['controls']['name'].value}}
+            </a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [disabled]="!formGroup.valid"
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>

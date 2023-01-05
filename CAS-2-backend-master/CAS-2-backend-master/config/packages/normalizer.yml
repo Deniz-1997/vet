@@ -1,0 +1,51 @@
+services:
+
+   GBProd\UuidNormalizer\UuidNormalizer:
+      public: true
+      autowire: true
+      tags:
+         - { name: serializer.normalizer }
+
+   GBProd\UuidNormalizer\UuidDenormalizer:
+      public: true
+      autowire: true
+      tags:
+         - { name: serializer.normalizer }
+
+   Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
+      public: false
+      autowire: true
+      tags:
+         - { name: serializer.normalizer }
+
+   App\Packages\Normalizer\EnumDenormalizer:
+      arguments:
+         - '@translator.default'
+      tags:
+         - { name: "serializer.normalizer", piority: 155 }
+
+   App\Packages\Normalizer\EnumNormalizer:
+      arguments:
+         - '@translator.default'
+      tags:
+         - { name: "serializer.normalizer", piority: 155 }
+
+   Doctrine\Common\Annotations\CachedReader:
+      alias: annotations.cached_reader
+
+   App\Packages\Normalizer\DefaultNormalizer:
+      public: true
+      autowire: true
+      autoconfigure: true
+      arguments:
+         - '@Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface'
+         - ~
+         - '@Symfony\Component\PropertyAccess\PropertyAccessorInterface'
+         - '@Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface'
+         - '@doctrine.orm.default_entity_manager'
+         - '@translator.default'
+         - '@event_dispatcher'
+         - '@annotations.cached_reader'
+      tags:
+         - { name: serializer.normalizer, piority: 255 }
+

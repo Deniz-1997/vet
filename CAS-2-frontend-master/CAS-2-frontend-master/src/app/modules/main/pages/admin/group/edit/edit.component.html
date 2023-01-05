@@ -1,0 +1,123 @@
+<ng-container *ngIf="openDialog">
+  <app-close-dialog [title]="title"></app-close-dialog>
+</ng-container>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <k-container fluid>
+    <ng-template #templateRef>
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('name')" label="Наименование"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <k-text-field type="text" [control]="formGroup.get('code')" label="Символьный код"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+
+      </k-row>
+    </ng-template>
+  </k-container>
+  <div class="tab-group">
+    <mat-tab-group animationDuration="0ms" dynamicHeight="true">
+      <mat-tab label="Роли">
+        <k-container fluid>
+          <ng-template #templateRef>
+            <k-row no-gutters>
+              <ng-template #row>
+                <k-col cols="4">
+                  <ng-template #col>
+                    <k-subheader>Роли</k-subheader>
+                  </ng-template>
+                </k-col>
+                <k-col cols="8" class="text-right">
+                  <ng-template #col>
+                    <k-button (click)="onSelectAllRead()" type="button" color="primary" name="Выбрать все для чтения">
+                    </k-button>
+                    <k-button (click)="onSelectAll()" type="button" color="primary" name="Выбрать все"></k-button>
+                    <k-button (click)="onDeselectAll()" type="button" color="primary" name="Снять все"></k-button>
+                  </ng-template>
+
+                </k-col>
+              </ng-template>
+
+            </k-row>
+            <k-row>
+              <ng-template #row>
+                <k-col cols="4">
+                  <ng-template #col>
+                    Выбрано
+                    ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length : 0}}
+                    <br />
+                    <mat-selection-list [formControlName]="'roles'">
+                      <mat-list-option *ngFor="let item of roles" [value]="item" checkboxPosition="before">
+                        {{item['name']}} [{{item['id']}}]
+                      </mat-list-option>
+                    </mat-selection-list>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+            <k-row>
+              <ng-template #row>
+                <k-col cols="12">
+                  <ng-template #col>
+                    Выбрано ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length :
+                    0}}<br />
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+          </ng-template>
+        </k-container>
+      </mat-tab>
+      <mat-tab label="Меню">
+        <k-container fluid>
+          <ng-template #templateRef>
+            <k-row>
+              <ng-template #row>
+                <k-col cols="12">
+                  <ng-template #col>
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodeToggle>
+                        <button disabled mat-icon-button type="button"></button>
+                        <mat-checkbox (change)="toggleSelectedMenu(node);" [checked]="isSelectedMenu(node)"
+                          [disabled]="!node.roles || node.roles.length <1" class="checklist-leaf-node">{{node.item}}
+                          [<span *ngFor="let role of node.roles"> {{role.id}} </span>]
+                        </mat-checkbox>
+                      </mat-tree-node>
+                      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                        <button [attr.aria-label]="'toggle ' + node.filename" mat-icon-button matTreeNodeToggle
+                          type="button">
+                          <mat-icon class="mat-icon-rtl-mirror">
+                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                          </mat-icon>
+                        </button>
+                        <mat-checkbox (change)="todoItemSelectionToggle(node)" [checked]="descendantsAllSelected(node)"
+                          [indeterminate]="descendantsPartiallySelected(node)">{{node.item}}
+                          [<span *ngFor="let role of node.roles"> {{role.id}} </span>]
+                        </mat-checkbox>
+                      </mat-tree-node>
+                    </mat-tree>
+                    <div>Выбрано ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length
+                      : 0}}</div>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+          </ng-template>
+        </k-container>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

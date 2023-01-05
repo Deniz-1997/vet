@@ -1,0 +1,46 @@
+<div class="d-flex">
+  <div class="mr-auto p-1">
+    <a href="#remove-reference"
+       *ngIf="state.code === 'DRAFT'"
+       data-fancybox class="lnk-delete">Удалить</a>
+  </div>
+  <div class="p-1">
+    <a [routerLink]="goListUrl" class="btn btn-outline-secondary">Отмена</a>
+  </div>
+  <div class="p-1">
+    <button type="button"
+            (click)="changeStatusEmit($event,'DRAFT')"
+            *ngIf="state.code !== 'DRAFT'"
+            class="btn btn-primary"
+            [class.btn-loader]="getLoading$ | async">
+      Черновик
+    </button>
+  </div>
+  <div class="p-1">
+    <button type="button"
+            (click)="changeStatusEmit($event,'REGISTERED')"
+            *ngIf="state.code === 'DRAFT'"
+            class="btn btn-primary"
+            [class.btn-loader]="getLoading$ | async">
+      Зарегистрировать
+    </button>
+  </div>
+  <div class="popup-hide">
+    <div id="remove-reference" class="popup-close-id popup-wr">
+      <ngx-loading [show]="loadingRemove$|async"
+                   [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"></ngx-loading>
+      <div class="popup-wr__head">
+        Вы точно хотите удалить
+        элемент?
+        <div class="popup-wr__head-comment">Действие необратимо
+        </div>
+      </div>
+      <div class="popup-wr__footer">
+        <a href=""
+           class="lnk-delete float-left" (click)="remove($event)">Удалить</a>
+        <a href="" class="lnk-open float-right" data-fancybox-close>Отмена</a>
+
+      </div>
+    </div>
+  </div>
+</div>

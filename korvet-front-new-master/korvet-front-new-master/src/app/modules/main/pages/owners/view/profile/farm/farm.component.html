@@ -1,0 +1,222 @@
+<div class="tab-list">
+  <div *ngIf="owner" class="tab-item">
+    <div class="form-wr form-wr--mmin">
+      <a [routerLink]="['../../../edit']" class="info-edit" style="opacity: 1">
+        <app-icon-edit></app-icon-edit>
+      </a>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=nameOfLegalEntity >
+            <ng-template #colContent>
+              <strong>{{owner.name}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=personType col="12 col-md-3" >
+            <ng-template #colContent>
+              <strong>{{owner.PersonType}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=inn col="12 col-md-2" class="mt-2 mb-2 mb-md-0 mt-md-0" >
+            <ng-template #colContent>
+              <strong>{{owner.inn}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=egrip col="12 col-md-2" >
+            <ng-template #colContent>
+              <ng-container *ngIf="owner.farm">
+                <strong>{{owner.farm.egrip}}</strong>
+              </ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=telephoneCompanies col="12 col-md-2" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.phone}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=emailCompanies col="12 col-md-2">
+            <ng-template #colContent>
+              <strong><a href="mailto:{{owner.email}}">{{owner.email}}</a></strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=address >
+            <ng-template #colContent>
+              <ng-container *ngIf="owner.address && owner.address.full">
+                <strong>{{owner.address.full}}</strong>
+              </ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=householdAddress>
+            <ng-template #colContent>
+              <ng-container *ngIf="owner.individualPerson && owner.individualPerson.householdAddressIsPersonAddress">
+                {{owner.address.full}}
+              </ng-container>
+              <ng-container
+                *ngIf="owner.individualPerson && (owner.individualPerson && !owner.individualPerson.householdAddressIsPersonAddress)">
+                {{owner.individualPerson.householdAddress}}
+              </ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=propertyDocuments *ngIf="false">
+            <ng-template #colContent>
+              <table>
+                <tr>
+                  <td>
+                    <img alt="" class="down-ico" src="assets/img/pdf.svg">
+                  </td>
+                  <td>
+                    234 кб
+                  </td>
+                  <td style="opacity: .5">
+                    Справочник
+                  </td>
+                  <td>
+                    Медицинское заключение об операции
+                  </td>
+                </tr>
+              </table>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row *ngIf="false">
+        <ng-template #rowContent>
+          <a class="map-show" href="">Показать карту</a>
+        </ng-template>
+      </app-row>
+      <app-ya-map *ngIf="false"></app-ya-map>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=farmHeadPerson col="12 col-md-3">
+            <ng-template #colContent>
+              <strong *ngIf="owner.farm">{{owner.farm.head.person.fullName.Full}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=phone col="12 col-md-3" class="mb-2 mt-2 mb-md-0 mt-md-0">
+            <ng-template #colContent>
+              <strong *ngIf="owner.farm">{{owner.farm.head.person.phone}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=email col="12 col-md-3" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong *ngIf="owner.farm"><a
+                href="mailto:{{owner.farm.head.person.email}}">{{owner.farm.head.person.email}}</a></strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=share col="12 col-md-3">
+            <ng-template #colContent>
+              <strong *ngIf="owner.farm">{{owner.farm.head.share}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=khf *ngIf="owner.customActivities || (owner.activities && owner.activities.length > 0)" >
+            <ng-template #colContent>
+              <div *ngFor="let activity of owner.activities" class="tag-box tag-box--def">{{activity.name}}</div>
+              <div *ngIf="owner.customActivities" class="tag-box tag-box--def">{{owner.customActivities}}</div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+
+    <app-print-forms
+      [ownerId]="owner.id"
+      [pets]="owner.pets"
+      partition="Owner"
+    ></app-print-forms>
+
+    <div *ngIf="owner.farmMembers && owner.farmMembers.length > 0" class="body-header">
+      <div class="body-header__name">Участники КФХ</div>
+      <div class="body-header__setting">
+        <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+          <app-icon-print></app-icon-print>
+        </a>
+        <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+          <app-icon-download></app-icon-download>
+        </a>
+        <a [routerLink]="['../../../edit']" class="lnk-add" data-fancybox>Добавить</a>
+      </div>
+    </div>
+
+    <div *ngIf="owner.farmMembers && owner.farmMembers.length > 0" class="table-info">
+      <table class="table-info-st delivery">
+        <tr>
+          <th>ФИО</th>
+          <th>Телефон</th>
+          <th>Почта</th>
+          <th colspan="2">Долевое участие</th>
+        </tr>
+        <tr *ngFor="let member of owner.farmMembers">
+          <td>{{member.member.person.fullName.lastName}} {{member.member.person.fullName.name}} {{member.member.person.fullName.middleName}}</td>
+          <td><span>{{member.member.person.phone}}</span></td>
+          <td><a href="mailto:{{member.member.person.email}}">{{member.member.person.email}}</a></td>
+          <td>{{member.member.share}}</td>
+          <td>
+            <a [routerLink]="['../../../../', member.owner.id, 'edit']" class="ico-edit"></a>
+          </td>
+        </tr>
+      </table>
+      <div class="delivery-grid">
+        <div class="form-wr form-wr--adaptive container-fluid">
+          <ng-container *ngFor="let member of owner.farmMembers">
+            <app-row>
+              <ng-template #rowContent>
+                <app-col text="ФИО">
+                  <ng-template #colContent>
+                    <strong>
+                      {{member.member.person.fullName.lastName}}
+                      {{member.member.person.fullName.name}}
+                      {{member.member.person.fullName.middleName}}
+                    </strong>
+                  </ng-template>
+                </app-col>
+                <app-col  text="Телефон">
+                  <ng-template #colContent>
+                    <strong>{{member.member.person.phone}}</strong>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+            <app-row >
+              <ng-template #rowContent>
+                <app-col  text="Почта">
+                  <ng-template #colContent>
+                    <a href="mailto:{{member.member.person.email}}">{{member.member.person.email}}</a>
+                  </ng-template>
+                </app-col>
+                <app-col  text="Долевое участие">
+                  <ng-template #colContent>
+                    <a [routerLink]="['../../../../', member.owner.id, 'edit']" class="ico-edit"></a>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <!--<a class="btn-show-add">Показать все 40 записей</a>-->
+  </div>
+</div>

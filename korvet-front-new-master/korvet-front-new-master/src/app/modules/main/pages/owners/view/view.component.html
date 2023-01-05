@@ -1,0 +1,42 @@
+
+<app-title-view title="{{owner && owner.name || ''}}">
+</app-title-view>
+<div class="position-relative">
+  <ngx-loading [show]="loading$ | async"></ngx-loading>
+</div>
+<div [hidden]="loading$|async" class="tab">
+  <ul class="tab-btn delivery">
+    <li *ngFor="let tab of tabs"><a [routerLinkActiveOptions]="{exact: true}" [routerLink]="tab.link"
+                                    routerLinkActive="active">{{tab.title}}</a></li>
+    <!--<li><a [routerLink]="['./']" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Профиль и животные</a></li>
+    <li><a [routerLink]="['history']" routerLinkActive="active">История обращений</a></li>
+    <li><a [routerLink]="['accounts']" routerLinkActive="active">Счета</a></li>
+    <li><a [routerLink]="['documents']" routerLinkActive="active">Документы</a></li>-->
+  </ul>
+  <div class="delivery-grid">
+    <div class="d-none d-md-block">
+        <div class="d-flex p-2">
+          <ng-container *ngFor="let tab of tabs">
+          <div class="p-2">
+            <a [routerLinkActiveOptions]="{exact: true}" class="lnk-open" [routerLink]="tab.link"
+               routerLinkActive="active">{{tab.title}}</a>
+          </div>
+          </ng-container>
+        </div>
+    </div>
+    <div class="d-block d-md-none">
+      <div class="row">
+        <ng-container *ngFor="let tab of tabs">
+          <div class="col-12">
+            <a [routerLinkActiveOptions]="{exact: true}" class="lnk-open" [routerLink]="tab.link"
+               routerLinkActive="active">{{tab.title}}</a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+
+
+  <router-outlet></router-outlet>
+</div>

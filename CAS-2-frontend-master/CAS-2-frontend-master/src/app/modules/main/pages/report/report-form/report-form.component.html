@@ -1,0 +1,82 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<ngx-loading [show]="reportLoading$ | async"></ngx-loading>
+<form [formGroup]="formGroup">
+  <k-header>{{title}}</k-header>
+  <k-subheader>{{'Отчет за ' + month + ' ' + year + ' года.'}}</k-subheader>
+  <app-buttons-component
+    [reportStatus]="currentStatus"
+    [userType]="userType"
+    (closeReport)="closeReport()"
+    (rightButton)="submit($event)"
+    (leftButton)="submit($event)">
+  </app-buttons-component>
+  <k-row>
+    <ng-template #row>
+      <k-col cols="12">
+        <ng-template #col>
+          <ng-container *ngIf="isData">
+            <mat-tab-group animationDuration="0ms" dynamicHeight *ngIf="tabs.length"
+                           (selectedIndexChange)="selectTab($event)" class="mt-4">
+              <mat-tab *ngFor="let tab of tabs;" [label]="tab.name" formGroupName="data">
+                <ng-template class="w-100" mat-tab-label>
+                  {{ tab.name }}
+                </ng-template>
+                <ng-container *ngIf="isReportTab">
+                  <div fxLayout="row wrap" fxLayoutGap="24px grid" class="pt-3" [formArrayName]="tabActive">
+                    <div [fxFlex]="table.fxFlex" [fxFlex.lg]="table.fxFlex" fxFlex.xs="100%"
+                         *ngFor="let table of tables; let tableIndex = index;">
+                      <mat-card class="pt-4 off-overflow" [ngClass]="{'off-flex-for-table': !table.fxLayout}">
+                        <mat-card-header>
+                          <mat-card-title class="mat-card-title-custom">{{table.title}}</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <k-report-table [table]="table"
+                                          [isReadonly]="isReadOnly"
+                                          (getAutocompleteList)="filterAutocomplete($event)"
+                                          [autocompleteList]="valuesAutocomplete"
+                                          [form]="formGroup.get(['data', tabActive, tableIndex])" class="scroll-table">
+                          </k-report-table>
+                        </mat-card-content>
+                      </mat-card>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="isExplanatoryTab">
+                  <app-explanatory-note-form
+                    (explanatoryNoteComment)="comment = $event"
+                    (explanatoryNoteFile)="file = $event"
+                    (submitReport)="submit($event, false)"
+                    [reportDataId]="id"
+                    [file]="file"
+                    [comment]="comment"
+                  ></app-explanatory-note-form>
+                </ng-container>
+
+                <ng-container *ngIf="isHistoryTab">
+                  <app-history-report-form
+                    [reportDataId]="id"
+                  ></app-history-report-form>
+                </ng-container>
+
+                <ng-container *ngIf="!tabs[selected.value]">
+                  <div class="box-empty pt-5">
+                    <h3>Добавьте шаблон для страницы #{{selected.value}}</h3>
+                  </div>
+                </ng-container>
+
+              </mat-tab>
+            </mat-tab-group>
+          </ng-container>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+  <app-buttons-component
+    [reportStatus]="currentStatus"
+    [userType]="userType"
+    (closeReport)="closeReport()"
+    (rightButton)="submit($event)"
+    (leftButton)="submit($event)">
+  </app-buttons-component>
+</form>

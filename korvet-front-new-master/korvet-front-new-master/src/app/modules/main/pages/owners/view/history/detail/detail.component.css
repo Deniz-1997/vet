@@ -1,0 +1,14 @@
+:host .second {
+  margin-left: 50px;
+}
+
+.print-block {
+  float: right;
+  margin: 10px 0 20px 0;
+}
+
+.print-block span {
+  margin: 0 0 0 20px;
+  position: relative;
+  bottom: 5px;
+}

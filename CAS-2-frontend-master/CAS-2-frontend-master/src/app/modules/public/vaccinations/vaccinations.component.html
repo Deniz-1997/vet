@@ -1,0 +1,146 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<div class="container">
+  <k-row>
+    <ng-template #row>
+      <k-col class="text-center" cols="12">
+        <ng-template #col>
+          <p class="mt-5">Комплексная автоматизированная система</p>
+          <app-title-view title='«Ветеринария»'></app-title-view>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+  <form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+          <div class="k-form">
+            <k-row>
+              <ng-template #row>
+                <k-col cols="12" lg="2">
+                  <ng-template #col>
+                    <app-datepicker-overview label="Дата вакцинации (с)" formControlName="dateFrom"></app-datepicker-overview>
+                  </ng-template>
+                </k-col>
+                <k-col cols="12" lg="2">
+                  <ng-template #col>
+                    <app-datepicker-overview label="Дата вакцинации (по)" formControlName="dateTo"></app-datepicker-overview>
+                  </ng-template>
+                </k-col>
+                <k-col cols="12" lg="4">
+                  <ng-template #col>
+                    <app-ui-autocomplete label="Станции" [control]="formGroup.get('station')" [type]="crudType.ReferenceStation">
+                    </app-ui-autocomplete>
+                  </ng-template>
+                </k-col>
+                <k-col cols="12" lg="4">
+                  <ng-template #col>
+                    <app-ui-autocomplete label="Наименование вакцины" [addFilter]="filter" [control]="formGroup.get('vaccine')" [type]="crudType.DictionaryVaccine">
+                    </app-ui-autocomplete>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+
+            <k-row>
+              <ng-template #row>
+                <k-col cols="12" lg="4">
+                  <ng-template #col>
+                    <app-ui-autocomplete label="Вид животного" [control]="formGroup.get('petType')" [type]="crudType.DictionaryKind">
+                    </app-ui-autocomplete>
+                  </ng-template>
+                </k-col>
+                <k-col cols="12" lg="4">
+                  <ng-template #col>
+                    <app-ui-autocomplete label="Порода" [control]="formGroup.get('breed')" [type]="crudType.DictionaryBreed">
+                    </app-ui-autocomplete>
+                  </ng-template>
+                </k-col>
+                <k-col cols="12" lg="4">
+                  <ng-template #col>
+                    <k-text-field type="text" label="Владелец" [control]="formGroup.get('owner')"></k-text-field>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12" lg="4">
+            <ng-template #col>
+              <k-text-field type="text" label="Кличка" [control]="formGroup.get('nickName')"></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="12" lg="4">
+            <ng-template #col>
+              <k-text-field type="text" label="Чип" [control]="formGroup.get('chip')"></k-text-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="12" lg="4">
+            <ng-template #col>
+              <k-text-field type="text" label="Номер бирки" [control]="formGroup.get('tagNumber')"></k-text-field>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+
+            <k-row>
+              <ng-template #row>
+                <k-col class="text-right">
+                  <ng-template #col>
+                    <k-button type="raised" color="primary" name="Сформировать"></k-button>
+                  </ng-template>
+                </k-col>
+              </ng-template>
+            </k-row>
+          </div>
+  </form>
+</div>
+
+<div class="container">
+  <k-row>
+    <ng-template #row>
+      <k-col cols="12">
+        <ng-template #col>
+          <app-universal-mat-table [dataSource]="vaccinations"
+                                   [displayedColumns]="displayedColumns"
+                                   [type]="type"
+                                   [fields]="fields"
+                                   [order]="order"
+                                   [isEmptyInformation]="isEmptyInformation"
+                                   [filter]="filterAppend">
+            <ng-container matColumnDef="owner">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Владелец</th>
+              <td mat-cell *matCellDef="let element" class="pb-2">{{element.animals[0]?.owner ? element.animals[0]?.owner : "Не указан"}}</td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Кличка</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.animals[0]?.name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="chip">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Чип</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.animals[0]?.chip}}</td>
+            </ng-container>
+            <ng-container matColumnDef="kind">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Вид</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.animals[0]?.kind?.name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="breed">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Порода</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.animals[0]?.breed?.name}}</td>
+            </ng-container>
+            <ng-container matColumnDef="vaccineSeries">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Вакцины</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{getVaccines(element.vaccineSeries)}}</td>
+            </ng-container>
+            <ng-container matColumnDef="people">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Вет.врач</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.doctor}}</td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef class="pr-2"> Дата вакцинации</th>
+              <td mat-cell *matCellDef="let element" class="pb-2 pr-2">{{element.date | dateParse}}</td>
+            </ng-container>
+          </app-universal-mat-table>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+</div>

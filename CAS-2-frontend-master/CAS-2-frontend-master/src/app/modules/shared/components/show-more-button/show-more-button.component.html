@@ -1,0 +1,6 @@
+<div class="container-btn">
+  <div class="btn-show-more" *ngIf="appendLoading"><span class="loader"></span></div>
+  <a class="btn-show-more" *ngIf="!(appendLoading) && items.length < totalCount" (click)="outAppend.emit({limit: limit, offset: offset})">
+    Показать ещё {{getRowCount()}} записей
+  </a>
+</div>

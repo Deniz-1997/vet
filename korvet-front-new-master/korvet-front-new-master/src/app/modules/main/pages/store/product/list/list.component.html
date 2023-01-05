@@ -1,0 +1,80 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'номенклатуру',
+    title: 'Не найдено ни одной номенклатуры',
+    subtitle: 'Вы можете добавить номенклатуру',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Номенклатура"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+
+    <ng-container *ngIf="setting.contactValue.getValue().enable1c === 'true' ">
+      <a [matMenuTriggerFor]="menu" mat-button>ОБМЕН С 1С</a>
+      <mat-menu #menu="matMenu">
+        <button (click)="exportTo()" mat-menu-item>Экспорт</button>
+        <button (click)="importTo(1)" mat-menu-item>
+          Импорт Складов
+        </button>
+        <button (click)="importTo(2)" mat-menu-item>
+          Импорт Остатков
+        </button>
+        <button (click)="importTo(3)" mat-menu-item>
+          Импорт Перемещений
+        </button>
+      </mat-menu>
+    </ng-container>
+
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Стоимость</th>
+      <th>Активна</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td>{{item.name}}</td>
+      <td style="white-space: nowrap">{{item.price | price}}</td>
+      <td>{{item.active ? 'Да' : 'Нет '}}<span *ngIf="!item.active" class="ico-voko"></span></td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-4 pb-2 pb-lg-0" titleName="name">
+            <ng-template #colContent>
+              <a [routerLink]="[item.id]">{{item.name}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="6 col-lg-4" text="Стоимость">
+            <ng-template #colContent>
+              {{item.price | price}}
+            </ng-template>
+          </app-col>
+          <app-col col="6 col-lg-4" text="Активна">
+            <ng-template #colContent>
+              {{item.active ? 'Да' : 'Нет '}}<span *ngIf="!item.active" class="ico-voko"></span>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

@@ -1,0 +1,19 @@
+<div class="header" [hidden]="( matches$ | async).length ==0">
+  <div class="header__name">Совпадения</div>
+</div>
+<div class="matches-list" style="position: relative">
+  <ngx-loading [show]="matchesLoading$|async"></ngx-loading>
+  <div class="matches-item" *ngFor="let match of matches$ | async">
+    <div class="user-name">{{match.name}}</div>
+    <div class="user-address">{{match?.address?.full}}</div>
+    <div class="user-contacts">
+      <a href="tel:{{match.phone}}">{{match.phone}}</a>
+      <a href="mailto:info@dimaivanov.ru">{{match.email}}</a>
+    </div>
+    <div class="matches-item__add">
+      <a (click)="addOwner(match)" class="btn-st">
+        Выбрать владельца
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="status-select">
+  <div class="status-select__head" [attr.data-color]="color" #headDiv>{{head}}</div>
+  <div class="status-select__body">
+    <div class="status-select__item" *ngFor="let option of options">
+      <a [attr.data-color]="option.value.color || option.color"
+         (click)="outChoose.emit(option.value || option.label)">{{option.label}}</a>
+    </div>
+  </div>
+</div>

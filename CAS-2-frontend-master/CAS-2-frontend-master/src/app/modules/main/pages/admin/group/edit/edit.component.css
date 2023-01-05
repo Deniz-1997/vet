@@ -1,0 +1,4 @@
+.tab-group {
+  max-height: 50vh;
+  overflow-y: scroll;
+}

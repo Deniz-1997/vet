@@ -1,0 +1,88 @@
+<k-header class="header-style">Отчет по импорту "{{title}}"</k-header>
+<ng-container *ngIf="title">
+</ng-container>
+<ng-container *ngIf="!title">
+  <div>Просмотр отчета по импорту...</div>
+</ng-container>
+<ng-container *ngIf="totalCount == 0">
+  <div>
+    <p><span>Увы, записи не найдены</span>
+  </div>
+</ng-container>
+<k-container *ngIf="reference">
+  <ng-container *ngIf="totalCount > 0">
+  </ng-container>
+</k-container>
+<mat-card>
+  <mat-card-content>
+    <k-row class="row-margin">
+      <ng-template #row>
+        <k-col cols="3" class="text-left">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Дата создания</span>:
+              <br><span><strong>{{date}}</strong></span></p>
+          </ng-template>
+        </k-col>
+        <k-col cols="3" class="text-left">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Наименование файла</span>:
+              <br><span><strong>{{title}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+        <k-col cols="3" class="text-left">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Состояние</span>:
+              <br><span><strong>{{statusMsg}}</strong></span>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row class="row-margin">
+      <ng-template #row>
+        <k-col cols="3" class="text-left">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Содержит записей</span>:
+              <br><span><strong>{{totalCount}}</strong></span></p>
+          </ng-template>
+        </k-col>
+        <k-col cols="3" class="text-left">
+          <ng-template #col>
+            <p>
+              <span>Количество строк с ошибками</span>:
+              <br><span><strong>{{countErrorItems}}</strong></span></p>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="countErrorItems !== 0">
+  <h3 class="header-style">Отчет об ошибках</h3>
+  <mat-card>
+    <mat-card-content>
+      <mat-table mat-table [dataSource]="referenceErrorItems">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef > Ид строки</mat-header-cell>
+          <mat-cell *matCellDef="let element" >{{element.id}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="statusMsg">
+          <mat-header-cell *matHeaderCellDef  class="header-align"> Вид ошибки</mat-header-cell>
+          <mat-cell *matCellDef="let element" >{{element.statusMsg}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns" fxLayout="row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayout="row"></mat-row>
+      </mat-table>
+      <app-show-more-button [limit]="limit"
+                            [offset]="offset"
+                            [type]="type"
+                            [items]="items$| async"
+                            [appendLoading]="appendLoading$| async"
+                            [totalCount]="totalCount$ | async"
+                            (outAppend)="appendList($event)">
+      </app-show-more-button>
+    </mat-card-content>
+  </mat-card>
+</div>

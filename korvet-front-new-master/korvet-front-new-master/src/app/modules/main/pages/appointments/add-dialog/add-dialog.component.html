@@ -1,0 +1,11 @@
+<app-appointment-add-form
+  (cancelForm)="cancel()"
+  (afterSaveEvent)="submit($event)"
+  [date]="data.date"
+  [formType]="type"
+  [loading]="loading$|async"
+  [time]="data.time"
+  [user]="data.user"
+  [openDialog]="true"
+  [backButton]="false"
+></app-appointment-add-form>

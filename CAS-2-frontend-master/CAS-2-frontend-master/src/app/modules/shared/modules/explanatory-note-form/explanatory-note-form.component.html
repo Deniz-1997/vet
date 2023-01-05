@@ -1,0 +1,103 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<form [formGroup]="formGroup">
+  <div class="container-fluid mt-2 pt-4 off-overflow">
+    <k-row>
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <mat-form-field appearance="fill">
+              <mat-label>Комментарии</mat-label>
+              <textarea matInput rows="10" type="text" maxLength="2000" formControlName="comment">
+             </textarea>
+            </mat-form-field>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row class="pt-0 mt-0 mb-2">
+      <ng-template #row>
+        <k-col cols="6" class="pt-0 mt-0 pb-0">
+          <ng-template #col>
+            <div class="text-left" fxFlex="100">
+              <a href="javascript:void(0)" color="primary" (click)="chooseFile($event)"> {{file && file.name ? file.name
+                : 'Выбрать файл'}}</a>
+              <input type="file" hidden #fileInput (change)="changeFile($event)" [accept]="data?.extension" name="file"
+                [multiple]="false" />
+            </div>
+          </ng-template>
+        </k-col>
+        <k-col cols="6" class="pt-0 mt-0 pr-0 pb-0">
+          <ng-template #col>
+            <div class="text-right" fxFlex="100">
+              <button mat-raised-button class="mr-4" [style]="backgroundColor" (click)="submit()">Приложить</button>
+            </div>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row class="pt-2 pb-2" *ngIf="dataList && dataList.length">
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <mat-card>
+              <mar-card-header>
+                <mat-card-title class="mat-card-title-custom text-left">История изменений</mat-card-title>
+              </mar-card-header>
+              <mat-card-content>
+                <mat-table [dataSource]="dataList">
+
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>Комментарий</mat-header-cell>
+                    <mat-cell class="justify-start" *matCellDef="let element">
+                      <ng-container *ngIf="element.comment !== null; else noCommentBlock">
+                        <span>{{element?.comment}}</span>
+                      </ng-container>
+                      <ng-template #noCommentBlock>
+                        <span>Комментарий отсутствует</span>
+                      </ng-template>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="user">
+                    <mat-header-cell *matHeaderCellDef>Пользователь</mat-header-cell>
+                    <mat-cell class="justify-start pl-0" *matCellDef="let element">
+                      <ng-container *ngIf="element.user !== null; else noUserBlock">
+                        <span>{{element.user.surname}}</span>
+                      </ng-container>
+                      <ng-template #noUserBlock>
+                        <span>-</span>
+                      </ng-template>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef>Дата создания</mat-header-cell>
+                    <mat-cell class="justify-start pl-0" *matCellDef="let element">
+                      <span>{{element?.createdAt}}</span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="file">
+                    <mat-header-cell *matHeaderCellDef>Файл</mat-header-cell>
+                    <mat-cell class="justify-start pl-0" *matCellDef="let element">
+                      <ng-container *ngIf="element.file!== null; else noFileBlock">
+                        <a [href]="element.file.path+'/'+element.file.name" target="blank">
+                          <app-file-type-icon [mimeType]="element.file.mimeType"></app-file-type-icon>
+                        </a>
+                      </ng-container>
+                      <ng-template #noFileBlock>
+                        <span>-</span>
+                      </ng-template>
+                    </mat-cell>
+                  </ng-container>
+                  <mat-header-row *matHeaderRowDef="tableFields"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: tableFields;" fxLayout="row"></mat-row>
+                </mat-table>
+              </mat-card-content>
+            </mat-card>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </div>
+</form>

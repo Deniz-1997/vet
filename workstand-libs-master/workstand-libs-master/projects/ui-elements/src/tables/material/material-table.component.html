@@ -1,0 +1,22 @@
+<mat-table [dataSource]="dataSource" class="report-form-table">
+  <ng-container *ngFor="let column of columns; index as colIndex;trackBy: trackByFn" [matColumnDef]="column.name">
+    <mat-cell *matHeaderCellDef [fxFlex]="table.useFxFlex? column.size.fxFlex : null">
+      <ng-container [ngTemplateOutlet]="tableHeaderContent" [ngTemplateOutletContext]="{column: column}"></ng-container>
+    </mat-cell>
+    <mat-cell *matCellDef="let row; index as rowIndex" [fxFlex]="table.useFxFlex? column.size.fxFlex : null">
+      <ng-container [ngTemplateOutlet]="tableRowContent"
+                    [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}"></ng-container>
+    </mat-cell>
+    <ng-container *ngIf="showTotalRow">
+      <mat-footer-cell *matFooterCellDef>
+        {{table.setTotalRowInFooterRow(form.value, column)}}
+      </mat-footer-cell>
+    </ng-container>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="headersName" [fxLayout]="table.useFxFlex? 'row' : null"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: headersName;" [ngStyle]="{'display': isDoneRenderRows ? '' : 'none' }"
+           [fxLayout]="table.useFxFlex? 'row' : null"></mat-row>
+  <ng-container *ngIf="showFooter">
+    <mat-footer-row *matFooterRowDef="headersName" [fxLayout]="table.useFxFlex? 'row' : null"></mat-footer-row>
+  </ng-container>
+</mat-table>

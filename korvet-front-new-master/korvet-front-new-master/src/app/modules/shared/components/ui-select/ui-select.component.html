@@ -1,0 +1,11 @@
+<select
+  [formControl]="control"
+  appUiSelect
+  (select)="onSelected()"
+  #selectField
+>
+  <option value="null">Не выбрано</option>
+  <optgroup *ngIf="(options | async)  && (options | async)[0] && (options | async)[0].id>0">
+    <option *ngFor="let option of options | async" value="{{option.id}}">{{getValueName(option)}}</option>
+  </optgroup>
+</select>

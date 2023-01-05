@@ -1,0 +1,58 @@
+<app-navigator appRemoveComponentTag [items]="menuService.sidenav" [user]="user" [isMobile]="isMobile"
+               [isShowMenu]="isShowMenu" (changeIsShowMenu)="isShowMenu = false"></app-navigator>
+<div class="kvr-main" [ngStyle]="{'padding-left': isMobile ? '0' : (widthNavigation + 20)+'px' }" appResized
+     data-booted="true"
+     (resized)="onResized($event)">
+  <div class="kvr-main__wrap padding-right">
+    <k-container fluid="fluid">
+      <ng-template #templateRef>
+        <k-row no-gutters="no-gutters">
+          <ng-template #row>
+            <k-button *ngIf="isMobile" type="mini-fab" class="mt-4 ml-4 mr-3" iconBtn="menu" (click)="isShowMenu = !isShowMenu"></k-button>
+            <k-col>
+              <ng-template #col>
+                <k-breadcrumbs>
+                  <ng-template #content>
+                    <ng-container>
+                      <k-breadcrumbs-item *ngIf="breadcrumbs$|async as breadcrumbs"
+                                          [items]="breadcrumbs" [showDivider]="false"></k-breadcrumbs-item>
+                    </ng-container>
+                  </ng-template>
+                </k-breadcrumbs>
+              </ng-template>
+            </k-col>
+          </ng-template>
+        </k-row>
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <ng-container [style.display]="!(noAccessService.noAccess | async) ? 'block' : 'none'">
+              </ng-container>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      </ng-template>
+    </k-container>
+    <k-container fluid="fluid" class="text-center">
+      <ng-template #templateRef>
+        <k-row class="text-center">
+          <ng-template #row>
+            <k-col>
+              <ng-template #col>
+                <ng-container *ngIf="!(noAccessService.noAccess | async)">
+                  <app-main-header></app-main-header>
+                  <router-outlet></router-outlet>
+                </ng-container>
+                <ng-container *ngIf="noAccessService.noAccess | async">
+                  <app-no-access></app-no-access>
+                </ng-container>
+              </ng-template>
+            </k-col>
+          </ng-template>
+        </k-row>
+      </ng-template>
+    </k-container>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.panel{
+  position: absolute;
+  right: 0;
+  top: 50px;
+  z-index: 1;
+}
+.select-search-body{
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.inp-st{
+  cursor: pointer;
+}
+
+.select-search .select-search-body {
+  max-height: 360px;
+}

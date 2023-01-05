@@ -1,0 +1,30 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'канал оповещения',
+    title: 'Не найдено ни одного канала оповещений',
+    subtitle: 'Вы можете добавить канал оповещений',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Каналы оповещения"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

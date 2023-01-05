@@ -1,0 +1,31 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'свойства полей шаблона',
+    title: 'Не найдено ни одного свойства для полей шаблона',
+    subtitle: 'Вы можете добавить новое свойство для поля шаблона',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Свойства полей"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>#</th>
+      <th>Наименование</th>
+      <th>Код</th>
+      <th>Описание</th>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td>{{item.code}}</td>
+      <td>{{item.description}}</td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

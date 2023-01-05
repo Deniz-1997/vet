@@ -1,0 +1,162 @@
+<div class="container-fluid" [class.form-wr]="formBorder" [class.p-0]="!formBorder"
+  *ngIf="model.status.code === 'DONE' || model.status.code === 'CORRUPTED'">
+  <ng-container *ngIf="model.probeItem.corrupted">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <label for="corrupted">Проба испорчена</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-4">
+      <ng-template #rowContent>
+        <app-col titleName="corruptDate" col="12 col-lg-3">
+          <ng-template #colContent>
+            <strong>
+              {{ model.probeItem?.corruptedDate }}
+            </strong>
+          </ng-template>
+        </app-col>
+        <app-col titleName="corruptReason" col="12 col-lg-9">
+          <ng-template #colContent>
+            <ng-container>
+              <strong>
+                {{ model.probeItem?.corruptReason?.name }}
+              </strong>
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-3" *ngIf="model.result">
+      <ng-template #rowContent>
+        <app-col titleName="comments" col="12">
+          <ng-template #colContent>
+            <strong>
+              {{ model.result }}
+            </strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </ng-container>
+  <ng-container *ngIf="!model.probeItem.corrupted">
+    <app-row *ngIf="!model.laboratory.external && model.researchEquipment">
+      <ng-template #rowContent>
+        <app-col titleName="equipment">
+          <ng-template #colContent>
+            <strong>
+              {{ model.researchEquipment?.name }}
+            </strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <ng-container *ngIf="!model.laboratory.external && model.laboratory.stock">
+      <ng-container *ngFor="let item of model.documentProducts; let i = index;">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName="expendableMaterial" col="12 col-lg-9">
+              <ng-template #colContent>
+                <strong>
+                  {{ item?.product?.name }}
+                </strong>
+              </ng-template>
+            </app-col>
+            <app-col titleName="quantity" col="12 col-lg-3">
+              <ng-template #colContent>
+                <strong>
+                  {{ item?.quantity }}
+                </strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </ng-container>
+    </ng-container>
+    <app-row class="pb-3" *ngIf="model.result">
+      <ng-template #rowContent>
+        <app-col titleName="conclusion" col="12">
+          <ng-template #colContent>
+            <strong>
+              {{ model.result }}
+            </strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <div class="w-100 text-center">
+      <div *ngIf="fileLoading" class="loader"></div>
+    </div>
+    <div class="delivery">
+      <table class="table-info-st table-info-st--close" *ngIf="!fileLoading && researchFiles.length">
+        <tr>
+          <th>Дата</th>
+          <th style="width: 20px"></th>
+          <th>Название</th>
+          <th>Тип</th>
+          <th>Формат</th>
+          <th>Размер</th>
+        </tr>
+        <ng-container *ngFor="let item of researchFiles">
+          <tr>
+            <td>{{item.createdAt}}</td>
+            <td>
+              <a *ngIf="item.appointment" [routerLink]="['/appointments', item.appointment.id]">
+                <app-icon-calendar></app-icon-calendar>
+              </a>
+            </td>
+            <td><a
+              href="{{ item.uploadedFile.path === null? '/uploaded' : item.uploadedFile.path}}/{{item.uploadedFile.name}}"
+              target="_blank">{{item.name}}</a></td>
+            <td>
+              <ng-container *ngIf="item.type && item.type.name">{{item.type.name}}</ng-container>
+            </td>
+            <td>
+              <app-file-type-icon [mimeType]="item.uploadedFile.mimeType"></app-file-type-icon>
+            </td>
+            <td>{{item.uploadedFile.size|fileSize}}</td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+
+    <div class="delivery-grid">
+      <div class="form-wr form-wr--adaptive container-fluid" *ngIf="!fileLoading && researchFiles.length">
+        <ng-container *ngFor="let item of researchFiles">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col text="Дата">
+                <ng-template #colContent>
+                  {{item.createdAt}} <a *ngIf="item.appointment" [routerLink]="['/appointments', item.appointment.id]">
+                  <app-icon-calendar></app-icon-calendar>
+                </a>
+                </ng-template>
+              </app-col>
+              <app-col text="Название">
+                <ng-template #colContent>
+                  <a href="{{ item.uploadedFile.path === null? '/uploaded' : item.uploadedFile.path}}/{{item.uploadedFile.name}}"
+                    target="_blank">{{item.name}}</a>
+                </ng-template>
+              </app-col>
+              <app-col text="Тип">
+                <ng-template #colContent>
+                  <ng-container *ngIf="item.type && item.type.name">{{item.type.name}}</ng-container>
+                </ng-template>
+              </app-col>
+              <app-col text="Формат">
+                <ng-template #colContent>
+                  <app-file-type-icon [mimeType]="item.uploadedFile.mimeType"></app-file-type-icon>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>

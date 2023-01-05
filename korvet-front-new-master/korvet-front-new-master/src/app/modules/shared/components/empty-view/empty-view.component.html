@@ -1,0 +1,23 @@
+<div *ngIf="search" class="box-empty box-empty">
+  <h3>
+    Упс, ничего не найдено.
+    <span>Попробуйте указать другой запрос</span>
+  </h3>
+</div>
+<div *ngIf="!search" class="box-empty">
+  <h3>
+    {{title || 'Упс, ничего не найдено'}}
+    <span *ngIf="subtitle">{{subtitle}}</span>
+  </h3>
+  <div class="box-empty__btn" *ngIf="addLink || buttons">
+    <a *ngIf="isValidLink() && !addLinInvisible" [routerLink]="addLink"
+       class="btn-st btn-st--inline">Добавить {{elementName}}</a>
+    <ng-container *ngIf="buttons && buttons.length">
+      <button type="button" class="btn-st btn-st--inline" *ngFor="let button of buttons"
+              (click)="buttonClick.emit({action: button.action})">
+        {{button.title}}
+      </button>
+    </ng-container>
+  </div>
+</div>
+

@@ -1,0 +1,897 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<div *ngIf="!loading$" class="header">
+  <div class="header__name">{{ item.id ? 'Шаблон ' + item.name : 'Создать шаблон' }}</div>
+</div>
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="10" [required]="true" titleName=templateName >
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" mwlTextInputElement type="text"
+              placeholder="Шаблон записи животного"/>
+          </ng-template>
+        </app-col>
+        <app-col *ngIf="item.id" text=" " class="pt-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="active" id="archive-template" type="checkbox"
+                     value="{{formGroup.get('active').value}}">
+              <label for="archive-template">Архив</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col *ngIf="item.id" class="text-left text-lg-right">
+          <ng-template #colContent>
+            <a (click)="cloneForm();"
+               [ngClass]="{'disabled' : needSave || blockCloneBtn}"
+               class="btn btn-outline-primary"
+               title="Вы можете сделать копию готового шаблона">Клонировать шаблон</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col *ngIf="needSave">
+          <ng-template #colContent>
+            <small class="float-right" style="color: #6d6d6d;">Прежде чем клонировать шаблон, сохраните текущий.</small>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+  <div *ngIf="item.id" class="form-wr container-fluid" id="fixed-field">
+    <app-title-view title="Поля шаблона"></app-title-view>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col class="col-12 text-left text-lg-right mb-2" *ngIf="!item.appointmentCount">
+          <ng-template #colContent>
+            <a (click)="addField()"
+               class="btn btn-outline-primary"
+               id="addFieldButton"
+               title="Добавить новое поле"> Добавить поле</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+
+  <div (cdkDropListDropped)="dropped($event)"
+       cdkDropList
+       class="list-order-form">
+    <div (mouseleave)="removeClass($event)"
+         (mouseover)="addClass($event)"
+         *ngFor="let formField of formFields.controls; let i = index;"
+         [className]="formField.get('type').get('code').value !== 'indent' ? 'form-wr container-fluid box-order-form' : 'form-wr container-fluid box-order-form indent'"
+         cdkDrag cdkDragBoundary=".list-order-form">
+      <div formArrayName="formFields">
+        <div cdkDragHandle class="drag-icon">
+          <app-icon-drag></app-icon-drag>
+        </div>
+        <app-row [formGroup]="formField">
+          <input formControlName="sort" hidden value="{{ formField.get('sort').value }}">
+          <ng-template #rowContent>
+            <app-col col="10 col-lg-11">
+              <ng-template #colContent>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col col="1  pt-3">
+                      <ng-template #colContent>
+                        <strong>{{ formField.get('sort').value }}</strong>
+                      </ng-template>
+                    </app-col>
+                    <app-col [class.col-lg-7]="!formField.get('properties').value.length"
+                             [class.col-lg-3]="formField.get('properties').value.length"
+                              formGroupName="type">
+                      <ng-template #colContent>
+                        <div class="container-fluid">
+                          <app-row>
+                            <ng-template #rowContent>
+                              <div *ngIf="!formField.get('properties').value.length; then thenBlock; else disabledOptions"></div>
+                              <ng-template #thenBlock>
+                                <app-col  [required]="true" titleName=selectField>
+                                  <ng-template #colContent>
+                                    <select (ngModelChange)="addFieldProperty(formField, $event, i)"
+                                            [options]="fieldTypeList"
+                                            app-ui-select-field
+                                            formControlName="id"></select>
+                                  </ng-template>
+                                </app-col>
+                              </ng-template>
+                              <ng-template #disabledOptions>
+                                <app-col titleName=selectedField>
+                                  <ng-template #colContent>
+                                    <strong>{{ formField.get('type').get('name').value }}</strong>
+                                  </ng-template>
+                                </app-col>
+                              </ng-template>
+                            </ng-template>
+                          </app-row>
+                        </div>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-lg-3 pb-2 pb-lg-0" *ngIf="formField.get('type').get('code').value !== 'indent'" titleName=nameField>
+                      <ng-template #colContent>
+                        <div *ngIf="formField.get('type').get('code').value !== 'indent'">
+                          <input (change)="onChangeInput()" class="inp-st" formControlName="name"  type="text"/>
+                        </div>
+                      </ng-template>
+                    </app-col>
+                    <app-col col="12 col-lg-5 pb-2 pb-lg-0" *ngIf="formField.get('properties').value.length" >
+                      <ng-template #colContent>
+                        <div *ngFor="let property of formField.get('properties').controls; let j = index"
+                             [class.form-span__prop-6]="property.value.formFieldProperty.code === 'max_number_value' ||
+                                            property.value.formFieldProperty.code === 'min_number_value' ||
+                                            property.value.formFieldProperty.code === 'float' ||
+                                            property.value.formFieldProperty.code === 'precision' ||
+                                            formField.get('type').get('code').value === 'multi_date'"
+                             [style.paddingLeft]="property.value.formFieldProperty.code === 'max_number_value' ||
+                     property.value.formFieldProperty.code === 'precision' ||
+                     property.get('formFieldProperty').get('code').value === 'date_max_limit'
+                     ? '15px' : '0'"
+                             formArrayName="properties"
+                        >
+                          <div [formGroupName]="j">
+                            <div *ngIf="
+                    property.value.formFieldProperty.code === 'text_length' ||
+                    property.value.formFieldProperty.code === 'text_default_value' ||
+                    property.value.formFieldProperty.code === 'max_number_value' ||
+                    property.value.formFieldProperty.code === 'min_number_value' ||
+                    property.value.formFieldProperty.code === 'text_area_length' ||
+                    property.value.formFieldProperty.code === 'number_default_value' ||
+                    property.value.formFieldProperty.code === 'text_area_default_value' ||
+                    property.get('formFieldProperty').get('code').value === 'date_limit' ||
+                    (property.get('formFieldProperty').get('code').value === 'date_range' && formField.get('showDateRange').value) ||
+                    (property.get('formFieldProperty').get('code').value === 'date_range_value' && formField.get('showDateRangeValue').value) ||
+                    (property.get('formFieldProperty').get('code').value === 'date_min_range' && formField.get('showDateMinRange').value) ||
+                    (property.get('formFieldProperty').get('code').value === 'date_min_range_value' && formField.get('showDateMinRangeValue').value) ||
+                    property.get('formFieldProperty').get('code').value === 'date_min_limit' ||
+                    property.get('formFieldProperty').get('code').value === 'date_max_limit' ||
+                    property.get('formFieldProperty').get('code').value === 'entity'
+                    " class="form-head">
+                              <strong>{{property.get('formFieldProperty').get('name').value}}</strong>
+                            </div>
+                            <!-- Text -->
+                            <ng-container *ngIf="formField.get('type').get('code').value === 'text'">
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'text_length'">
+                                <div class="form-body block">
+                                  <input [placeholder]="property.value.formFieldProperty.description"
+                                         [readonly]="item.appointmentCount"
+                                         [required]="true"
+                                         [title]="property.value.formFieldProperty.description"
+                                         class="inp-st inp-st__pl-color"
+                                         formControlName="value"
+                                         type="number"
+                                         value="{{property.get('value').value}}"/>
+                                </div>
+                              </ng-container>
+                              <!-- Default value-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'text_default_value'">
+                                <div class="form-body ng-star-inserted">
+                                  <input [placeholder]="property.get('formFieldProperty').get('description').value"
+                                         [readonly]="item.appointmentCount"
+                                         [title]="property.value.formFieldProperty.description"
+                                         class="inp-st np-st__pl-color ng-untouched ng-pristine ng-valid"
+                                         formControlName="value"
+                                         type="text"
+                                         value="{{ property.get('value').value }}"/>
+                                </div>
+                              </ng-container>
+                            </ng-container>
+
+                            <!-- Title -->
+                            <ng-container *ngIf="formField.get('type').get('code').value === 'title'">
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'text_length'">
+                                <div class="form-body block">
+                                  <input [placeholder]="property.value.formFieldProperty.description"
+                                         [readonly]="item.appointmentCount"
+                                         [required]="true"
+                                         [title]="property.value.formFieldProperty.description"
+                                         class="inp-st inp-st__pl-color"
+                                         formControlName="value"
+                                         type="number"
+                                         value="{{property.get('value').value}}"/>
+                                </div>
+                              </ng-container>
+                            </ng-container>
+                            <!-- Number -->
+                            <div *ngIf="formField.get('type').get('code').value === 'number'" [class.block]="property.value.formFieldProperty.code === 'max_number_value' ||
+                                    property.value.formFieldProperty.code === 'min_number_value' ||
+                                    property.value.formFieldProperty.code === 'precision'"
+                                 class="form-body"
+                            >
+
+                              <!-- min & max -->
+                              <input *ngIf="property.value.formFieldProperty.code === 'max_number_value' ||
+                                property.value.formFieldProperty.code === 'min_number_value'"
+                                     [placeholder]="property.value.formFieldProperty.description"
+                                     [readonly]="item.appointmentCount"
+                                     [title]="property.value.formFieldProperty.description"
+                                     class="inp-st inp-st__pl-color"
+                                     formControlName="value"
+                                     min="{{getNumberMin(property, formField.get('properties').controls)}}"
+                                     step="{{getNumberStep(property, formField.get('properties').controls)}}"
+                                     type="number"
+                                     value="{{property.get('value').value}}"/>
+
+                              <!-- Float switcher -->
+                              <div *ngIf="property.value.formFieldProperty.code === 'float'"
+                                   [title]="property.get('formFieldProperty').get('description').value"
+                                   class="inline-block"
+                                   style="margin-right: 15px; margin-top: 30px;">
+                                <div class="form-btn__check">
+                                  <div class="check-st">
+                                    <div class="check-st__col">
+                                      <input #checkBox
+                                             (change)="getNumberStep(property, formField.get('properties').controls)"
+                                             (click)="toggleOnChange(checkBox.value, '#floatInput' + i )"
+                                             [attr.disabled]="item.appointmentCount ? '' : null"
+                                             formControlName="value"
+                                             id="floatCheck{{ i }}"
+                                             type="checkbox"
+                                             value="{{!!property.get('value').value}}">
+                                      <label
+                                        for="floatCheck{{ i }}">{{ property.get('formFieldProperty').get('name').value }}</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Float input -->
+                              <div *ngIf="property.value.formFieldProperty.code === 'precision'"
+                                   [style.display]="!this._showFloatInput[formField.get('id').value] ? 'none':'inherit'"
+                                   id="floatInput{{ i }}"
+                              >
+                                <div class="form-head">
+                                  <strong>{{property.get('formFieldProperty').get('description').value}}</strong></div>
+                                <input [placeholder]="property.get('formFieldProperty').get('description').value"
+                                       [readonly]="item.appointmentCount"
+                                       [title]="property.get('formFieldProperty').get('description').value"
+                                       class="inp-st np-st__pl-color"
+                                       formControlName="value"
+                                       id="inputNumberPrecision{{ i }}"
+                                       min="1"
+                                       type="number"
+                                       value="{{ property.get('value').value }}"/>
+                              </div>
+
+                              <!-- Signed switcher -->
+                              <div *ngIf="property.value.formFieldProperty.code === 'signed'"
+                                   [title]="property.get('formFieldProperty').get('description').value"
+                                   class="form-btn__check">
+                                <div class="check-st">
+                                  <div class="check-st__col">
+                                    <input [attr.disabled]="item.appointmentCount ? '' : null"
+                                           [checked]="property.get('value').value"
+                                           formControlName="value"
+                                           id="signedCheck{{ i }}"
+                                           type="checkbox">
+                                    <label
+                                      for="signedCheck{{ i }}">{{property.get('formFieldProperty').get('name').value}}</label>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Default value-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'number_default_value'">
+                                <div class="form-body ng-star-inserted">
+                                  <input [decimals]="GetPrecision('floatCheck'+i, 'inputNumberPrecision'+i)"
+                                         [placeholder]="property.get('formFieldProperty').get('description').value"
+                                         [readonly]="item.appointmentCount"
+                                         [signed]="GetSigned('signedCheck'+i)"
+                                         [title]="property.value.formFieldProperty.description"
+                                         appNumeric
+                                         class="inp-st np-st__pl-color ng-untouched ng-pristine ng-valid"
+                                         formControlName="value"
+                                         type="text"
+                                         value="{{ property.get('value').value }}"/>
+                                </div>
+                              </ng-container>
+                            </div>
+
+                            <!-- Textarea -->
+                            <ng-container *ngIf="formField.get('type').get('code').value === 'textarea'">
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'text_area_length'">
+                                <div class="form-body block">
+                                  <input [placeholder]="property.get('formFieldProperty').get('description').value"
+                                         [readonly]="item.appointmentCount"
+                                         [title]="property.get('formFieldProperty').get('description').value"
+                                         class="inp-st inp-st__pl-color"
+                                         formControlName="value"
+                                         type="text"
+                                         value="{{property.get('value').value}}"/>
+                                </div>
+                              </ng-container>
+                              <!-- Default value-->
+                              <ng-container
+                                *ngIf="property.get('formFieldProperty').get('code').value === 'text_area_default_value'">
+                                <div class="form-body ng-star-inserted">
+                    <textarea [placeholder]="property.get('formFieldProperty').get('description').value"
+                              [readonly]="item.appointmentCount"
+                              class="textarea-st inline"
+                              formControlName="value"
+                              [title]="property.value.formFieldProperty.description"
+                              rows="3"
+                              type="text"
+                              value="{{ property.get('value').value }}"></textarea>
+                                </div>
+                              </ng-container>
+                            </ng-container>
+                            <!--------------------------------------------------------------------------------------------------------------------->
+
+                            <!-- Reference -->
+                            <div *ngIf="formField.get('type').get('code').value === 'reference'" class="form-body">
+
+                              <!-- Entity -->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity'">
+                                <mat-form-field appearance="outline">
+                                  <mat-select (selectionChange)="onChangeReference($event, formField, i)"
+                                              [disabled]="item.appointmentCount ? '' : null" disableOptionCentering
+                                              formControlName="value"
+                                              required>
+                                    <mat-option
+                                      *ngFor="let reference of References | keyvalue"
+                                      value="{{reference.key}}">{{reference.value.name}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Entity Default-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity_default_value'">
+                                <ng-container *ngIf="formField.get('parentReference').value">
+                                  <app-ui-select-reference
+                                    (selected)="onChangeParentReference($event, formField, i)"
+                                    [crudType]="formField.get('parentReference').get('crudType').value"
+                                    [title]="formField.get('parentReference').get('title').value"
+                                    [value]="formField.get('parentReference').get('value').value">
+                                  </app-ui-select-reference>
+                                </ng-container>
+
+                                <!-- SubParent entity-->
+                                <ng-container *ngIf="formField.get('subParentReference').value &&
+                       (formField.get('parentReference').value && formField.get('parentReference').get('value').value)">
+                                  <app-ui-select-reference
+                                    (selected)="onChangeSubParentReference($event, formField, i)"
+                                    [crudType]="formField.get('subParentReference').get('crudType').value"
+                                    [filter]="formField.get('subParentReference').get('filter').value"
+                                    [title]="formField.get('subParentReference').get('title').value"
+                                    [value]="formField.get('subParentReference').get('value').value">
+                                  </app-ui-select-reference>
+                                </ng-container>
+
+                                <!-- Default Entity -->
+                                <ng-container *ngIf="
+                      property.get('value').value ||
+                      (!property.get('value').value && !formField.get('parentReference').value && !formField.get('subParentReference').value) ||
+                      (formField.get('parentReference').value && formField.get('parentReference').get('value').value
+                        && !formField.get('subParentReference').value) ||
+                      (formField.get('parentReference').value && formField.get('parentReference').get('value').value
+                        && formField.get('subParentReference').value && formField.get('subParentReference').get('value').value)">
+                                  <div class="form-head" style="margin-bottom: 0">
+                                    <strong>{{property.get('formFieldProperty').get('name').value}}</strong></div>
+                                  <app-ui-select-reference
+                                    [control]="property.get('value')"
+                                    [crudType]="formField.get('crudType').value"
+                                    [filter]="formField.get('filter').value"
+                                    [multiSelect]="+formField.get('multiSelect').value > 0"
+                                    [title]="formField.get('title').value"
+                                    [value]="property.get('value').value">
+                                  </app-ui-select-reference>
+                                </ng-container>
+
+                              </ng-container>
+
+                              <!-- Entity View Type-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity_view_type'">
+                                <div class="form-head" style="margin-bottom: 0">
+                                  <strong>{{property.get('formFieldProperty').get('name').value}}</strong></div>
+                                <mat-form-field appearance="outline">
+                                  <mat-select (selectionChange)="onChangeReferenceViewType($event, formField, i)"
+                                              [disabled]="!!formField.get('parentRefName').value || item.appointmentCount > 0"
+                                              [placeholder]="property.get('formFieldProperty').get('description').value"
+                                              [title]="property.get('formFieldProperty').get('description').value"
+                                              [value]="property.get('value').value ? property.get('value').value : 'select'"
+                                              disableOptionCentering
+                                              formControlName="value"
+                                              required>
+                                    <mat-option
+                                      *ngFor="let viewType of referenceViewTypes;"
+                                      value="{{viewType.value}}"
+                                    >{{viewType.title}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Entity Multi Select -->
+                              <div *ngIf="property.get('formFieldProperty').get('code').value === 'multi_select' &&
+                              formField.get('viewType').value === 'select'"
+                                   [title]="property.get('formFieldProperty').get('description').value"
+                                   class="inline-block"
+                                   style="margin-right: 15px">
+                                <div class="form-btn__check">
+                                  <div class="check-st">
+                                    <div class="check-st__col">
+                                      <input #checkBox (click)="onChangeMultiSelect(checkBox.value, i, formField)"
+                                             [attr.disabled]="item.appointmentCount ? '' : null"
+                                             formControlName="value"
+                                             id="multiSelect{{ i }}"
+                                             type="checkbox"
+                                             value="{{!!property.get('value').value}}">
+                                      <label
+                                        for="multiSelect{{ i }}">{{ property.get('formFieldProperty').get('name').value }}</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <!-- Template Reference -->
+                            <div *ngIf="formField.get('type').get('code').value === 'template_reference'" class="form-body">
+
+                              <!-- Entity -->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity'">
+
+                                <mat-form-field appearance="outline">
+                                  <mat-select
+                                    (selectionChange)="onChangeTemplateReference($event, formField, i)"
+                                    [disabled]="item.appointmentCount ? '' : null" disableOptionCentering
+                                    formControlName="value"
+                                    required
+                                  >
+                                    <mat-option
+                                      *ngFor="let reference of templateReferences"
+                                      value="{{reference.id}}">{{reference.name}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Entity Default-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity_default_value'">
+                                <!-- Default Entity -->
+                                <ng-container>
+                                  <app-ui-select-reference
+                                    [control]="property.get('value')"
+                                    [crudType]="formField.get('crudType').value"
+                                    [filter]="formField.get('filter').value"
+                                    [multiSelect]="+formField.get('multiSelect').value > 0"
+                                    [title]="'Значение по умолчанию'"
+                                    [value]="property.get('value').value">
+                                  </app-ui-select-reference>
+                                </ng-container>
+
+                              </ng-container>
+
+                              <!-- Entity View Type-->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'entity_view_type'">
+                                <div class="form-head" style="margin-bottom: 0">
+                                  <strong>{{property.get('formFieldProperty').get('name').value}}</strong></div>
+                                <mat-form-field appearance="outline">
+                                  <mat-select (selectionChange)="onChangeReferenceViewType($event, formField, i)"
+                                              [disabled]="!!formField.get('parentRefName').value || item.appointmentCount > 0"
+                                              [placeholder]="property.get('formFieldProperty').get('description').value"
+                                              [title]="property.get('formFieldProperty').get('description').value"
+                                              [value]="property.get('value').value ? property.get('value').value : 'select'"
+                                              disableOptionCentering
+                                              formControlName="value"
+                                              required>
+                                    <mat-option
+                                      *ngFor="let viewType of referenceViewTypes;"
+                                      value="{{viewType.value}}"
+                                    >{{viewType.title}}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Entity Multi Select -->
+                              <div *ngIf="property.get('formFieldProperty').get('code').value === 'multi_select' &&
+                              formField.get('viewType').value === 'select'"
+                                   [title]="property.get('formFieldProperty').get('description').value"
+                                   class="inline-block"
+                                   style="margin-right: 15px">
+                                <div class="form-btn__check">
+                                  <div class="check-st">
+                                    <div class="check-st__col">
+                                      <input #checkBox (click)="onChangeMultiSelect(checkBox.value, i, formField)"
+                                             [attr.disabled]="item.appointmentCount ? '' : null"
+                                             formControlName="value"
+                                             id="templateReferencesMultiSelect{{ i }}"
+                                             type="checkbox"
+                                             value="{{!!property.get('value').value}}">
+                                      <label
+                                        for="templateReferencesMultiSelect{{ i }}">{{ property.get('formFieldProperty').get('name').value }}</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <!--Date--------------------------------------------------------------------------------------------------->
+
+                            <!-- Date -->
+                            <div *ngIf="formField.get('type').get('code').value === 'date'" class="form-body">
+
+                              <!-- Ограничение на ввод даты -->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_limit'">
+                                <mat-form-field appearance="outline">
+                                  <mat-select
+                                    (selectionChange)="onChangeDateLimit($event, formField, i)"
+                                    [disabled]="item.appointmentCount ? '' : null"
+                                    [placeholder]="property.get('formFieldProperty').get('description').value"
+                                    [title]="property.get('formFieldProperty').get('description').value"
+                                    disableOptionCentering
+                                    formControlName="value"
+                                    panelClass="multiple-panel"
+                                  >
+                                    <mat-option *ngFor="let limitType of limitTypes;"
+                                                [value]="limitType.value">{{limitType.title}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Срок -->
+                              <ng-container
+                                *ngIf="property.get('formFieldProperty').get('code').value === 'date_range' && formField.get('showDateRange').value">
+                                <mat-form-field appearance="outline">
+                                  <mat-select
+                                    (selectionChange)="onChangeDateRange($event, formField, i)"
+                                    [disabled]="item.appointmentCount ? '' : null"
+                                    [placeholder]="property.get('formFieldProperty').get('description').value"
+                                    [title]="property.get('formFieldProperty').get('description').value"
+                                    disableOptionCentering
+                                    formControlName="value"
+                                    panelClass="multiple-panel"
+                                  >
+                                    <mat-option
+                                      *ngFor="let limitRange of limitRanges;"
+                                      [value]="limitRange.value">{{limitRange.title}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </ng-container>
+
+                              <!-- Date range value -->
+                              <ng-container
+                                *ngIf="property.get('formFieldProperty').get('code').value === 'date_range_value'
+                    && formField.get('showDateRangeValue').value">
+                                <input
+                                  [placeholder]="property.get('formFieldProperty').get('description').value"
+                                  [readonly]="item.appointmentCount"
+                                  [title]="property.get('formFieldProperty').get('description').value"
+                                  class="inp-st inp-st__pl-color"
+                                  formControlName="value"
+                                  type="number"
+                                  value="{{property.get('value').value}}"/>
+                              </ng-container>
+
+                              <!-- Date format -->
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_format'">
+                                <div [title]="property.get('formFieldProperty').get('description').value"
+                                     class="form-btn__check">
+                                  <div class="check-st">
+                                    <div class="check-st__col">
+                                      <input
+                                        [attr.disabled]="item.appointmentCount ? '' : null"
+                                        formControlName="value"
+                                        id="dateTimeCheck{{ i }}"
+                                        type="checkbox"
+                                        value="{{property.get('value').value}}"
+                                      >
+                                      <label
+                                        for="dateTimeCheck{{ i }}">{{property.get('formFieldProperty').get('name').value}}</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-container>
+
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_time'">
+                                <input formControlName="value" type="hidden">
+                              </ng-container>
+
+                            </div>
+
+                            <!---------------------- Диапазон дат -------------------------------------------------------->
+
+                            <div *ngIf="formField.get('type').get('code').value === 'multi_date'" class="form-body">
+
+                              <!-- Ограничение на ввод даты -->
+                              <div
+                                *ngIf="['date_min_limit', 'date_max_limit'].includes(property.get('formFieldProperty').get('code').value)">
+
+                                <!-- min_limit-->
+                                <div *ngIf="property.get('formFieldProperty').get('code').value === 'date_min_limit'">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select
+                                      (selectionChange)="onChangeDateLimit($event, formField, i, 'date_min_limit')"
+                                      [disabled]="!!item.appointmentCount"
+                                      [placeholder]="property.get('formFieldProperty').get('description').value"
+                                      [title]="property.get('formFieldProperty').get('description').value"
+                                      disableOptionCentering
+                                      formControlName="value"
+                                      panelClass="multiple-panel"
+                                    >
+                                      <mat-option *ngFor="let limitType of limitTypes;"
+                                                  [value]="limitType.value">{{limitType.title}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+
+                                <!-- max_limit-->
+                                <div *ngIf="property.get('formFieldProperty').get('code').value === 'date_max_limit'">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select
+                                      (selectionChange)="onChangeDateLimit($event, formField, i )"
+                                      [disabled]="!!item.appointmentCount"
+                                      [placeholder]="property.get('formFieldProperty').get('description').value"
+                                      [title]="property.get('formFieldProperty').get('description').value"
+                                      disableOptionCentering
+                                      formControlName="value"
+                                      panelClass="multiple-panel"
+                                    >
+                                      <mat-option
+                                        *ngFor="let limitType of limitMaxTypes;"
+                                        [value]="limitType.value">{{limitType.title}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+
+                              </div>
+
+                              <!-- Срок -->
+                              <div
+                                *ngIf="['date_min_range', 'date_max_range'].includes(property.get('formFieldProperty').get('code').value)">
+
+                                <!-- Минимальный -->
+                                <mat-form-field
+                                  *ngIf="property.get('formFieldProperty').get('code').value === 'date_min_range' && formField.get('showDateMinRange').value"
+                                  appearance="outline"
+                                >
+                                  <mat-select
+                                    (selectionChange)="onChangeDateRange($event, formField, i)"
+                                    [disabled]="!!item.appointmentCount"
+                                    [placeholder]="property.get('formFieldProperty').get('description').value"
+                                    [title]="property.get('formFieldProperty').get('description').value"
+                                    disableOptionCentering
+                                    formControlName="value"
+                                    panelClass="multiple-panel"
+                                  >
+                                    <mat-option
+                                      *ngFor="let limitRange of limitRanges;"
+                                      [value]="limitRange.value">{{limitRange.title}}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+
+                                <!-- Максимальный -->
+                                <!--                    <div *ngIf="property.get('formFieldProperty').get('code').value === 'date_max_range'">-->
+                                <!--                      <div class="form-body">-->
+                                <!--                        <mat-form-field appearance="outline">-->
+                                <!--                          <mat-select-->
+                                <!--                            formControlName="value"-->
+                                <!--                            [placeholder]="property.get('formFieldProperty').get('description').value"-->
+                                <!--                            [title]="property.get('formFieldProperty').get('description').value"-->
+                                <!--                            panelClass="multiple-panel"-->
+                                <!--                            disableOptionCentering-->
+                                <!--                            [disabled]="!!item.appointmentCount"-->
+                                <!--                            (selectionChange)="onChangeDateRange($event, formField, i)"-->
+                                <!--                          >-->
+                                <!--                            <mat-option-->
+                                <!--                              *ngFor="let limitRange of limitRanges;"-->
+                                <!--                              [value]="limitRange.value">{{limitRange.title}}-->
+                                <!--                            </mat-option>-->
+                                <!--                          </mat-select>-->
+                                <!--                        </mat-form-field>-->
+                                <!--                      </div>-->
+                                <!--                    </div>-->
+                              </div>
+
+                              <!-- Date Range value -->
+                              <div
+                                *ngIf="['date_min_range_value', 'date_max_range_value'].includes(property.get('formFieldProperty').get('code').value)">
+
+                                <ng-container
+                                  *ngIf="property.get('formFieldProperty').get('code').value === 'date_min_range_value' && formField.get('showDateMinRangeValue').value">
+                                  <input
+                                    [placeholder]="property.get('formFieldProperty').get('description').value"
+                                    [readonly]="item.appointmentCount"
+                                    [title]="property.get('formFieldProperty').get('description').value"
+                                    class="inp-st inp-st__pl-color"
+                                    formControlName="value"
+                                    type="number"
+                                    value="{{property.get('value').value}}"/>
+                                </ng-container>
+
+                                <!--                    <ng-container-->
+                                <!--                      *ngIf="property.get('formFieldProperty').get('code').value === 'date_max_range_value'">-->
+                                <!--                        <input-->
+                                <!--                          class="inp-st inp-st__pl-color"-->
+                                <!--                          type="number"-->
+                                <!--                          formControlName="value"-->
+                                <!--                          [attr.disabled]="item.appointmentCount ? '' : null"-->
+                                <!--                          value="{{property.get('value').value}}"-->
+                                <!--                          [title]="property.get('formFieldProperty').get('description').value"-->
+                                <!--                          [placeholder]="property.get('formFieldProperty').get('description').value"/>-->
+                                <!--                    </ng-container>-->
+                              </div>
+
+                              <!-- Date Format -->
+                              <div
+                                *ngIf="['date_min_format', 'date_max_format'].includes(property.get('formFieldProperty').get('code').value)"
+                                [style.marginLeft]="property.get('formFieldProperty').get('code').value === 'date_max_format' ? '15px' : '0'"
+                                [title]="property.get('formFieldProperty').get('description').value"
+                              >
+
+                                <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_min_format'">
+                                  <div class="form-btn__check">
+                                    <div class="check-st">
+                                      <div class="check-st__col">
+                                        <input
+                                          [attr.disabled]="item.appointmentCount ? '' : null"
+                                          formControlName="value"
+                                          id="dateTimeMinCheck{{ i }}"
+                                          type="checkbox"
+                                          value="{{property.get('value').value}}"
+                                        >
+                                        <label
+                                          for="dateTimeMinCheck{{ i }}">{{property.get('formFieldProperty').get('name').value}}</label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </ng-container>
+
+                                <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_max_format'">
+                                  <div class="form-btn__check">
+                                    <div class="check-st">
+                                      <div class="check-st__col">
+                                        <input
+                                          [attr.disabled]="item.appointmentCount ? '' : null"
+                                          formControlName="value"
+                                          id="dateTimeMaxCheck{{ i }}"
+                                          type="checkbox"
+                                          value="{{property.get('value').value}}"
+                                        >
+                                        <label
+                                          for="dateTimeMaxCheck{{ i }}">{{property.get('formFieldProperty').get('name').value}}</label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </ng-container>
+                              </div>
+
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_min_time'">
+                                <input formControlName="value" type="hidden">
+                              </ng-container>
+                              <ng-container *ngIf="property.get('formFieldProperty').get('code').value === 'date_max_time'">
+                                <input formControlName="value" type="hidden">
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </ng-template>
+            </app-col>
+            <app-col col="2 col-lg-1"  *ngIf="!item.appointmentCount">
+              <ng-template #colContent>
+                <button (click)="removeField(formField, i)" class="field-close float-right" type="button">&times;</button>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <hr>
+      </div>
+    </div>
+  </div>
+
+  <mat-expansion-panel *ngIf="formFields.controls.length > 0" [disabled]="needSave"
+                       hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="header">
+          <div class="header__name">Просмотр шаблона</div>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col class="float: right" *ngIf="needSave">
+                <ng-template #colContent>
+                  <small class="float-right" style="color: #6d6d6d;">Сохраните текущие изменения для просмотра
+                    шаблона.</small>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div #formView *ngIf="!needSave"> <!-- Scroll here -->
+
+      <div *ngIf="item.id && ((item.templateArr && item.templateArr.length) || item.fields)"
+           class="form-wr container-fluid"
+           style="padding-bottom: 20px">
+
+        <div class="header">
+          <a (click)="previewForm(formView)"
+             class="form-span__lnk-btn float-right"
+             title="Обновить созданные поля шаблона"
+          >Обновить</a>
+        </div>
+
+        <app-form-template-view
+          [formTemplate]="item"
+        ></app-form-template-view>
+
+      </div>
+
+    </div>
+  </mat-expansion-panel>
+
+  <div *ngIf="appointmentFormTemplates && appointmentFormTemplates.length" class="table-info">
+    <div class="header__name" style="padding: 20px;">Шаблон в приемах</div>
+    <table class="table-info-st">
+      <tr>
+        <th>Дата и время</th>
+        <th style="width:150px">Владелец</th>
+        <th>Вид и кличка животного</th>
+        <th>Специалист</th>
+        <th>Метод оплаты</th>
+        <th>Статус оплаты</th>
+        <th style="width:150px">Статус</th>
+        <th>Контакты</th>
+      </tr>
+      <tr *ngFor="let item of appointmentFormTemplates">
+        <td><a [routerLink]="['/appointments', item.appointment.id]">{{item.appointment.date}}</a></td>
+        <td><a *ngIf="item.appointment.owner"
+               [routerLink]="['/owners', item.appointment.owner.id]">{{item.appointment.owner.name}}</a></td>
+        <td><a *ngIf="item.appointment.pet" [routerLink]="['/pets', item.appointment.pet.id]">
+          {{item.appointment.pet.type ? item.appointment.pet.type.name : '' + " " + item.appointment.pet.name}}
+        </a>
+        </td>
+        <td>
+          <!--          {{((item.appointment.user.surname || '') + ' ' + (item.appointment.user.name || '') + ' ' + (item.appointment.user.patronymic || '')).trim()}}-->
+        </td>
+        <td>{{item.appointment.paymentType?.title}}</td>
+        <td>{{item.appointment.paymentState?.title}}</td>
+        <td style="width:150px">
+          {{item.appointment.status.name}}
+        </td>
+        <td>
+          <ng-container *ngIf="item.appointment.owner">
+            {{item.appointment.owner.phone}}<br>
+            <a href="mailto:{{item.appointment.owner.email}}">{{item.appointment.owner.email}}</a>
+          </ng-container>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <app-reference-button-form
+    [isEdit]="isEdit()"
+    [goListUrl]="goListUrl()"
+    [type]="type"
+    [id]="id"
+    [removeAble]="item.appointmentCount === 0"
+  ></app-reference-button-form>
+
+  <div *ngIf="showFixedButton" class="fixed-action-btn" style="bottom: 90px; right: 24px;">
+    <a (click)="addField()" class="btn-st btn-floating btn-large">
+      <i class="material-icons">add</i>
+    </a>
+  </div>
+</form>

@@ -1,0 +1,156 @@
+<div class="position-relative">
+  <form (ngSubmit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="form-wr container-fluid">
+      <app-personal-contact [formGroup]="formGroup"></app-personal-contact>
+      <app-row formGroupName="address">
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=addressForm col="12 col-lg-10">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text" placeholder="г. Москва, ул. Тверская, д. 9">
+            </ng-template>
+          </app-col>
+          <app-col titleName=apartmentNumber col="6 col-lg-2" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st inp-address" formControlName="apartmentNumber" type="text" placeholder="99">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+
+      <app-row class="pb-0 mb-0">
+        <ng-template #rowContent>
+          <app-col col="12 col-lg-12" class="pl-4">
+            <ng-template #colContent>
+              <app-ya-maps-field  [coordinatesControl]="formGroup.controls['address']['controls']['coordinates']">
+              </app-ya-maps-field>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <mat-accordion >
+        <mat-expansion-panel  [@.disabled]="isDisabled" [expanded]="formGroup.get('passport').get('number').value!=''"
+          (opened)="panelPassportState = true" (closed)="panelPassportState = false">
+          <mat-expansion-panel-header class="pl-0 pt-3 pb-3">
+            <mat-panel-title class="pl-2">
+              Паспортные данные
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="mt-3">
+            <app-contact-document [DocumentTypeEnum]="DocumentTypeEnum" [formGroup]="formGroup"></app-contact-document>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <mat-accordion>
+        <mat-expansion-panel [@.disabled]="isDisabled" [expanded]="formGroup.get('individualPerson').get('householdAddress').value!=''"
+          (opened)="panelPassportState = true" (closed)="panelPassportState = false">
+          <mat-expansion-panel-header class="pl-0 pt-3 pb-3">
+            <mat-panel-title class="pl-2">
+              Является ЛПХ (Личным подсобным хозяйством)
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <fieldset formGroupName="individualPerson">
+            <app-row class="align-items-center mt-3">
+              <ng-template #rowContent>
+                <app-col titleName=householdAddress col="12 col-lg-8">
+                  <ng-template #colContent>
+                    <input appYaMapsSuggestion class="inp-st" formControlName="householdAddress" type="text" placeholder="г. Москва, ул. Тверская, д. 9">
+                  </ng-template>
+                </app-col>
+                <app-col col="12 col-lg-4" class="pt-1 pt-lg-4">
+                  <ng-template #colContent>
+                    <div class="check-st">
+                      <input [dependControl]="formGroup.controls['individualPerson']['controls']['householdAddress']"
+                        [mainControl]="formGroup.controls['address']['controls']['full']" appSameField
+                        formControlName="householdAddressIsPersonAddress" id="address-ok" type="checkbox">
+                      <label for="address-ok" class="pt-0">Совпадает с адресом проживания</label>
+                    </div>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+            <app-row class="mt-3 align-items-center">
+              <ng-template #rowContent>
+                <app-col col="12 col-sm-6 col-lg-2">
+                  <ng-template #colContent>
+                    <div class="check-st">
+                      <input formControlName="householdInRent" id="arenda-ok" type="checkbox">
+                      <label for="arenda-ok" class="pt-0">Земля в аренде до</label>
+                    </div>
+                  </ng-template>
+                </app-col>
+                <app-col col="12 col-sm-6 col-lg-3">
+                  <ng-template #colContent>
+                    <app-datepicker-overview formControlName="householdRentExpirationDate"></app-datepicker-overview>
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </fieldset>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=selectActivities col="12 col-lg-6">
+                <ng-template #colContent>
+                  <mat-form-field appearance="outline">
+                    <mat-select [compareWith]="compareFn" disableOptionCentering formControlName="activities" multiple
+                      panelClass="multiple-panel" placeholder="Выберите виды деятельности">
+                      <mat-option *ngFor="let group of choicesActivities" [value]="group">{{group.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </app-col>
+              <app-col titleName=specifyYourActivities col="12 col-lg-6">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="customActivities" type="text" placeholder="Реализация животных">
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <mat-accordion>
+        <mat-expansion-panel [@.disabled]="isDisabled" [expanded]="formGroup.get('additionalContacts').value!=''"
+          (opened)="panelPassportState = true" (closed)="panelPassportState = false">
+          <mat-expansion-panel-header class="pl-0 pt-3 pb-3">
+            <mat-panel-title class="pl-2">
+              Дополнительные сведения
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-row class="mt-3">
+            <ng-template #rowContent>
+              <app-col titleName=additionalContacts col="12">
+                <ng-template #colContent>
+                  <textarea [value]="formGroup.get('additionalContacts').value" class="textarea-st" cols="30"
+                    formControlName="additionalContacts" rows="6" placeholder="Дополнительный телефон: +79999999999"></textarea>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName=dateEndContract col="12 col-lg-4">
+                <ng-template #colContent>
+                  <app-datepicker-overview [dataError]="formGroup.controls['contractDateTo'].hasError('required')"
+                    formControlName="contractDateTo"></app-datepicker-overview>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </form>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <app-reference-button-form [goListUrl]="'/owners'" [backButton]="true" [hidden]="backButton" [goListUrlAfterRemove]="'/owners'" [id]="formGroup.value['id']"
+                                   (buttonClick)="submit()" [isEdit]="formGroup.value['id'] ? true : false" [type]="type"
+                                   [saveButtonName]="formGroup.value['id'] ? 'Сохранить':'Добавить'"
+                                   removeButtonName="УДАЛИТЬ ВЛАДЕЛЬЦА">
+        </app-reference-button-form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-owner-search (select)="addOwner($event)" [model]="formGroup"></app-owner-search>

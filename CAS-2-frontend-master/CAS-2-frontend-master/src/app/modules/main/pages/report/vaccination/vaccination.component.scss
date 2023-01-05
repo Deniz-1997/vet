@@ -1,0 +1,91 @@
+@import "src/assets/scss/colors";
+.report-success {
+  color: $black;
+}
+
+.margin-bottom {
+  margin-bottom: -20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+}
+
+.row-margin {
+  margin: 10px;
+}
+
+.header-align {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.data-header-align {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+
+.card-style {
+  margin-bottom: 30px;
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.table {
+  margin: 0 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+}
+.search {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  > .el1 {
+    width: 30rem;
+  }
+}
+.category-list {
+  list-style: none;
+  column-count: 4;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  column-width: 400px;
+}
+
+.button-clear ::ng-deep .mat-raised-button {
+  height: 52px;
+}
+
+.magnifier {
+  color: $mediumGrey;
+  float: right;
+}
+
+.mat-row {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  border-color: $lightGrey;
+  background-color: $lightGrey;
+}
+
+.color-link {
+  color: #0b4aaf;
+}
+
+.header-style {
+  display: inline;
+  font-size: 25px;
+  margin-top: 70px;
+  width: 100%;
+}
+

@@ -1,0 +1,44 @@
+<app-list-filter-view
+  (outEmptyClick)="onEdit()"
+  [listEmptyOptions]="{
+    elementName: 'Значения',
+    title: 'Не найдено ни одного значение справочника конструктора',
+    subtitle: 'Вы можете добавить значение справочника конструктора',
+    buttons:[{
+      title: 'Добавить значение',
+      action:'add'
+    }]
+  }"
+  [type]="crudType"
+  filterPlaceholder="Поиск по значению"
+  title="Значения"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a (click)="onEdit()" class="lnk-add">Добавить значение</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Редактирование</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td>{{item.id}}</td>
+      <td>{{item.name}}</td>
+      <td>
+        <button (click)="onEdit(item.id)" class="btn btn-primary float-right mr-4">Изменить</button>
+        <button (click)="onDelete(item.id)" class="btn btn-danger float-right mr-2">Удалить</button>
+      </td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

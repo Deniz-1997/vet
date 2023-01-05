@@ -1,0 +1,6 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<app-title-view title="Результаты исследований">
+</app-title-view>
+<div class="mb-3" *ngFor="let reserch of researchList">
+  <app-research-header [model] = "reserch" [showResult] = "true"></app-research-header>
+</div>

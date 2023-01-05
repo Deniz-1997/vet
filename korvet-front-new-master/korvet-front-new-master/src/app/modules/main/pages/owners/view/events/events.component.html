@@ -1,0 +1,11 @@
+<ngx-loading [show]="loadingData$|async"></ngx-loading>
+<app-event-form
+  (cancelForm)="cancel()"
+  (submitForm)="submit($event)"
+  [loading]="loading$|async"
+  [model]="event$|async"
+  [ownerId]="ownerId"
+  [pets]="pets$"
+  [types]="eventTypes$"
+  [users]="users$"
+></app-event-form>

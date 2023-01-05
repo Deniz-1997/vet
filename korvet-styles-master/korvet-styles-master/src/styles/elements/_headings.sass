@@ -1,0 +1,8 @@
+@mixin heading($material)
+  color: map-deep-get($material, 'text', 'primary')
+
+.krv-application .theme--light.heading
+  +heading($material-light)
+
+.krv-application .theme--dark.heading
+  +heading($material-dark)

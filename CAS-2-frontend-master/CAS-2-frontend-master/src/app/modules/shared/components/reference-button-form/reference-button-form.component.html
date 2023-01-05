@@ -1,0 +1,60 @@
+<k-container fluid>
+  <ng-template #templateRef>
+    <k-row *ngIf="!isEdit" justify="space-between">
+      <ng-template #row>
+        <k-col *ngIf="backButton">
+          <ng-template #col>
+            <a [routerLink]="goListUrl" [hidden]="hidden">Назад</a>
+          </ng-template>
+        </k-col>
+        <k-col *ngIf="cancelButton">
+          <ng-template #col>
+            <a [mat-dialog-close]="true"  (click)="exit($event)">Отмена</a>
+          </ng-template>
+        </k-col>
+        <k-col class="text-right">
+          <ng-template #col>
+            <k-button  (click)="isButtonClick($event)"  color="primary" name="{{saveButtonName}}"
+                       [class.btn-loader]="getLoading$ | async"
+                       [disabled]="disabled">
+            </k-button>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row *ngIf="cancelButton">
+      <ng-template #row>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </k-row>
+  </ng-template>
+</k-container>
+
+
+<k-container fluid>
+  <ng-template #templateRef>
+    <k-row *ngIf="isEdit">
+      <ng-template #row>
+        <k-col cols="10" class="text-left">
+          <ng-template #col>
+            <a [routerLink]="goListUrl" [hidden]="hidden" class="pr-4">Отмена</a>
+            <k-button *ngIf="removeAble" (click)="remove($event)" [hidden]="hidden" color="primary" name="{{removeButtonName}}"></k-button>
+          </ng-template>
+        </k-col>
+        <k-col class="text-right" *ngIf="showSaveButton">
+          <ng-template #col>
+            <k-button  (click)="isButtonClick($event)"
+                       color="primary"
+                       name="{{saveButtonName}}"
+                       [class.btn-loader]="getLoading$ | async"
+                       [disabled]="disabled">
+            </k-button>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </ng-template>
+</k-container>
+
+
+

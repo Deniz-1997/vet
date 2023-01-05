@@ -1,0 +1,43 @@
+<div #headTemplate>
+  <ng-content select="[headTemplate]"></ng-content>
+</div>
+<div *ngIf="title" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<form (submit)="submit($event)" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+  <div class="popup-wr__body">
+    <app-row class="mt-2">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=dateHolding  col="12 col-md-4" >
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['date'].hasError('required')"
+              formControlName="date"
+            ></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=time   col="12 col-md-4" class="mb-2 mb-md-0">
+          <ng-template #colContent>
+            <input appUiMaskTime class="inp-st time-mask" formControlName="time">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=temperature  col="12 col-md-4"  *ngIf="type===types.PetTemperature">
+          <ng-template #colContent>
+            <input appNumberOnly class="inp-st" formControlName="value" placeholder="00.00" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=weight  col="12 col-md-4"  *ngIf="type===types.PetWeight">
+          <ng-template #colContent>
+            <input [numberType]="integer" appNumberOnly class="inp-st" formControlName="value" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <div class="popup-wr__footer">
+    <button (click)="cancel()" class="btn-st btn-st--left btn-st--gray" type="button">Отмена</button>
+    <button (click)="submit($event)" [class.btn-loader]="btnLoader" class="btn-st btn-st--right"
+            type="button">Добавить
+    </button>
+  </div>
+</form>

@@ -1,0 +1,41 @@
+<div *ngIf="!openDialog" class="header">
+  <div *ngIf="id === 'create'; else elseBlock" class="header__name">Создать настройку</div>
+  <ng-template #elseBlock>
+    <div class="header__name">{{formGroup?.controls.key.value}}</div>
+  </ng-template>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=key>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="key" type="text" placeholder="Настройка доступа"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-4">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=value>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="value" type="text" placeholder="9"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="true">
+  </app-reference-button-form>
+</form>

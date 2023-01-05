@@ -1,0 +1,74 @@
+@import "colors";
+
+$font-family:   'Roboto, "Helvetica Neue", sans-serif';
+$enable-shadows:  true;
+$border-radius:4px;
+//Text
+$small-font-size: 12px!important;
+//Button
+$input-btn-font-size:14px;
+$btn-line-height: 38px;
+$btn-padding-x: 20px;
+$btn-padding-y: 0;
+$input-btn-focus-width: 1px;
+$btn-box-shadow: none;
+//Form
+$input-bg: $light;
+$input-height: 48px;
+$input-focus-bg:white;
+$input-focus-border-color: lighten($primary, 10%);
+$input-focus-box-shadow: none;
+$input-border-width: 1.4px;
+$label-margin-bottom: 8px!important;
+$form-text-margin-top: 5px!important;
+.form-group label{
+    font-size: 12px;
+}
+//Table
+$table-bg: white;
+$table-cell-padding: 1rem;
+.table{
+    box-shadow: 0 5px 15px -10px $shadow;
+    margin-bottom: 40px!important;
+    padding-bottom: 50px;
+    border-radius: 4px;
+}
+.table th{
+    font-weight: 700!important;
+    font-size: 12px;
+    border-bottom-color: $light!important;
+    border-bottom-style: solid!important;
+    border-bottom-width: 1px!important;
+    margin-bottom: 5px;
+}
+.table tr:not(:first-child):hover{
+    background-color: lighten(black, 95%);
+}
+
+.table tr td{
+    vertical-align: baseline!important;
+}
+
+.loader {
+    font-size: 0;
+    pointer-events: none;
+    content: '';
+    display: inline-block;
+    border: 2px solid #0d51b6;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: 8px;
+}
+
+.mat-expansion-panel-header:hover{
+    background-color: lighten(black, 95%)!important;
+}
+.mat-expansion-panel-body{
+    padding: 1px!important;
+}
+
+
+@import "~bootstrap/scss/bootstrap";

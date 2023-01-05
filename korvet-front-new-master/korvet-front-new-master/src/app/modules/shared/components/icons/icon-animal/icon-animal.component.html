@@ -1,0 +1,9 @@
+<ng-container  *ngIf="type === 'horse.svg' && type !== undefined; else blockElse">
+  <img  [class.bounce-1]="show" (click)="expand()"  alt=""  src="/assets/icons/animals/{{type}}"
+        style="width: 29px; height: 24px;" [style.margin-bottom]="steps">
+</ng-container>
+<ng-template  #blockElse>
+  <img *ngIf="type !== undefined"  alt=""  src="/assets/icons/animals/{{type}}"
+         style="width: 29px; height: 24px;" [style.margin-bottom]="steps">
+</ng-template>
+

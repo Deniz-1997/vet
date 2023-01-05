@@ -1,0 +1,170 @@
+<div class="body-header">
+  <div class="body-header__name">{{title}}</div>
+  <div class="body-header__setting">
+    <ng-container *ngIf="id !== 'create' && formGroup && cashService.isNew(item)">
+      <button (click)="onCashFlowRegister(item.id)" [class.btn-loader]="loading | async" class="btn-st btn-st--right"
+        type="button">Пробить чек {{item.type.title | lowercase}}</button>
+    </ng-container>
+  </div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row *ngIf="id !== 'create'">
+      <ng-template #rowContent>
+        <app-col titleName=id col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.id}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=createdAt col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.createdAt}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=creator col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>
+                {{getFullName(item.creator)}}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=cashier col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>
+                {{getFullName(item.cashier)}}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=kkm col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('cashRegister')" [options]="referenceCashRegisterItems"
+              [type]="crudType.ReferenceCashRegister" placeholder="Укажите ККМ"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" text="Тип операции" col="6 col-lg-3" formGroupName="type" class="pb-3 pb-lg-0">
+          <ng-template #colContent>
+            <select (ngModelChange)="changeType()" [options]="cashFlowTypeEnum" app-ui-select-field
+              formControlName="code">
+            </select>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" text="Сумма, ₽" col="6 col-lg-3" class="pb-3 pb-lg-0">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="total" type="number" placeholder="999 999,99"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="id !== 'create'">
+      <ng-template #rowContent>
+        <app-col text="Статус чека ККМ" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.state.title}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="Дата и время отчета" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fiscalDocumentDateTime}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="Номер ФД отчета" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>
+                {{item.fiscal.registrationNumber}}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="ФПД отчета" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fiscalDocumentNumber}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="id !== 'create'">
+      <ng-template #rowContent>
+        <app-col text="Номер чека в смене" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fiscalDocumentSign}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="Количество чеков за смену" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fiscalReceiptNumber}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=total col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.total}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="Номер ФН" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fnNumber}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="id !== 'create'">
+      <ng-template #rowContent>
+        <app-col text="РНМ" col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.registrationNumber}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col titleName=shiftNumber col="6 col-lg-3">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.shiftNumber}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col text="URL ФНС" col="12 col-lg-6">
+          <ng-template #colContent>
+            <div class="form-txt">
+              <strong>{{item.fiscal.fnsUrl}}</strong>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type">
+  </app-reference-button-form>
+</form>

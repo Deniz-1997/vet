@@ -1,0 +1,58 @@
+<fieldset [formGroup]="formGroup" >
+  <app-row formGroupName="fullName">
+    <ng-template #rowContent>
+        <app-col [required]="lastNameRequired" titleName=lastName col="12 col-lg-4" class="pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <app-dadata
+              [control]="formGroup.get('fullName').get('lastName')"
+               field='surname'
+               parts='SURNAME'
+               placeholder='Иванов'>
+            </app-dadata>
+          </ng-template>
+        </app-col>
+          <app-col [required]="nameRequired" titleName=firstName col="12 col-lg-4">
+            <ng-template #colContent>
+              <app-dadata
+                [control]="formGroup.get('fullName').get('name')"
+                 field='name'
+                 parts='NAME'
+                 placeholder='Иван'
+                 (selectedGender)="getGender($event)">
+              </app-dadata>
+            </ng-template>
+          </app-col>
+            <app-col titleName=middleName col="12 col-lg-4" class="pt-2 pt-lg-0">
+              <ng-template #colContent>
+                <app-dadata
+                  [control]="formGroup.get('fullName').get('middleName')"
+                   field='patronymic'
+                   placeholder='Иванович'
+                   parts='PATRONYMIC'>
+                </app-dadata>
+              </ng-template>
+            </app-col>
+    </ng-template>
+  </app-row>
+    <app-row class="pb-4">
+        <ng-template #rowContent>
+            <app-col [required]="phoneRequired" titleName=phone col="12 col-lg-4">
+                <ng-template #colContent>
+                    <input (change)="getMatches.emit(formGroup.value)" [maskPhoneMax]="10" [maskPhoneMin]="1"
+                        appUiMaskPhone class="inp-st inp-namber" formControlName="phone" type="text" placeholder="+79999999999">
+                </ng-template>
+            </app-col>
+            <app-col [required]="emailRequired" titleName=email col="12 col-lg-4" class="pt-2 pt-lg-0">
+                <ng-template #colContent>
+                    <input (change)="getMatches.emit(formGroup.value)" class="inp-st" formControlName="email"
+                        type="text" placeholder="info@mail.ru">
+                </ng-template>
+            </app-col>
+            <app-col [text]="additionFieldName" col="12 col-lg-4" *ngIf="additionFieldName">
+                <ng-template #colContent>
+                    <input class="inp-st" formControlName="share" [type]="additionFieldType">
+                </ng-template>
+            </app-col>
+        </ng-template>
+    </app-row>
+</fieldset>

@@ -1,0 +1,183 @@
+<div class="tab-list">
+  <div *ngIf="owner" class="tab-item">
+    <div class="form-wr container-fluid">
+      <a [routerLink]="['../../../edit']" class="info-edit" style="opacity: 1">
+        <app-icon-edit></app-icon-edit>
+      </a>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=nameOfLegalEntity >
+            <ng-template #colContent>
+              <strong>{{owner.name}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=personType col="12 col-md-3">
+            <ng-template #colContent>
+              <strong>{{owner.legalForm?.name}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=inn col="12 col-md-2" class="mb-2 mt-2 mt-md-0 mb-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.inn}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=kpp col="12 col-md-2" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong></strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=ogrn col="12 col-md-2">
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.ogrn}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=telephoneCompanies col="12 col-md-3" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.phone}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=emailCompanies col="12 col-md-3">
+            <ng-template #colContent>
+              <strong><a href="mailto:{{owner.email}}">{{owner.email}}</a></strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=juridicalAddress >
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.juridicalAddress}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=legalActualAddress >
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.factAddressIsJuridicalAddress ? owner.legalEntity?.juridicalAddress : owner.address?.full}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=propertyDocuments *ngIf="false">
+            <ng-template #colContent>
+              <table>
+                <tr>
+                  <td>
+                    <img alt="" class="down-ico" src="assets/img/pdf.svg">
+                  </td>
+                  <td>
+                    234 кб
+                  </td>
+                  <td style="opacity: .5">
+                    Справочник
+                  </td>
+                  <td>
+                    Медицинское заключение об операции
+                  </td>
+                </tr>
+              </table>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-ya-map *ngIf="false"></app-ya-map>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=generalManager col="12 col-md-3">
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.head.fullName.Full}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=phone col="12 col-md-3" class="mt-2 mb-2 mb-md-0 mt-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.head?.phone}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=email col="12 col-md-3">
+            <ng-template #colContent>
+              <strong><a href="mailto:{{owner.legalEntity?.head.email}}">{{owner.legalEntity?.head.email}}</a></strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=position col="12 col-md-3" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.head.position}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col titleName=responsibilitiesLegal col="12 col-md-3">
+            <ng-template #colContent>
+              <strong>{{owner.legalEntity?.head.responsibilities}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <ng-container *ngFor="let person of owner.contactPersons">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col titleName=contactPerson col="12 col-md-3">
+              <ng-template #colContent>
+                <strong>{{person.person?.fullName.Full}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col titleName=phone col="12 col-md-3" class="mt-2 mb-2 mb-md-0 mt-md-0">
+              <ng-template #colContent>
+                <strong>{{person.person?.phone}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col titleName=email col="12 col-md-3">
+              <ng-template #colContent>
+                <strong><a href="mailto:{{person.person?.email}}">{{person.person?.email}}</a></strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col  titleName=position col="12 col-md-3" class="mb-2 mb-md-0">
+              <ng-template #colContent>
+                <strong>{{person.position}}</strong>
+              </ng-template>
+            </app-col>
+            <app-col  titleName=responsibilitiesLegal col="12 col-md-3">
+              <ng-template #colContent>
+                <strong>{{person.comment}}</strong>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </ng-container>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName="activities" *ngIf="owner.customActivities || (owner.activities && owner.activities.length > 0)">
+            <ng-template #colContent>
+              <div *ngFor="let activity of owner.activities" class="tag-box tag-box--def">{{activity.name}}</div>
+              <div *ngIf="owner.customActivities" class="tag-box tag-box--def">{{owner.customActivities}}</div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </div>
+</div>
+
+  <app-print-forms
+    [ownerId]="owner.id"
+    [pets]="owner.pets"
+    partition="Owner"
+  ></app-print-forms>

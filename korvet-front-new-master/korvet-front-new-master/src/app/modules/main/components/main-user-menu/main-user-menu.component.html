@@ -1,0 +1,30 @@
+<ul id="user-menu" class="menu-column__user-menu-dr">
+  <li class="menu-column__user-menu-ico">
+    <a (click)="close($event)">
+      <app-icon-menu color="black"></app-icon-menu>
+    </a>
+  </li>
+  <li>
+    <a class="lnk-icon" routerLink="/lk">
+      <span style="margin-top: 1px;">
+        <app-icon-profile></app-icon-profile>
+      </span>
+      Мой профиль
+    </a>
+  </li>
+
+  <li *ngIf="false">
+    <a class="lnk-icon">
+            <span style="margin-top: -3px;">
+              <app-icon-notifications></app-icon-notifications>
+            </span>
+      Мои уведомления
+      <i>3</i>
+    </a>
+  </li>
+  <li>
+    <a (click)="logout($event)">
+      Выйти из системы
+    </a>
+  </li>
+</ul>

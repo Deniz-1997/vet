@@ -1,0 +1,32 @@
+<ng-container [ngSwitch]="type">
+  <ng-container *ngSwitchCase="'icon-storage'">
+    <app-icon-store></app-icon-store>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-cashbox'">
+    <app-icon-cashbox></app-icon-cashbox>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-reception'">
+    <app-icon-reception></app-icon-reception>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-administration'">
+    <app-icon-settings></app-icon-settings>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-culling'">
+    <app-icon-culling></app-icon-culling>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-shop'">
+    <app-icon-shop></app-icon-shop>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-laboratory'">
+    <app-icon-laboratory></app-icon-laboratory>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-leaving'">
+    <app-icon-leaving></app-icon-leaving>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon-description'">
+    <app-icon-description></app-icon-description>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <app-icon-settings></app-icon-settings>
+  </ng-container>
+</ng-container>

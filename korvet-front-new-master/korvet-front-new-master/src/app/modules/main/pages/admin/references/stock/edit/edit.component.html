@@ -1,0 +1,71 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name col="7" class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.name" class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=externalIdentifier col="7" class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.externalId" class="inp-st" formControlName="externalId" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=clinic col="7" class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('unit')"
+              [options]="unitItems"
+              [type]="crudType.ReferenceUnit"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="8" class="pb-2">
+          <ng-template #colContent>
+            <div class="form-btn__check form-btn__check--span">
+              <div class="check-st">
+                <input formControlName="showInAppointment" id="product-active" type="checkbox">
+                <label for="product-active">Показывать в приеме</label>
+              </div>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>
+

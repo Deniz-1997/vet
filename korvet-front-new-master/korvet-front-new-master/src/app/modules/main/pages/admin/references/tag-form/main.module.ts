@@ -1,0 +1,24 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+
+import {SharedModule} from '../../../../../shared/shared.module';
+import {RoutingModule} from './routing.module';
+
+import {EditComponent} from './edit/edit.component';
+import {ListComponent} from './list/list.component';
+import {ReferenceModule} from '../../../../../shared/modules/reference-edit/reference.module';
+
+@NgModule({
+  declarations: [
+    ListComponent,
+    EditComponent
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    RoutingModule,
+    ReferenceModule
+  ]
+})
+export class MainModule {
+}

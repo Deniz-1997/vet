@@ -1,0 +1,231 @@
+<ngx-loading [show]="getStockLoading$ | async"></ngx-loading>
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form *ngIf="item">
+  <div class="form-wr">
+    <p><span class="form-head">Наименование файла</span>: <span
+      class="form-txt"><strong>{{item.fileName}}</strong></span></p>
+    <p><span class="form-head">Операция</span>: <span class="form-txt"><strong
+      *ngIf="item.operationType">{{item.operationType.title}}</strong></span></p>
+    <p><span class="form-head">Дата</span>: <span class="form-txt"><strong>{{item.date}}</strong></span></p>
+    <p><span class="form-head">Импортировано</span>: <span
+      class="form-txt"><strong>{{item.imported ? 'Да' : 'Нет'}}</strong></span></p>
+    <br>
+    <h2>Отчет</h2>
+    <ng-container *ngIf="!item.report?.errors?.length">
+      <p class="report-success">Нет ошибок</p>
+      <br>
+      <br>
+    </ng-container>
+    <ng-container *ngIf="item.report?.errors?.length>0">
+      <ul>
+        <li *ngFor="let error of item.report?.errors">
+          <p>
+            <ng-container *ngIf="error.product && error.product.id; else elseErrorBlock">
+              <a [routerLink]="'/store/product/' + error.product.id">{{error.info}}</a>
+            </ng-container>
+            <ng-template #elseErrorBlock>
+              {{error.info}}
+            </ng-template>
+          </p>
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-container *ngIf="item.operationType && item.operationType.code === 'IMPORT_STOCK'">
+      <p><span class="form-head">Добавлено складов</span>: <span
+        class="form-txt"><strong>{{item.report?.countAddedStocks || 0}}</strong></span></p>
+      <p><span class="form-head">Добавлено на склад номенклатур</span>: <span
+        class="form-txt"><strong>{{item.report?.countAddedProducts || 0}}</strong></span></p>
+      <p><span class="form-head">Добавлено/обновлено номенклатур</span>: <span
+        class="form-txt"><strong>{{item.report?.countChangedProducts || 0}}</strong></span></p>
+      <p><span class="form-head">Списано со склада номенклатур</span>: <span
+        class="form-txt"><strong>{{item.report?.countDeletedProducts || 0}}</strong></span></p>
+
+      <h2>Список добавленных складов</h2>
+      <ng-container *ngIf="item.report?.countAddedStocks; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.stockData">
+            <li>
+              <a href="javascript:void(0)"(click)="openStore(list.externalId)">{{list.name}}</a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список прихода/поступления номенклатур на склад</h2>
+      <ng-container *ngIf="item.report?.productDataReceipt && item.report?.productDataReceipt.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.productDataReceipt">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список добавления/обновления номенклатур</h2>
+      <ng-container *ngIf="item.report?.productData && item.report?.productData.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.productData">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список расхода/списания номенклатур со склада</h2>
+      <ng-container
+        *ngIf="item.report && item.report['productDataConsumption'] && item.report['productDataConsumption'].length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report['productDataConsumption']">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="item.operationType && item.operationType.code === 'IMPORT_SERVICE'">
+
+      <p><span class="form-head">Добавленно услуг</span>: <span
+        class="form-txt"><strong>{{item.report?.countAddedProducts || 0}}</strong></span></p>
+      <p><span class="form-head">Обновленно услуг</span>: <span
+        class="form-txt"><strong>{{item.report?.countChangedProducts || 0}}</strong></span></p>
+      <p><span class="form-head">Удаленно услуг</span>: <span
+        class="form-txt"><strong>{{item.report?.countDeletedProducts || 0}}</strong></span></p>
+
+      <h2>Список добавленных услуг</h2>
+      <ng-container *ngIf="item.report?.productDataReceipt && item.report?.productDataReceipt.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.productDataReceipt">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список обновленных услуг</h2>
+      <ng-container *ngIf="item.report?.productData && item.report?.productData.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.productData">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список удаленных услуг</h2>
+      <ng-container
+        *ngIf="item.report && item.report['productDataConsumption'] && item.report['productDataConsumption'].length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report['productDataConsumption']">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="item.operationType && item.operationType.code === 'IMPORT_STOCK_MOVE'">
+
+      <p><span class="form-head">Добавленно складов</span>: <span
+        class="form-txt"><strong>{{item.report?.countAddedStocks || 0}}</strong></span></p>
+      <p><span class="form-head">Добавленно услуг</span>: <span
+        class="form-txt"><strong>{{item.report?.countChangedProducts || 0}}</strong></span></p>
+
+      <h2>Список добавленных складов</h2>
+      <ng-container *ngIf="item.report?.stockData && item.report?.stockData.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.stockData">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stock && list.stock.name">, на склад: {{list.stock.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+      <h2>Список перемещенных номенкатур</h2>
+      <ng-container *ngIf="item.report?.productData && item.report?.productData.length; else elseBlock">
+        <ul class="report-list">
+          <ng-container *ngFor="let list of item.report?.productData">
+            <li>
+              <a [routerLink]="'/store/product/' + list.id">{{list.name}}
+                <ng-container *ngIf="list.quantity">, всего: {{list.quantity}}
+                </ng-container>
+                <ng-container *ngIf="list.stockFrom && list.stockFrom.name && list.stockTo && list.stockTo.name">, со
+                  склада {{list.stockFrom.name}} на склад {{list.stockTo.name}}</ng-container>
+              </a>
+            </li>
+          </ng-container>
+        </ul>
+      </ng-container>
+
+    </ng-container>
+
+    <ng-template #elseBlock>
+      <p class="report-success">Нет изменений</p>
+    </ng-template>
+
+    <br>
+    <br>
+    <p><span class="form-head">Внесено изменений</span>: <span class="form-txt"><strong>
+      <ng-container *ngIf="item.report && item.report.hasOwnProperty('countDeletedProducts'); else elseTotalBlock">
+        {{item.report?.countAddedStocks + item.report?.countAddedProducts + item.report?.countChangedProducts + item.report?.countDeletedProducts}}
+      </ng-container>
+      <ng-template #elseTotalBlock>
+        0
+      </ng-template>
+    </strong></span></p>
+    <br>
+    <br>
+    <ng-container *ngIf="item.uploadImportExportFile && item.uploadImportExportFile.uploadedFile.name">
+      <div class="text-right">
+        <a class="form-span__lnk-btn" href="/uploaded/{{item.uploadImportExportFile.uploadedFile.name}}"
+           target="_blank">Скачать файл</a>
+      </div>
+    </ng-container>
+    <br>
+    <br>
+  </div>
+  <div class="form-footer">
+    <a [routerLink]="goListUrl()" class="btn-st btn-st--left btn-st--gray">Назад</a>
+  </div>
+</form>
+

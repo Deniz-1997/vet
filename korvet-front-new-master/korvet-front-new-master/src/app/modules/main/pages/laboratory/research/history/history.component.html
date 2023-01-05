@@ -1,0 +1,55 @@
+<app-title-view title="История изменений">
+</app-title-view>
+
+<div class="w-100 text-center">
+  <div *ngIf="historyLoading" class="loader"></div>
+</div>
+<div class="delivery">
+  <table class="table-info-st table-info-st--close" *ngIf="historyList.length">
+    <tr>
+      <th>Дата изменения</th>
+      <th>Статус</th>
+      <th>Пользователь</th>
+    </tr>
+    <ng-container *ngFor="let item of historyList">
+      <tr>
+        <td>{{item.updatedAt}}</td>
+        <td>{{item.status?.title}}</td>
+        <td>
+          <ng-container *ngIf="item.user?.surname"> {{item.user?.surname}} </ng-container>
+          <ng-container *ngIf="item.user?.name"> {{item.user?.name}} </ng-container>
+          <ng-container *ngIf="item.user?.patronymic"> {{item.user?.patronymic}} </ng-container>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+<div class="delivery-grid">
+  <div class="form-wr form-wr--adaptive container-fluid" *ngIf="historyList.length">
+    <ng-container *ngFor="let item of historyList">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col text="Дата">
+            <ng-template #colContent>
+              <strong>{{item.updatedAt}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col text="Статус">
+            <ng-template #colContent>
+              <strong>{{item.status?.title}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col text="Пользователь">
+            <ng-template #colContent>
+              <strong>
+                <ng-container *ngIf="item.user?.surname"> {{item.user?.surname}} </ng-container>
+                <ng-container *ngIf="item.user?.name"> {{item.user?.name}} </ng-container>
+                <ng-container *ngIf="item.user?.patronymic"> {{item.user?.patronymic}} </ng-container>
+              </strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+  </div>
+</div>

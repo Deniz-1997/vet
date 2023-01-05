@@ -1,0 +1,74 @@
+.logo{
+  width: 200px;
+}
+
+.logo-margin{
+  margin-right: 20px !important;
+}
+
+.footer-small-txt k-list-item.krv-list-item.theme--light {
+  opacity: .5;
+  margin: 0 0 8px;
+  min-height: auto;
+}
+
+.footer-small-txt k-list-item-title.krv-list-item__title {
+  font-size: 12px;
+}
+
+.footer-small-txt k-list-item-title.krv-list-item__title a {
+  color: #fff!important;
+  text-decoration: none;
+  margin: 0 10px 0 0;
+  background-color: transparent;
+}
+.manual-link {
+  font-size: 14px;
+  color: #f7f7f7;
+  text-decoration: none;
+}
+.manual-link:hover {
+  text-decoration: underline;
+}
+ a {
+   text-decoration: none;
+ }
+
+.notification {
+  cursor: pointer
+}
+
+.krv-application {
+  color: white
+}
+
+::ng-deep .mat-select-panel.custom-select-list .option {
+  white-space: normal;
+  height: auto;
+  line-height: 19px;
+  margin: 0;
+  padding: 0.325rem 0.625rem 0.325rem 0.625rem;
+  word-break: break-word;
+}
+
+.krv-list-item__title, .krv-list-item__subtitle {
+  white-space: normal;
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pages {
+  flex: 1 0 auto;
+}
+.footer {
+  flex-shrink: 0;
+}
+
+.z-index {
+  z-index: 1000;
+}

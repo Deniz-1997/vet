@@ -1,0 +1,111 @@
+@import './_variables.scss'
+@import './_mixins.sass'
+
+// Element
+.krv-list-group .krv-list-group__header
+  .krv-list-item__icon.krv-list-group__header__append-icon
+    align-self: center
+    margin: 0
+    min-width: $list-group-header-icon-min-width
+    justify-content: flex-end
+
+.krv-list-group--sub-group
+  align-items: center
+  display: flex
+  flex-wrap: wrap
+
+.krv-list-group__header
+  &.krv-list-item--active:not(:hover):not(:focus):before
+    opacity: 0
+
+.krv-list-group__items
+  flex: 1 1 auto
+
+  .krv-list-item,
+  .krv-list-group__items
+    overflow: hidden
+
+.krv-list-group--active > .krv-list-group__header
+  > .krv-list-group__header__append-icon .krv-icon
+    transform: rotate(-180deg)
+
+  &.krv-list-group__header--sub-group
+    > .krv-list-group__header__prepend-icon .krv-icon
+      transform: rotate(-180deg)
+
+
+  .krv-list-item,
+  .krv-list-item__content,
+  .krv-list-group__header__prepend-icon .krv-icon
+    color: inherit
+
+.krv-list-group--sub-group
+  .krv-list-item__action,
+  .krv-list-item__avatar,
+  .krv-list-item__icon
+    &:first-child
+      +ltr()
+        margin-right: $list-group-sub-group-child-margin
+
+      +rtl()
+        margin-left: $list-group-sub-group-child-margin
+
+  .krv-list-group__header
+    +ltr()
+      padding-left: $list-group-sub-group-header-margin
+
+    +rtl()
+      padding-right: $list-group-sub-group-header-margin
+
+
+  .krv-list-group__items
+    .krv-list-item
+      +ltr()
+        padding-left: $list-group-items-item-padding
+
+      +rtl()
+        padding-right: $list-group-items-item-padding
+
+  &.krv-list-group--active
+    .krv-list-item__icon.krv-list-group__header__prepend-icon .krv-icon
+      transform: rotate(-180deg)
+
+.krv-list-group--no-action
+  > .krv-list-group__items > .krv-list-item
+    +ltr()
+      padding-left: $list-group-no-action-item-padding
+
+    +rtl()
+      padding-right: $list-group-no-action-item-padding
+
+  &.krv-list-group--sub-group
+    > .krv-list-group__items > .krv-list-item
+      +ltr()
+        padding-left: $list-group-no-action-sub-group-item-padding
+
+      +rtl()
+        padding-right: $list-group-no-action-sub-group-item-padding
+
+.krv-list--dense
+  .krv-list-group--sub-group .krv-list-group__header
+    +ltr()
+      padding-left: $list-group-dense-sub-group-header-padding
+
+    +rtl()
+      padding-right: $list-group-dense-sub-group-header-padding
+
+  &.krv-list--nav .krv-list-group--no-action
+    > .krv-list-group__items > .krv-list-item
+      +ltr()
+        padding-left: $list-group-nav-no-action-item-padding
+
+      +rtl()
+        padding-right: $list-group-nav-no-action-item-padding
+
+    &.krv-list-group--sub-group
+      > .krv-list-group__items > .krv-list-item
+        +ltr()
+          padding-left: $list-group-sub-group-item-padding
+
+        +rtl()
+          padding-right: $list-group-sub-group-item-padding

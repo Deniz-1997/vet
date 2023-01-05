@@ -1,0 +1,65 @@
+<div id="add-passport-data" [formGroup]="formGroup">
+  <fieldset formGroupName="passport">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-6" titleName=documentType  formGroupName="documentType">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum formControlName="code" [options]="DocumentTypeEnum"
+                                    [modelValue]="formGroup.get('passport.documentType.code').value"></app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-6" titleName=numberPassport>
+          <ng-template #colContent>
+            <app-row>
+              <ng-template #rowContent>
+                <app-col col="12 col-sm-6 col-lg-6 pb-2 pb-lg-0">
+                  <ng-template #colContent>
+                    <input type="text" class="inp-st"
+                           formControlName="series"
+                           oninput="this.value = this.value.toUpperCase()"
+                           [textMask]="seriesTextMask"
+                    />
+                  </ng-template>
+                </app-col>
+                <app-col col="12 col-sm-6 col-lg-6">
+                  <ng-template #colContent>
+                    <input type="text" class="inp-st"
+                           formControlName="number"
+                           [textMask]="numberTextMask"/>
+                  </ng-template>
+                </app-col>
+                <app-col  col="12 col-sm-6 col-lg-6" class="error-message"  *ngIf="formGroup.get('passport').invalid">
+                  <ng-template #colContent>
+                    Неверный формат. Пример
+                    '{{getSeriesAndMaskFormat()}}'
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  col="12 col-lg-3" titleName=dateIssue >
+          <ng-template #colContent>
+            <app-datepicker-overview
+              formControlName="dateOfIssue"
+            ></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-6" titleName=issuer>
+          <ng-template #colContent>
+            <input type="text" class="inp-st" formControlName="issuer" placeholder="ОТДЕЛЕНИЕ УФМС РОССИИ ПО ГОР. МОСКВЕ ПО РАЙОНУ ХОРОШЕВСКИЙ">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName=issuerCode class="pt-2 pt-lg-0" *ngIf="formGroup.get('passport.documentType.code').value === 'RF_CITIZEN_PASSPORT'">>
+          <ng-template #colContent>
+            <input type="text" class="inp-st" formControlName="issuerCode" placeholder="770-024">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </fieldset>
+</div>

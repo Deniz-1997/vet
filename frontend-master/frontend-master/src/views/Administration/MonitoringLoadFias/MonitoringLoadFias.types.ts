@@ -1,0 +1,6 @@
+export enum UpdateFiasMode {
+  FULL = 'FULL',
+  LAST_UPDATE = 'LAST_UPDATE',
+  SELECTED_UPDATE = 'SELECTED_UPDATE',
+  REGION = 'REGION',
+}

@@ -1,0 +1,13 @@
+__tests__
+.husky
+.vscode
+coverage
+dist
+scripts
+.eslintrc
+.gitignore
+.prettierignore
+.prettierrc
+.stylelintrc
+jest.config.js
+yarn-error.log

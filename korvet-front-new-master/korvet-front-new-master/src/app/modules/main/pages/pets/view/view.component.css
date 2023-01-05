@@ -1,0 +1,4 @@
+a.btn-st--disabled, a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

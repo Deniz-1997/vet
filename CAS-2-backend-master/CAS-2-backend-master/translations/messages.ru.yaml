@@ -1,0 +1,7 @@
+Internal server error: "Возникла ошибка на сервере. В ближайшее время будет устранена"
+Not Found: "Такой записи не найдено в базе данных"
+prefix_history: 'У '
+change: ' изменилось '
+create: 'Операция создания {className}'
+update: 'Операция обновление {className}'
+delete: 'Операция удаление {className}'

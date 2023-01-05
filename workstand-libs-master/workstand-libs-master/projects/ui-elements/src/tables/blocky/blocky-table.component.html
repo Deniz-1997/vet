@@ -1,0 +1,17 @@
+<ng-container>
+  <mat-grid-list class="grid-list header-row" [cols]="headersName.length">
+    <mat-grid-tile class="grid-list-item" *ngFor="let column of columns;trackBy: trackByFn">
+      <ng-container [ngTemplateOutlet]="tableHeaderContent"
+                    [ngTemplateOutletContext]="{column: column}"></ng-container>
+    </mat-grid-tile>
+  </mat-grid-list>
+</ng-container>
+<ng-container *ngFor="let row of dataSource; index as rowIndex;trackBy: trackByFn">
+  <mat-grid-list class="grid-list" [cols]="headersName.length"
+                 [ngStyle]="{'display': isDoneRenderRows ? '' : 'none' }">
+    <mat-grid-tile class="grid-list-item" *ngFor="let column of columns; index as colIndex;trackBy: trackByFn">
+      <ng-container [ngTemplateOutlet]="tableRowContent"
+                    [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}"></ng-container>
+    </mat-grid-tile>
+  </mat-grid-list>
+</ng-container>

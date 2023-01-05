@@ -1,0 +1,158 @@
+/* Style Placeholders */
+
+::placeholder {
+  color: $medium-grey-color;
+}
+
+input.input-field, select.select-field, .input-field input {
+  position: relative;
+  border: 1px solid $input-border-color;
+  box-sizing: border-box;
+  border-radius: 4px;
+  outline: none;
+  height: 40px;
+  width: 100%;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+  padding: 0 10px 0 5px;
+  background: transparent;
+  color: $webkit-color;
+
+  // Disabled input style
+  &.invalid {
+    border: 1px solid $input-error-color;
+    -webkit-box-shadow: 0 0 2px 0 $input-error-color;
+    box-shadow: 0 0 2px 0 $input-error-color;
+  }
+
+  // Disabled input style
+  &.success {
+    border: 1px solid $input-success-color;
+    -webkit-box-shadow: 0 0 1px 0 $input-success-color;
+    box-shadow: 0 0 1px 0 $input-success-color;
+  }
+}
+
+.input-block label {
+  padding: 0.75rem 0 0.75rem 0;
+  color: $medium-grey-color;
+  position: relative;
+}
+
+
+
+/* Checkboxes */
+.checkbox-block {
+  align-items: center;
+  display: flex;
+
+  .label {
+    margin-bottom: 0;
+    margin-left: 5px;
+    line-height: 1.1;
+  }
+}
+
+.checkbox {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  display: flex;
+
+  [type = "checkbox"]{
+    position: absolute;
+    opacity: 0;
+  }
+
+  &__icon {
+    align-items: center;
+    justify-content: center;
+    background: $check-bg;
+    display: flex;
+    height: 16px;
+    width: 16px;
+    border: 1px solid $input-border-color;
+    border-radius: 4px;
+    flex: 0 0 16px;
+
+    img {
+      width: 9px;
+      display: block;
+      opacity: 0;
+    }
+  }
+
+  [type = "checkbox"]:checked{
+    & + .checkbox__icon {
+      background: $gold-light-color;
+      border-color: $gold-light-color;
+
+      img {
+        opacity: 1;
+      }
+    }
+  }
+
+  [type = "checkbox"]:disabled{
+    & + .checkbox__icon {
+      background: $silver-color;
+      border-color: $silver-color;
+    }
+  }
+}
+.vs__selected-options{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-wrap: unset !important;
+}
+span.vs__selected {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+}
+
+.vs--single .vs__selected {
+  color: $black-color !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.vs--disabled .vs__selected {
+  color: $input-disabled-color !important;
+}
+
+.vs__selected svg {
+  fill: $white-color;
+}
+
+.vs__open-indicator {
+  cursor: pointer;
+}
+.vs--single.vs--open .vs__selected{
+  position: relative !important;
+}
+
+.vs__dropdown-toggle {
+  box-sizing: border-box;
+  min-height: 40px;
+  font-size: 14px!important;
+  margin: 0;
+  padding-bottom: 0 !important;
+  height: auto;
+  border-color: $input-border-color !important;
+}
+
+.vs__search, .vs__search:focus{
+  margin: 0 !important;
+}
+
+.vs__dropdown-option {
+  white-space: normal !important;
+  border-bottom: 1px solid $light-grey-color;
+}
+
+.vs__dropdown-option:last-child{
+  border-bottom: 0;
+}

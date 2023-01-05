@@ -1,0 +1,9 @@
+<app-leaving-add-form
+  (cancelForm)="cancel()"
+  (afterSaveEvent)="submit($event)"
+  [date]="data.date"
+  [formType]="type"
+  [loading]="loading$|async"
+  [time]="data.time"
+  [user]="data.user">
+</app-leaving-add-form>

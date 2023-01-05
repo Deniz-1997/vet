@@ -1,0 +1,128 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<k-header>Отчет по импорту</k-header>
+<ng-container *ngIf="title">
+</ng-container>
+<ng-container *ngIf="totalCount == 0">
+  <div>
+    <p><span>Увы, записи не найдены</span>
+  </div>
+</ng-container>
+<k-container *ngIf="reference">
+  <ng-container *ngIf="totalCount > 0">
+  </ng-container>
+</k-container>
+<mat-card>
+  <mat-card-content class="mb-5">
+    <k-row class="row-margin">
+      <ng-template #row>
+        <k-col class="text-left" cols="2">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Дата создания</span>:
+              <br><span><strong>{{model?.createdAt}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+        <k-col class="text-left" cols="2">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Файл</span>:
+              <br><span><strong>{{model?.name}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+        <k-col class="text-left" cols="4">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Хозяйствующий субъект</span>:
+              <br><span><strong *ngIf="model?.user">{{model?.businessEntity?.name}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+        <k-col class="text-left" cols="3">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Пользователь</span>:
+              <br><span><strong *ngIf="model?.user">{{usersService.getFullName(model?.user)}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+        <k-col class="text-left" cols="1">
+          <ng-template #col>
+            <p class="margin-bottom"><span>Записей</span>:
+              <br><span><strong>{{totalCount}}</strong></span>
+            </p>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </mat-card-content>
+</mat-card>
+
+<k-form [formGroup]="formGroup">
+  <k-row>
+    <ng-template #row>
+      <k-col class="search">
+        <ng-template #col>
+          <mat-form-field appearance="fill" class="el1">
+            <mat-label>фильтрация по статусу</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of statusList" [value]="status">
+                {{status.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Поиск</mat-label>
+            <input matInput formControlName="search"  type="text">
+            <k-icon matPrefix name="search" class="magnifier"></k-icon>
+          </mat-form-field>
+          <k-button (click)="clearFilters()" name="Очистить фильтры" color="primary" type="raised" class="button-clear"></k-button>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+</k-form>
+
+<div *ngIf="model && model.rows && model.rows.length">
+  <k-header>Строки</k-header>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-table [dataSource]="model.rows" mat-table>
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef class="header-align" fxFlex="10">Состояние</mat-header-cell>
+          <mat-cell *matCellDef="let row" fxFlex="10">{{row?.status?.title}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="data">
+          <mat-header-cell *matHeaderCellDef class="data-header-align" fxFlex="60">Данные</mat-header-cell>
+          <mat-cell *matCellDef="let row" fxFlex="60">
+            <ul class="text-left category-list">
+              <li *ngFor="let item of getRowData(row.data)">
+                <strong> {{ item.name }} </strong> {{ item.value }} </li>
+            </ul>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="errors">
+          <mat-header-cell *matHeaderCellDef fxFlex="30">Ошибки</mat-header-cell>
+          <mat-cell *matCellDef="let row" fxFlex="30">
+            <ng-container *ngIf="row.error && row.status.code === 'finished_with_errors'">
+              <div class="text-center">
+                <p>
+                  Ошибка: поле {{dataNameService.getDataName(row.error.field)}}. {{row.error.error}}.
+                </p>
+                <a mat-button (click)="showModalErrorEdit(row)" color="primary">Исправить</a>
+              </div>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns" fxLayout="row"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayout="row"></mat-row>
+      </mat-table>
+      <app-show-more-button (outAppend)="appendList($event)"
+                            [appendLoading]="false"
+                            [items]="model.rows"
+                            [limit]="limit"
+                            [offset]="offset"
+                            [totalCount]="totalCount"
+                            [type]="type">
+      </app-show-more-button>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,280 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form [formGroup]="formGroup" (submit)="submit($event)" *ngIf="formGroup" [class.show-error]="showError">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=templateName>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" placeholder="Консультация"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="clinic">
+          <ng-template #colContent>
+            <app-ui-mat-multi-select
+              placeholder="Укажите клинику"
+              [selectFormControl]="formGroup.get('unit')"
+              [type]="crudType.Unit">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+  <div class="form-wr container-fluid">
+    <div class="form-header form-header--inline">Выберите услуги или лекарственные препараты</div>
+    <div class="form__table delivery" formArrayName="products">
+      <table *ngIf="formGroup.controls.products['controls'].length">
+        <tr>
+          <th class="th-service">Оказанные услуги и лекарственные препараты</th>
+          <th>Дозировка/количество</th>
+          <th>Цена</th>
+          <th>Единица измерения</th>
+          <th></th>
+        </tr>
+        <ng-container *ngFor="let item of formGroup.controls['products']['controls']; let i=index"
+                      [formGroupName]="i">
+          <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                        [ngTemplateOutlet]="productItemRow"></ng-container>
+          <ng-container
+            *ngFor="let childItem of formGroup.controls['products']['controls'][i]['controls']['children']['controls']; let j=index">
+            <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                          [ngTemplateOutlet]="productItemRow"></ng-container>
+          </ng-container>
+          <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                        [ngTemplateOutlet]="addProductItemRow"></ng-container>
+        </ng-container>
+      </table>
+    </div>
+    <div class="container-fluid delivery-grid" *ngIf="formGroup.controls.products['controls'].length" formArrayName="products">
+      <div class="row">
+        <div class="col-12">
+          <ng-container *ngFor="let item of formGroup.controls['products']['controls']; let i=index"
+                        [formGroupName]="i">
+            <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                          [ngTemplateOutlet]="productItemRow2"></ng-container>
+            <ng-container
+              *ngFor="let childItem of formGroup.controls['products']['controls'][i]['controls']['children']['controls']; let j=index">
+              <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                            [ngTemplateOutlet]="productItemRow2"></ng-container>
+            </ng-container>
+            <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                          [ngTemplateOutlet]="addProductItemRow2"></ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <app-row >
+      <ng-template #rowContent>
+        <app-col class="pb-3" col="12 col-lg-6" >
+          <ng-template #colContent>
+            <a (click)="addProductItem($event,'SERVICE', null)" class="form-span__lnk-btn" href="#">Добавить услугу</a>
+          </ng-template>
+        </app-col>
+        <app-col class="pb-3" col="12 col-lg-6" >
+          <ng-template #colContent>
+            <ng-container *ngIf="referenceStocks.length">
+              <a [matMenuTriggerFor]="menu" class="form-span__lnk-btn">
+                <span>Добавить из склада...</span>
+              </a>
+              <mat-menu #menu="matMenu">
+                <ng-container *ngFor="let stock of referenceStocks">
+                  <a (click)="addProductItem($event,'COMMODITY', stock.id)"
+                     href="#" mat-menu-item
+                  >{{'№' + stock.id + ': ' + stock.name}}</a>
+                </ng-container>
+              </mat-menu>
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <div class="form-wr container-fluid">
+    <div class="row pb-4">
+      <div class="col-8">
+        <div class="">
+          <h1>Стоимость оказанных услуг:
+            <small>Услуг: {{getCountProduct('SERVICE')}} Товаров: {{getCountProduct('COMMODITY')}}</small>
+          </h1>
+        </div>
+      </div>
+      <div class="col-4  text-md-right">
+        <strong>{{getPriceAll() | price}}</strong>
+      </div>
+    </div>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true">
+  </app-reference-button-form>
+</form>
+<!--<form>-->
+
+
+<!--</form>-->
+
+<ng-template #addProductItemRow let-i="index" let-item="item" let-parent="parent">
+<ng-container *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent">
+  <tr style="border-bottom: 1px solid #e3e2e2;">
+    <td colspan="5">
+      <div>
+        <a [matMenuTriggerFor]="menu">
+          <span>+ Добавить товар из склада</span>
+        </a>
+        <mat-menu #menu="matMenu">
+          <ng-container *ngFor="let stock of referenceStocks">
+            <a (click)="addProductItem($event,'COMMODITY', stock.id, item)"
+               href="#" mat-menu-item
+            >{{'№' + stock.id + ': ' + stock.name}}</a>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+</ng-container>
+</ng-template>
+<ng-template #addProductItemRow2 let-i="index" let-item="item" let-parent="parent">
+  <ng-container *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent">
+    <div class="row">
+      <div class="col-12 pb-4 pt-2">
+        <a [matMenuTriggerFor]="menu">
+          <span>+ Добавить товар из склада</span>
+        </a>
+        <mat-menu #menu="matMenu">
+          <ng-container *ngFor="let stock of referenceStocks">
+            <a (click)="addProductItem($event,'COMMODITY', stock.id, item)"
+               href="#" mat-menu-item
+            >{{'№' + stock.id + ': ' + stock.name}}</a>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #productItemRow let-i="index" let-item="item" let-parent="parent">
+<tr>
+  <td style="width: 500px;">
+    <div style="display: flex; align-items: center">
+      <div *ngIf="parent" style="height: 100%">
+        <i class="material-icons" style="padding-bottom: 1.5em">
+          subdirectory_arrow_right
+        </i>
+      </div>
+      <div style="width: 100%;">
+        <app-ui-autocomplete
+          [addFilter]="getFilterProduct(item)"
+          [control]="item.get('product')"
+          [fields]="productFields"
+          [options]="referenceProductItems$"
+          [type]="crudType.ReferenceProduct"
+          styleClass="space-normal"
+        ></app-ui-autocomplete>
+        <small *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent" class="note-product">
+          услуга
+        </small>
+        <small
+          *ngIf="item.get('paymentObject').value === 'COMMODITY'"
+          class="note-product">
+          {{'склад: ' + getStockById(item.get('stock.id').value)?.name}}
+        </small>
+      </div>
+    </div>
+  </td>
+  <td style="vertical-align: top; width: 200px;">
+    <input [formControl]="item.get('quantity')" class="inp-st" type="number">
+  </td>
+  <td style="vertical-align: middle;">
+    <div
+      style="height: 50px;">{{item.get('product').value ? ((item.get('product').value?.price) || 0 | price) : '0.00'}}</div>
+  </td>
+  <td style="vertical-align: middle;">
+    <div style="height: 50px;">{{item.get('product').value ? item.get('product').value?.measure : ''}}</div>
+  </td>
+  <td style="vertical-align: top; text-align: right;"><a (click)="removeProductItem(i, $event, parent)"
+                                                         class="tr-close"
+                                                         style="margin-top: 16px;"></a></td>
+</tr>
+</ng-template>
+<ng-template #productItemRow2 let-i="index" let-item="item" let-parent="parent">
+  <app-row>
+    <ng-template #rowContent>
+      <app-col col="12" text="Оказанные услуги и лекарственные препараты">
+        <ng-template #colContent>
+          <div class="d-flex" >
+            <div *ngIf="parent">
+              <i class="material-icons" style="padding-bottom: 1.5em">
+                subdirectory_arrow_right
+              </i>
+            </div>
+            <div>
+              <app-ui-autocomplete
+                [addFilter]="getFilterProduct(item)"
+                [control]="item.get('product')"
+                [fields]="productFields"
+                [options]="referenceProductItems$"
+                [type]="crudType.ReferenceProduct"
+                styleClass="space-normal"
+              ></app-ui-autocomplete>
+              <small *ngIf="item.get('paymentObject').value === 'SERVICE' && !parent" class="note-product">
+                услуга
+              </small>
+              <small
+                *ngIf="item.get('paymentObject').value === 'COMMODITY'"
+                class="note-product">
+                {{'склад: ' + getStockById(item.get('stock.id').value)?.name}}
+              </small>
+            </div>
+          </div>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4" class="pb-2 pb-md-0" text="Дозировка/количество">
+        <ng-template #colContent>
+          <input [formControl]="item.get('quantity')" class="inp-st" type="number">
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  text="Единица измерения">
+        <ng-template #colContent>
+          <input class="inp-st" value="{{item.get('product').value ? item.get('product').value?.measure : ''}}" readonly>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pt-md-0" text="Цена">
+        <ng-template #colContent>
+          <input class="inp-st" value="{{item.get('product').value ? ((item.get('product').value?.price) || 0 | price) : '0.00'}}" readonly>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <div class="row">
+    <div class="col-12">
+      <a (click)="removeProductItem(i, $event, parent)" class="lnk-delete">удалить</a>
+    </div>
+  </div>
+</ng-template>

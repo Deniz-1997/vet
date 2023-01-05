@@ -1,0 +1,39 @@
+.report-success {
+  color: black;
+}
+
+.margin-bottom {
+  margin-bottom: -20px;
+}
+
+.row-margin {
+  margin: 10px;
+}
+
+.header-align {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.header-style {
+  text-align: left;
+  margin: 25px;
+}
+
+.card-style {
+  margin-bottom: 30px;
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.table {
+  margin: 0 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+}

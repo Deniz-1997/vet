@@ -1,0 +1,4 @@
+<option *ngIf="!options || !options.length || addNone" [value]="null" selected [disabled]="disabledOption({title: nullTitle, value: null})">{{nullTitle}}</option>
+<ng-container *ngFor="let option of options">
+  <option *ngIf="option.id || option.value || option.value === 0"  [value]="option.id || option.value" [disabled]="disabledOption(option)">{{option.name || option.title}}</option>
+</ng-container>

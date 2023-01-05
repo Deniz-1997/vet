@@ -1,0 +1,91 @@
+@import './_variables.scss'
+
+.krv-textarea
+  textarea
+    align-self: stretch
+    flex: 1 1 auto
+    line-height: $textarea-line-height
+    max-width: 100%
+    min-height: $textarea-min-height
+    outline: none
+    padding: $textarea-padding
+    width: 100%
+
+  .krv-text-field__prefix,
+  .krv-text-field__suffix
+    padding-top: $textarea-prefix-padding-top
+    align-self: start
+
+  &.krv-text-field--box,
+  &.krv-text-field--enclosed
+    .krv-text-field__prefix,
+    textarea
+      margin-top: $textarea-box-enclosed-prefix-margin-top
+
+    &.krv-text-field--single-line,
+    &.krv-text-field--outlined
+      &:not(.krv-input--dense)
+        .krv-text-field__prefix,
+        .krv-text-field__suffix,
+        textarea
+          margin-top: $textarea-box-enclosed-single-outlined-margin-top
+
+        .krv-label
+          top: $textarea-box-enclosed-single-outlined-label-top
+
+      &.krv-input--dense
+        .krv-text-field__prefix,
+        .krv-text-field__suffix,
+        textarea
+          margin-top: $textarea-dense-box-enclosed-single-outlined-margin-top
+
+        .krv-input__prepend-inner,
+        .krv-input__prepend-outer,
+        .krv-input__append-inner,
+        .krv-input__append-outer
+          align-self: flex-start
+          margin-top: $textarea-dense-append-prepend-margin-top
+
+  &.krv-text-field--solo
+    align-items: flex-start
+
+    // Essentially revert styles
+    // applied by v-text-field
+    .krv-input__prepend-inner,
+    .krv-input__prepend-outer,
+    .krv-input__append-inner,
+    .krv-input__append-outer
+      align-self: flex-start
+      margin-top: $textarea-solo-append-prepend-margin-top
+
+    .krv-input__append-inner
+      +ltr()
+        padding-left: $textarea-solo-append-padding
+
+      +rtl()
+        padding-right: $textarea-solo-append-padding
+
+  &--auto-grow
+    textarea
+      overflow: hidden
+
+  &--no-resize
+    textarea
+      resize: none
+
+  &.krv-text-field--enclosed
+    .krv-text-field__slot
+      align-self: stretch
+
+      +ltr()
+        margin-right: $textarea-enclosed-text-slot-margin
+
+      +rtl()
+        margin-left: $textarea-enclosed-text-slot-margin
+
+      textarea
+        +ltr()
+          padding-right: $textarea-enclosed-text-slot-padding
+
+        +rtl()
+          padding-left: $textarea-enclosed-text-slot-padding

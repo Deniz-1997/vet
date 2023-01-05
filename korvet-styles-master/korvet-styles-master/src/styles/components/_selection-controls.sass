@@ -1,0 +1,119 @@
+@import '../styles.sass'
+
+// Theme
++theme(krv-input--selection-controls) using ($material)
+  &.krv-input--is-disabled:not(.krv-input--indeterminate)
+    .krv-icon
+      // needed for helper override
+      color: map-deep-get($material, 'selection-controls', 'disabled') !important
+
+.krv-input--selection-controls
+  margin-top: $input-top-spacing
+  padding-top: 4px
+
+  > .krv-input__append-outer,
+  > .krv-input__prepend-outer
+    margin-top: 0
+    margin-bottom: 0
+
+  &:not(.krv-input--hide-details)
+    > .krv-input__slot
+      margin-bottom: 12px
+
+  .krv-input__slot,
+  .krv-radio
+    cursor: pointer
+
+    > .krv-label
+      align-items: center
+      display: inline-flex
+      flex: 1 1 auto
+      // TODO: Resolve in v3, all selection controls need separate sass files
+      height: auto
+
+  &__input
+    color: inherit
+    display: inline-flex
+    flex: 0 0 auto
+    height: 24px
+    position: relative
+    transition: $primary-transition
+    transition-property: transform
+    width: 24px
+    user-select: none
+
+    .krv-icon
+      width: 100%
+
+    +ltr()
+      margin-right: 8px
+
+    +rtl()
+      margin-left: 8px
+
+    input[role="checkbox"],
+    input[role="radio"],
+    input[role="switch"]
+      position: absolute
+      opacity: 0
+      width: 100%
+      height: 100%
+      cursor: pointer
+      user-select: none
+
+    // Sibling selector to avoid targeting krv-radio-group's label
+    & + .krv-label
+      cursor: pointer
+      user-select: none
+
+  &__ripple
+    border-radius: 50%
+    cursor: pointer
+    height: 34px
+    position: absolute
+    transition: inherit
+    width: 34px
+    left: -12px
+    top: calc(50% - 24px)
+    margin: 7px
+
+    &:before
+      border-radius: inherit
+      bottom: 0
+      content: ''
+      position: absolute
+      opacity: .2
+      left: 0
+      right: 0
+      top: 0
+      transform-origin: center center
+      transform: scale(0.2)
+      transition: inherit
+
+    > .krv-ripple__container
+      transform: scale(1.2)
+
+  &.krv-input--dense
+    .krv-input--selection-controls__ripple
+      width: 28px
+      height: 28px
+      left: -9px
+
+    &:not(.krv-input--switch)
+      .krv-input--selection-controls__ripple
+        top: calc(50% - 21px)
+
+  &.krv-input
+    flex: 0 1 auto
+
+  &.krv-input--is-focused,
+  .krv-radio--is-focused
+    .krv-input--selection-controls__ripple:before
+      background: currentColor
+      transform: scale(1.2)
+
+.krv-input--selection-controls__input:hover
+  .krv-input--selection-controls__ripple:before
+    background: currentColor
+    transform: scale(1.2)
+    transition: none

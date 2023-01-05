@@ -1,0 +1,236 @@
+<div class="tab-list">
+  <div *ngIf="owner" class="tab-item">
+    <div class="form-wr form-wr--mmin">
+      <a [routerLink]="['../../../edit']" class="info-edit" style="opacity: 1">
+        <app-icon-edit></app-icon-edit>
+      </a>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=address col="12 col-md-3">
+            <ng-template #colContent>
+              <strong>{{owner.address?.full}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=phone col="12 col-md-3" class="mt-2 mb-2 mb-md-0 mt-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.phone}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=email col="12 col-md-3" >
+            <ng-template #colContent>
+              <strong><a href="mailto:{{owner.email}}}">{{owner.email}}</a></strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=additionalContacts >
+            <ng-template #colContent>
+              <strong>{{owner.additionalContacts}}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=typeFarms col="12 col-md-3" class="mb-2 mb-md-0">
+            <ng-template #colContent>
+              <strong>{{owner.PersonType}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col  titleName=householdAddress col="12 col-md-3">
+            <ng-template #colContent>
+              <strong>{{(!owner.individualPerson?.household || !!owner.individualPerson.householdAddressIsPersonAddress) ?
+                owner.address?.full : owner.individualPerson?.householdAddress }}</strong>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=propertyDocuments *ngIf="false">
+            <ng-template #colContent>
+              <table>
+                <tbody>
+                <tr>
+                  <td>
+                    <img alt="" class="down-ico" src="assets/img/pdf.svg">
+                  </td>
+                  <td>
+                    234 кб
+                  </td>
+                  <td style="opacity: .5">
+                    Справочник
+                  </td>
+                  <td>
+                    Медицинское заключение об операции
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=activities *ngIf="owner.customActivities || (owner.activities && owner.activities.length > 0)">
+            <ng-template #colContent>
+              <div *ngFor="let activity of owner.activities" class="tag-box tag-box--def">{{activity.name}}</div>
+              <div *ngIf="owner.customActivities" class="tag-box tag-box--def">{{owner.customActivities}}</div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div *ngIf="false" class="lnk-edit">
+        <a>
+          <span class="lnk-edit__ico">
+              <app-icon-edit></app-icon-edit>
+          </span>
+          История изменений</a>
+      </div>
+    </div>
+
+    <app-print-forms
+      [ownerId]="owner.id"
+      [pets]="owner.pets"
+      partition="Owner"
+    ></app-print-forms>
+
+    <app-empty-view
+      *ngIf="!owner.pets.length"
+      [addLink]="['/owners', owner.id, 'pets', 'add']"
+      elementName="животное"
+      subtitle="Вы можете добавить животное"
+      title="Нет ни одного животного."
+    ></app-empty-view>
+
+    <ng-container *ngIf="owner.pets.length">
+      <app-title-view title="Домашние животные">
+        <ng-template #actionsTemplate>
+          <a [routerLink]="['/owners', owner.id, 'pets','add']" class="lnk-add">Добавить</a>
+        </ng-template>
+      </app-title-view>
+
+      <div *ngFor="let petToOwner of owner.pets" class="tab-box">
+        <app-pets-view-detail [ownerId]="petToOwner?.owner?.id" [petToOwnerId]="petToOwner.id" [pet]="petToOwner?.pet"
+                              [showName]="true"></app-pets-view-detail>
+      </div>
+    </ng-container>
+
+    <app-list-view
+      [emptyOptions]="{title: 'Не найдено ни одного планового мероприятия',
+      subtitle: 'Вы можете добавить плановое мероприятие',
+      elementName: 'плановое мероприятие',
+      addLink: ['../../../events', 'add']}"
+      [type]="eventType"
+      title="Плановые мероприятия"
+    >
+      <ng-template #actionsTemplate>
+        <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+          <app-icon-print></app-icon-print>
+        </a>
+        <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+          <app-icon-download></app-icon-download>
+        </a>
+        <a [routerLink]="['/owners', owner.id, 'events', 'add']" class="lnk-add">Добавить</a>
+      </ng-template>
+      <ng-template #headTemplate>
+        <tr>
+          <th>Дата</th>
+          <th>Мероприятие</th>
+          <th>Животное</th>
+          <th>Специалист</th>
+          <th>Статус</th>
+        </tr>
+      </ng-template>
+      <ng-template #itemTemplate let-item>
+        <tr>
+          <td>{{item.date}}</td>
+          <td><a (click)="eventClick(item)">{{item.type.name}}</a></td>
+          <td><a [routerLink]="['/pets', item.pet.id]">{{item.pet.name}}</a></td>
+          <td>{{item.user.name}}</td>
+          <td>
+            <app-dropdown-select
+              (outChoose)="changeEventStatus($event, item)"
+              [color]="item.status && item.status.color"
+              [head]="(item.status && item.status.name)|defaultValue"
+              [options]="eventStatuses$|async"></app-dropdown-select>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #itemTemplateGrid let-item>
+        <div class="form-wr form-wr--adaptive container-fluid">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="6" text="Дата">
+                <ng-template #colContent>
+                  {{item.date}}
+                </ng-template>
+              </app-col>
+              <app-col col="6" text="&#160;" class="text-right">
+                <ng-template #colContent>
+                  <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                    <span class="expand-lnk"></span>
+                    <span class="expand-text"></span>
+                  </a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col col="12" class="pb-1">
+                <ng-template #colContent>
+                  <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                    <app-row>
+                      <ng-template #rowContent>
+                        <app-col text="Мероприятие">
+                          <ng-template #colContent>
+                            <a (click)="eventClick(item)">{{item.type.name}}</a>
+                          </ng-template>
+                        </app-col>
+                      </ng-template>
+                    </app-row>
+                    <app-row>
+                      <ng-template #rowContent>
+                        <app-col text="Животное">
+                          <ng-template #colContent>
+                            <a [routerLink]="['/pets', item.pet.id]">{{item.pet.name}}</a>
+                          </ng-template>
+                        </app-col>
+                      </ng-template>
+                    </app-row>
+                    <app-row>
+                      <ng-template #rowContent>
+                        <app-col text="Специалист">
+                          <ng-template #colContent>
+                            <strong>{{item.user.name}}</strong>
+                          </ng-template>
+                        </app-col>
+                      </ng-template>
+                    </app-row>
+                    <app-row>
+                      <ng-template #rowContent>
+                        <app-col text="Статус">
+                          <ng-template #colContent>
+                            <app-dropdown-select
+                              (outChoose)="changeEventStatus($event, item)"
+                              [color]="item.status && item.status.color"
+                              [head]="(item.status && item.status.name)|defaultValue"
+                              [options]="eventStatuses$|async"></app-dropdown-select>
+                          </ng-template>
+                        </app-col>
+                      </ng-template>
+                    </app-row>
+                  </div>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-template>
+    </app-list-view>
+  </div>
+</div>

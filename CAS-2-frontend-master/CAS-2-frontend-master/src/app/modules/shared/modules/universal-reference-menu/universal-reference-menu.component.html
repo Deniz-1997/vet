@@ -1,0 +1,33 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<k-header>{{title}}</k-header>
+<k-row>
+  <ng-template #row>
+    <k-col cols="12">
+      <ng-template #col>
+        <mat-table mat-table [dataSource]="dataSource$ | async">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef fxFlex="30"> Наименование</mat-header-cell>
+            <ng-container *ngIf="useChildPath === false">
+              <mat-cell *matCellDef="let element" fxFlex="30"> <a [routerLink]="url + element.url">{{element.name}}</a></mat-cell>
+            </ng-container>
+
+            <ng-container *ngIf="useChildPath === true">
+              <mat-cell *matCellDef="let element" fxFlex="30"> <a [routerLink]="element.url">{{element.name}}</a></mat-cell>
+            </ng-container>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <mat-header-cell *matHeaderCellDef fxFlex="30"> Описание</mat-header-cell>
+            <mat-cell *matCellDef="let element" fxFlex="30">{{element.description}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns" fxLayout="row"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayout="row"></mat-row>
+        </mat-table>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>
+
+
+

@@ -1,0 +1,21 @@
+<app-row class="mb-0">
+  <ng-template #rowContent>
+    <app-col>
+      <ng-template #colContent>
+        <a class="map-show" (click)="state = !state">Показать карту</a>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+<app-row [ngClass]="{'form-row--map-hide': !state}">
+  <ng-template #rowContent>
+    <app-col >
+      <ng-template #colContent>
+        <div id="form-map" class="form-map">
+        </div>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+

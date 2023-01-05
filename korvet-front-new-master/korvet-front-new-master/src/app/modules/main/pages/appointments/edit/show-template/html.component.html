@@ -1,0 +1,75 @@
+<div class="fancybox-slide--html">
+  <div class="popup-wr" id="close-id">
+    <div *ngIf="data.head" class="popup-wr__head">
+      <span>Шаблон: {{data.head}}</span>
+      <div *ngIf="data.headComment" [innerHTML]="data.headComment" class="popup-wr__head-comment"></div>
+    </div>
+    <div class="popup-wr__body">
+
+      <div class="form-body">
+        <div class="form__table form__table--txt table-responsive-lg">
+
+          <!-- Product templates -->
+          <table *ngIf="data.products.length">
+            <tr>
+              <th scope="col" class="th-service">Наименование</th>
+              <th scope="col" class="th--center">Дозировка/количество</th>
+              <th scope="col" >Склад</th>
+            </tr>
+
+            <ng-container *ngFor="let item of data.products; let i=index">
+              <ng-container [ngTemplateOutletContext]="{item: item, index: i}"
+                            [ngTemplateOutlet]="productItemRow"></ng-container>
+              <ng-container *ngFor="let childItem of item.children; let j=index">
+                <ng-container [ngTemplateOutletContext]="{item: childItem, index: j, parent: item}"
+                              [ngTemplateOutlet]="productItemRow"></ng-container>
+              </ng-container>
+            </ng-container>
+
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+    <div *ngIf="data.actions && data.actions.length" class="popup-wr__footer">
+      <ng-container *ngFor="let action of data.actions">
+        <button [mat-dialog-close]="action.action" [ngClass]="action.class">{{action.title}}</button>
+      </ng-container>
+    </div>
+    <app-button-close></app-button-close>
+  </div>
+</div>
+
+<!-- Product templates row -->
+<ng-template #productItemRow let-i="index" let-item="item" let-parent="parent">
+  <tr>
+    <td>
+      <div style="display: flex; align-items: center">
+        <div *ngIf="parent" style="height: 100%">
+          <i class="material-icons">
+            subdirectory_arrow_right
+          </i>
+        </div>
+        <div class="form-txt">
+          <strong>{{item.product.name}}</strong>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="form-txt">
+        <strong>{{item.quantity}}</strong>
+      </div>
+    </td>
+    <td>
+      <div class="form-txt">
+        <ng-container *ngIf="item.stock; else elseBlock;">
+          <strong>{{item.stock.name}}</strong>
+        </ng-container>
+        <ng-template #elseBlock>
+          -
+        </ng-template>
+      </div>
+    </td>
+  </tr>
+</ng-template>

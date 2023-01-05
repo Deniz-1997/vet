@@ -1,0 +1,16 @@
+<k-row *ngIf="!isSeeReport"  fxLayout="row">
+  <ng-template #row>
+    <k-col cols="6" class="text-left">
+      <ng-template #col>
+        <button mat-raised-button (click)="closeReport.emit($event)">
+          Назад
+        </button>
+      </ng-template>
+    </k-col>
+    <k-col cols="6" class="text-right">
+      <ng-template #col>
+        <k-button type="raised" name="Сохранить" (click)="clickSubmit.emit($event)" color="primary"></k-button>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>

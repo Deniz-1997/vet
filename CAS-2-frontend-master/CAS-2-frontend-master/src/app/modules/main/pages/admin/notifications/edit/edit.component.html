@@ -1,0 +1,69 @@
+<ng-container *ngIf="openDialog">
+  <app-close-dialog [title]="title"></app-close-dialog>
+</ng-container>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <k-container fluid>
+    <ng-template #templateRef>
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <app-ui-autocomplete
+                label="Тип оповещения"
+                (selected)="onChangeType($event)"
+                [control]="formGroup.get('type')"
+                [type]="crudType.ReferenceNotificationsType"
+                field="name"
+                required="true"
+              ></app-ui-autocomplete>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <app-ui-autocomplete
+                label="Кому отправить уведомление (Для теста)"
+                [control]="formGroup.get('user')"
+                [type]="crudType.User"
+              ></app-ui-autocomplete>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <k-text-field required="true" label="Заголовок" type="text" formControlName="header"></k-text-field>
+            </ng-template>
+
+          </k-col>
+        </ng-template>
+      </k-row>
+
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <ckeditor [editor]="editor" [data]="formGroup.get('template').value" (change)="onChange($event)"></ckeditor>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+    </ng-template>
+  </k-container>
+  <app-reference-button-form
+    [isEdit]="isEdit()"
+    [goListUrl]="goListUrl()"
+    [type]="type"
+    [id]="id"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>

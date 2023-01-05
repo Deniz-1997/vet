@@ -1,0 +1,9 @@
+.content {
+  min-height: 30vh;
+  max-height: 80vh;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.text-center {
+  text-align: center;
+}

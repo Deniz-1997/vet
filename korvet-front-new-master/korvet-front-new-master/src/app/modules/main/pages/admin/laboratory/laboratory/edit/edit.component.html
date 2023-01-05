@@ -1,0 +1,79 @@
+<div class="header" *ngIf="!isModal">
+  <div *ngIf="id === 'create'; else elseBlock" class="header__name">Создать лабораторию</div>
+
+  <ng-template #elseBlock>
+    <div class="header__name">{{title}}</div>
+  </ng-template>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="container-fluid" [class.form-wr]="!isModal">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="name" col="12">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" />
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName="phone" col="12 col-lg-6">
+          <ng-template #colContent>
+            <input [maskPhoneMax]="10" [maskPhoneMin]="1" appUiMaskPhone class="inp-st inp-namber"
+              formControlName="phone" type="text">
+          </ng-template>
+        </app-col>
+        <app-col titleName="email" col="12 col-lg-6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="email" type="text" />
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName="stock" col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('stock')"
+              [type]="crudType.ReferenceStock"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName="websiteUrl" col="12 col-lg-6">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="website_url" type="text" />
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-3">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="address">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="address" type="text" />
+          </ng-template>
+        </app-col>
+        <app-col titleName="coordinates" col="12 col-lg-3">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="coordinates" type="text" />
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="external" id="external" placeholder="" type="checkbox" >
+              <label for="external">Сторонняя лаборатория</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [cancelButton]="isModal" [backButton]="!isModal" [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type">
+  </app-reference-button-form>
+</form>

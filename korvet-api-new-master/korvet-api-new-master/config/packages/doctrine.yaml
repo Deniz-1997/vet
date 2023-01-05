@@ -1,0 +1,67 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(DATABASE_URL): ''
+
+doctrine:
+    dbal:
+        # configure these for your database server
+        driver: 'pdo_pgsql'
+        server_version: '11.1'
+        charset: utf8
+
+        # With Symfony 3.3, remove the `resolve:` prefix
+        url: '%env(resolve:DATABASE_URL)%'
+        types:
+            App\Packages\DBAL\Types\CashFlowTypeEnum: App\Packages\DBAL\Types\CashFlowTypeEnum
+            App\Packages\DBAL\Types\CashReceiptTypeEnum: App\Packages\DBAL\Types\CashReceiptTypeEnum
+            App\Packages\DBAL\Types\CorrectionTypeEnum: App\Packages\DBAL\Types\CorrectionTypeEnum
+            App\Packages\DBAL\Types\FiscalReceiptStateEnum: App\Packages\DBAL\Types\FiscalReceiptStateEnum
+            App\Packages\DBAL\Types\PaymentMethodEnum: App\Packages\DBAL\Types\PaymentMethodEnum
+            App\Packages\DBAL\Types\PaymentObjectEnum: App\Packages\DBAL\Types\PaymentObjectEnum
+            App\Packages\DBAL\Types\PaymentTypeEnum: App\Packages\DBAL\Types\PaymentTypeEnum
+            App\Packages\DBAL\Types\PaymentStateEnum: App\Packages\DBAL\Types\PaymentStateEnum
+            App\Packages\DBAL\Types\ProductCodeTypeEnum: App\Packages\DBAL\Types\ProductCodeTypeEnum
+            App\Packages\DBAL\Types\ReceiptDeliveryTypeEnum: App\Packages\DBAL\Types\ReceiptDeliveryTypeEnum
+            App\Packages\DBAL\Types\ShiftStateEnum: App\Packages\DBAL\Types\ShiftStateEnum
+            App\Packages\DBAL\Types\TaxationTypeEnum: App\Packages\DBAL\Types\TaxationTypeEnum
+            App\Packages\DBAL\Types\VatRateEnum: App\Packages\DBAL\Types\VatRateEnum
+            App\Packages\DBAL\Types\ActionTypeEnum: App\Packages\DBAL\Types\ActionTypeEnum
+            App\Packages\DBAL\Types\ResearchStateEnum: App\Packages\DBAL\Types\ResearchStateEnum
+            App\Enum\AppointmentTypeEnum: App\Enum\AppointmentTypeEnum
+            App\Enum\LeavingTypeEnum: App\Enum\LeavingTypeEnum
+            App\Enum\WildAnimalAgeEnum: App\Enum\WildAnimalAgeEnum
+            App\Enum\WildAnimalReleaseTypeEnum: App\Enum\WildAnimalReleaseTypeEnum
+            App\Enum\CullingRegistrationFileTypeEnum: App\Enum\CullingRegistrationFileTypeEnum
+            App\Enum\WildAnimalFileTypeEnum: App\Enum\WildAnimalFileTypeEnum
+            App\Enum\FtpHistoryTypeEnum: App\Enum\FtpHistoryTypeEnum
+            App\Enum\StatusEnum: App\Enum\StatusEnum
+            App\Enum\DocumentTypeEnum: App\Enum\DocumentTypeEnum
+            App\Enum\DocumentStateEnum: App\Enum\DocumentStateEnum
+            App\Enum\DocumentOperationTypeEnum: App\Enum\DocumentOperationTypeEnum
+            App\Enum\FieldTypeEnum: \App\Enum\FieldTypeEnum
+            tsvector: App\Packages\Types\TsVector
+            App\Packages\DBAL\Types\TokenTypeEnum: App\Packages\DBAL\Types\TokenTypeEnum
+        mapping_types:
+            tsvector: tsvector
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            App:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: App
+        dql:
+            numeric_functions:
+                Random: Qbbr\PgsqlDoctrineRandomFunction\DQL\RandomFunction
+            string_functions:
+                cast: App\Packages\DQL\CastFunction
+                fts: App\Packages\DQL\FTS
+                tsquery: App\Packages\DQL\TsQuery

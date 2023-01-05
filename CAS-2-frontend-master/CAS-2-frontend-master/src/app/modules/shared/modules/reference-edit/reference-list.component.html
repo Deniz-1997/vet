@@ -1,0 +1,179 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<k-container fluid="fluid">
+  <ng-template #templateRef>
+    <k-header>{{fixedHeader}}</k-header>
+    <form (submit)="save()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+      <div class="mt-5">
+        <app-text-field [required]="true" label="Наименование" placeholder="Название справочника" type="text"
+          [control]="formGroup.get('referenceName')">
+        </app-text-field> 
+      </div>
+      <div class="text-right mb-8">
+        <k-button color="primary" name="Сохранить"></k-button>
+      </div>
+    </form>
+    <k-row>
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <app-list-filter [type]="type" [hidden]="totalCount === null" placeholder="Поиск по ключевому слову"
+              (outFilter)="filterList($event)" [filterFields]="filterFields" [mutableSearch]="mutableSearch">
+            </app-list-filter>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+
+    <ng-container *ngIf="reference.length === 0">
+      <k-row justify="center">
+        <ng-template #row>
+          <k-col cols="12" class="text-center">
+            <ng-template #col>
+              <div class="text-h5">Упс ничего не найдено</div>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <k-row justify="center">
+        <ng-template #row>
+          <k-col class="text-center">
+            <ng-template #col>
+              <k-button (click)="createData($event)" color="primary" name="Добавить значение"></k-button>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+    </ng-container>
+
+    <ng-container *ngIf="reference.length !==0">
+      <div class=" mt-5">
+        <div fxFlex="50" class="text-left text-h6">
+          Значения
+        </div>
+        <div fxFlex="50" class="text-right">
+          <k-button color="primary" type="button" name="Добавить значение" (click)="createData($event)"></k-button>
+        </div>
+      </div>
+      <k-row>
+        <ng-template #row>
+          <k-col cols="12">
+            <ng-template #col>
+              <mat-table [dataSource]="reference" multiTemplateDataRows class="table-flex">
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef [fxFlex]="flexColumn[0]"> Наименование</mat-header-cell>
+                  <mat-cell *matCellDef="let element" [fxFlex]="flexColumn[0]" (click)="toggleRow(element)">
+                    <ng-container [ngSwitch]="this.type">
+                      <ng-container *ngSwitchCase="crudType.Notifications">
+                        <span>{{element.element.data?.header ? element.element.data.header :
+                          element.element.type.name}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.Settings">
+                        <span>{{settingsService.tr(element.element.key)}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.ReferenceSupervisedObject">
+                        <span>{{element.element.name === '' ? element.element.businessEntity.name :
+                          element.element.name}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.DictionaryAnimalLivingPlaces">
+                        <span>{{element.element.address}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.DictionaryVaccineSeries">
+                        <span>{{element.element.serialNumber}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.ReferenceLocation">
+                        <span>{{element.element.address}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.ReferenceCircle">
+                        <span>{{element.element.location.address}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.ReferencePath">
+                        <span>{{element.element.location.address}}</span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="crudType.User">
+                        <div class="pr-3 text-decoration-underline">
+                          <span>{{element.element.surname + ' ' + element.element.name + ' ' +
+                            element.element?.patronymic}}</span>
+                        </div>
+                        <div>
+                          <span>{{'Логин: ' + element.element.username}}</span>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        <span>{{element.element?.name}}</span>
+                      </ng-container>
+                    </ng-container>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="edit">
+                  <mat-header-cell *matHeaderCellDef [fxFlex]="flexColumn[1]">Редактировать/Удалить</mat-header-cell>
+                  <mat-cell *matCellDef="let element" [fxFlex]="flexColumn[1]">
+                    <k-row>
+                      <ng-template #row>
+                        <k-col fxFlex="25" class="text-left">
+                          <ng-template #col>
+                            <k-button (click)="patchData(element.element.id)" type="button" name="Изменить"
+                              color="primary">
+                            </k-button>
+                          </ng-template>
+                        </k-col>
+                        <k-col fxFlex="25" class="text-left">
+                          <ng-template #col>
+                            <k-button (click)="deleteData(element.element.id)" type="button" name="Удалить"
+                              color="warn">
+                            </k-button>
+                          </ng-template>
+                        </k-col>
+                      </ng-template>
+                    </k-row>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <mat-header-cell *matHeaderCellDef [fxFlex]="flexColumn[2]"></mat-header-cell>
+                  <mat-cell *matCellDef="let element" [fxFlex]="flexColumn[2]">
+                    <k-row>
+                      <ng-template #row>
+                        <k-col fxFlex="25" class="text-right"
+                          *ngIf="authService.permissions('ROLE_ROOT') && type === 'user'">
+                          <ng-template #col>
+                            <k-button color="primary" name="Переключиться" (click)="switchUser(element.element)">
+                            </k-button>
+                          </ng-template>
+                        </k-col>
+                        <k-col class="text-right pt-5">
+                          <ng-template #col>
+                            <k-icon color="black" name="expand_more"
+                              [ngStyle]="{'transform': element.show ? 'rotate(180deg)' : 'rotate(0deg)'}"
+                              (click)="toggleRow(element)"></k-icon>
+                          </ng-template>
+                        </k-col>
+                      </ng-template>
+                    </k-row>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="expandedDetail">
+                  <mat-cell *matCellDef="let element">
+                    <div [@detailExpand]="element.show ? 'expanded' : 'collapsed'">
+                      <app-reference-view *ngIf="element.show" [type]="type" [item]="element.element">
+                      </app-reference-view>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="tableFields"></tr>
+                <tr mat-row *matRowDef="let element; columns: tableFields;" class="element-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+              </mat-table>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <app-show-more-button *ngIf="totalCount > offset + limit" [limit]="limit" [offset]="offset" [type]="type"
+        [items]="reference" [appendLoading]="appendLoading$|async" [totalCount]="totalCount"
+        (outAppend)="appendList($event)">
+      </app-show-more-button>
+    </ng-container>
+  </ng-template>
+</k-container>

@@ -1,0 +1,13 @@
+.text-middle {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 48px;
+}
+
+.form-template-view {
+  margin-bottom: 1.5em;
+}
+
+.form-template-view .form-body {
+  padding: 0 !important;
+}

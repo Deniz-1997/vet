@@ -1,0 +1,242 @@
+<ngx-loading [show]="loading"></ngx-loading>
+<app-title-view title="Корзина">
+  <ng-template #actionsTemplate>
+    <span>
+      <ng-container *ngIf="model.user?.surname"> {{model.user?.surname}} </ng-container>
+      <ng-container *ngIf="model.user?.name"> {{model.user?.name}} </ng-container>
+      <ng-container *ngIf="model.user?.patronymic"> {{model.user?.patronymic}} </ng-container>
+    </span>
+  </ng-template>
+</app-title-view>
+<div class="form-wr container-fluid pb-4" [formGroup]="formGroup">
+  <p *ngIf="!productsList.length && !stockNotFound" class="text-center">Добавьте товары в корзину</p>
+  <ng-container *ngIf="stockNotFound">
+    <p class="text-center mb-3">Не найден склад для магазина</p>
+    <p class="text-center"><a [routerLink]="['/shop/shop-settings/create']">Добавить склад</a></p>
+  </ng-container>
+  <div class="delivery">
+    <table class="table-info-st" *ngIf="productsList.length">
+      <tr>
+        <th>Наименование</th>
+        <th>Цена</th>
+        <th>Единица измерения</th>
+        <th>Количество</th>
+        <th>Сумма</th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let product of productsList; let i = index">
+        <td>
+          {{product.name}}
+        </td>
+        <td>
+          {{product.price | price}}
+        </td>
+        <td>
+          {{product.measurementUnits?.name}}
+        </td>
+        <td class="shortCell">
+          <ng-container *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+            <input [formControl]="formGroup.get('productCount_'+product.id)" class="inp-st" type="number"
+              appPositiveNumber />
+            <small class="note">Остаток: {{getProductStockCount(product)}}</small>
+          </ng-container>
+          <span *ngIf="model.state?.code === 'REGISTERED'">{{formGroup.get('productCount_'+product.id).value}}</span>
+        </td>
+        <td>
+          {{getSumm(product) | price}}
+        </td>
+        <td *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+          <a (click)="removeProduct(product, i)" class="tr-close"></a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <mat-divider></mat-divider>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3">
+          <strong>Позиций: </strong>{{productsList.length}}
+        </td>
+        <td>
+          <strong>Количество: </strong>{{getAllCount()}}
+        </td>
+        <td>
+          <strong>Итого: </strong>{{getAllAmount() | price}}
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="delivery-grid">
+    <div *ngIf="productsList.length">
+      <ng-container *ngFor="let product of productsList; let i = index">
+        <div class="border-bottom mb-2">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col text="Цена">
+                <ng-template #colContent>
+                  <strong>{{product.price | price}}</strong>
+                </ng-template>
+              </app-col>
+              <app-col text="Единица измерения">
+                <ng-template #colContent>
+                  <strong> {{product.measurementUnits?.name}}</strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col>
+                <ng-template #colContent>
+                  <strong> {{product.name}}</strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <div class="d-flex">
+            <div class="p-1" *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+              <a (click)="minusProduct(product)" class="lnk-mn">-</a>
+            </div>
+            <div class="col-3 col-sm-2 p-1">
+              <ng-container *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+                <input [formControl]="formGroup.get('productCount_'+product.id)" appPositiveNumber
+                  class="inp-st text-center" type="number" />
+                <small class="note">Остаток: {{getProductStockCount(product)}}</small>
+              </ng-container>
+              <span
+                *ngIf="model.state?.code === 'REGISTERED'">{{formGroup.get('productCount_'+product.id).value}}</span>
+            </div>
+            <div class="p-1" *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+              <a (click)="plusProduct(product)" class="lnk-pl">+</a>
+            </div>
+          </div>
+          <div class="d-flex pt-3">
+            <div class="mr-auto p-1">
+              Сумма: <strong style="font-size: 15px">{{getSumm(product) | price}}</strong>
+            </div>
+            <div class="p-1" *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+              <a (click)="removeProduct(product, i)" class="lnk-delete"></a>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <app-row class="mt-4 d-none d-lg-flex" *ngIf="productsList.length && !model.cashReceipt">
+    <ng-template #rowContent>
+      <app-col col="3">
+        <ng-template #colContent>
+          <ng-container *ngIf="model.state?.code !== 'REGISTERED'">
+            <a *ngIf="model.id" class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold mr-2"
+              (click)="delete()">
+              Удалить
+            </a>
+            <a class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold" (click)="clear()">
+              Очистить
+            </a>
+          </ng-container>
+          <a class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold"
+            (click)="changeOrderState('DRAFT')" *ngIf="model.state?.code === 'REGISTERED'">
+            Отменить
+          </a>
+        </ng-template>
+      </app-col>
+      <app-col col="9" class="text-right mr-4">
+        <ng-template #colContent>
+          <strong class="d-inline mr-1">Способ оплаты: </strong>
+          <ng-container *ngIf="model.state?.code !== 'REGISTERED'">
+            <div class="radio-box d-inline mr-2">
+              <input [value]="true" formControlName="type" id="status-ip" type="radio">
+              <label for="status-ip">Нал.</label>
+            </div>
+            <div class="radio-box d-inline mr-5">
+              <input [value]="false" formControlName="type" id="status-ur" type="radio">
+              <label for="status-ur">Безнал.</label>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="model.state?.code === 'REGISTERED'">
+            <span class="mr-4">{{formGroup.get('type').value === true ? 'Наличный' : 'Безналичный'}}</span>
+          </ng-container>
+          <button class="btn btn-primary" type="button" (click)="submit()" *ngIf="model.state?.code !== 'REGISTERED'">
+            Продать
+          </button>
+          <ng-container *ngIf="model.state?.code === 'REGISTERED'">
+            <button class="btn btn-primary" type="button" (click)="createReceipt()" *ngIf="!model.cashReceipt">
+              Создать чек
+            </button>
+          </ng-container>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <div class="mt-1 d-block d-lg-none" *ngIf="productsList.length && !model.cashReceipt">
+    <div class="d-flex p-1 pb-2 pt-2" *ngIf="model.state?.code !== 'REGISTERED' && !model.cashReceipt">
+      <div class="p-1">
+        <strong>Позиций: </strong>{{productsList.length}},
+      </div>
+      <div class="p-1">
+        <strong>Количество: </strong>{{getAllCount()}},
+      </div>
+      <div class="p-1">
+        <strong>Итого: </strong>{{getAllAmount() | price}}
+      </div>
+    </div>
+    <div class="d-flex p-1">
+      <div class="p-1">
+        <strong>Способ оплаты: </strong>
+      </div>
+      <ng-container *ngIf="model.state?.code !== 'REGISTERED'">
+        <div class="p-1 radio-box  mr-2">
+          <input [value]="true" formControlName="type" id="status-ip1" type="radio">
+          <label for="status-ip1">Нал.</label>
+        </div>
+        <div class="p-1 radio-box  ">
+          <input [value]="false" formControlName="type" id="status-ur1" type="radio">
+          <label for="status-ur1">Безнал.</label>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="model.state?.code === 'REGISTERED'">
+        <span class="mr-4">{{formGroup.get('type').value === true ? 'Наличный' : 'Безналичный'}}</span>
+      </ng-container>
+    </div>
+    <div class="d-flex p-1">
+      <div class="mr-auto p-1">
+        <ng-container *ngIf="model.state?.code !== 'REGISTERED'">
+          <a *ngIf="model.id" class="lnk-delete" (click)="delete()">
+            Удалить
+          </a>
+          <a class="lnk-delete" (click)="clear()">
+            Очистить
+          </a>
+        </ng-container>
+        <a class="lnk-delete" (click)="changeOrderState('DRAFT')" *ngIf="model.state?.code === 'REGISTERED'">
+          Отменить
+        </a>
+      </div>
+      <div class="p-1">
+        <a class="lnk-open" type="button" (click)="submit()" *ngIf="model.state?.code !== 'REGISTERED'">
+          Продать
+        </a>
+        <ng-container *ngIf="model.state?.code === 'REGISTERED'">
+          <a class="lnk-open" type="button" (click)="createReceipt()" *ngIf="!model.cashReceipt">
+            Создать чек
+          </a>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <app-row class="mt-4" *ngIf="model.cashReceipt">
+    <ng-template #rowContent>
+      <app-col>
+        <ng-template #colContent>
+          <a [routerLink]="['/cash/cash-receipt/', model.cashReceipt.id]" style="white-space: nowrap">
+            Чек ККМ №{{model.cashReceipt.id}} от {{model.cashReceipt.createdAt}}
+          </a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>
+<app-shop-catalog (selectedProduct)="addProduct($event)" [stock]="model.stock?.id"
+  *ngIf="model.state?.code !== 'REGISTERED' && !stockNotFound"></app-shop-catalog>

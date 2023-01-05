@@ -1,0 +1,14 @@
+services:
+    App\Packages\Describer\ModelDescriber:
+        arguments:
+            - '@property_info'
+            - '@annotations.cached_reader'
+            - '@translator.default'
+        tags:
+            - { name: nelmio_api_doc.model_describer, priority: 150 }
+
+    App\Packages\Describer\CustomRouteDescriber:
+        autowire: true
+        bind:
+            $annotationReader: '@annotation_reader'
+        tags: ['nelmio_api_doc.route_describer']

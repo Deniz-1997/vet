@@ -1,0 +1,20 @@
+:host .ui-selectmenu-button {
+  width: 100%;
+}
+
+:host /deep/ .mCustomScrollBox{
+  margin-right: 0;
+  max-width: 100%;
+}
+
+:host .ui-selectmenu-popup__list {
+  max-height: 186px;
+  overflow-y:auto;
+}
+:host .ui-selectmenu-popup {
+  width: 100%;
+  overflow: hidden
+}
+:host [data-open="true"] .ui-selectmenu-popup {
+  display: block;
+}

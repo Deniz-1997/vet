@@ -1,0 +1,22 @@
+{
+  "plugins": ["stylelint-scss"],
+  "customSyntax": "postcss-html",
+  "extends": ["stylelint-config-recommended-scss", "stylelint-config-standard"],
+  "rules": {
+    "no-empty-source": null,
+    "scss/at-import-no-partial-leading-underscore": null,
+    "selector-class-pattern": null,
+    "scss/comment-no-empty": null,
+    "at-rule-no-unknown": null,
+    "no-duplicate-selectors": null,
+    "block-no-empty": null,
+    "no-descending-specificity": null,
+    "declaration-block-no-duplicate-properties": null,
+    "selector-pseudo-element-no-unknown": null,
+    "scss/no-global-function-names": null,
+    "declaration-block-no-shorthand-property-overrides": null,
+    "scss/at-extend-no-missing-placeholder": null,
+    "max-line-length": 120,
+    "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["/global/"] }]
+  }
+}

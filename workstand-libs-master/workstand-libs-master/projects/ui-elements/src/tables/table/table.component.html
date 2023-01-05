@@ -1,0 +1,41 @@
+<div class="theme--light">
+  <div class="">
+    <table class="mat-table cdk-table report-form-table">
+      <ng-container *ngIf="headersArray.length === 1">
+        <tr class="mat-header-row cdk-header-row" [fxLayout]="table.useFxFlex? 'row' : null" *ngFor="let headerRow of headersArray;">
+          <td class="mat-cell cdk-cell cdk-column-birds mat-column-birds" [attr.colspan]="header.colspan" [attr.rowspan]="header.rowspan"
+            [fxFlex]="table.useFxFlex? header.size.fxFlex : null" *ngFor="let header of headerRow;">
+            <ng-container [ngTemplateOutlet]="tableHeaderContent" [ngTemplateOutletContext]="{column: header}">
+            </ng-container>
+          </td>
+        </tr>
+        <tr class="mat-row" *ngFor="let row of dataSource; index as rowIndex;trackBy: trackByFn"
+          [ngStyle]="{'display': isDoneRenderRows ? '' : 'none' }" [fxLayout]="table.useFxFlex? 'row' : null">
+          <ng-container *ngFor="let column of columns; index as colIndex;trackBy: trackByFn">
+            <td class="mat-cell cdk-cell cdk-column-name mat-column-name" [fxFlex]="table.useFxFlex? column.size.fxFlex : null">
+              <ng-container [ngTemplateOutlet]="tableRowContent"
+                [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}"></ng-container>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="headersArray.length > 1">
+        <tr *ngFor="let headerRow of headersArray;" class="table-row">
+          <th class="table-item" [attr.colspan]="header.colspan" [attr.rowspan]="header.rowspan" *ngFor="let header of headerRow;">
+            <ng-container [ngTemplateOutlet]="tableHeaderContent" [ngTemplateOutletContext]="{column: header}">
+            </ng-container>
+          </th>
+        </tr>
+
+        <tr *ngFor="let row of dataSource; index as rowIndex;trackBy: trackByFn" class="table-row">
+          <ng-container *ngFor="let column of columns; index as colIndex;trackBy: trackByFn">
+            <td class="table-item" [style]="column?.style">
+              <ng-container [ngTemplateOutlet]="tableRowContent"
+                [ngTemplateOutletContext]="{row:row, column: column, rowIndex: rowIndex}" ></ng-container>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<div *ngIf="titleName || text"
+     [className]="classHead">{{titleName || text}}</div>
+<div *ngIf="colContent" [className]="classBody">
+  <ng-container [ngTemplateOutlet]="colContent"></ng-container>
+</div>

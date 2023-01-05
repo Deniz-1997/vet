@@ -1,0 +1,71 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<app-close-dialog [textCenter]="true" [title]="'Загрузка файла '+ data?.title"></app-close-dialog>
+<mat-dialog-content align="center">
+  <form (submit)="submit()" [formGroup]="formGroup" appFormFocus>
+    <k-row *ngIf="data.subTitle">
+      <ng-template #row>
+        <k-col>
+          <ng-template #col>
+            Хозяйствующий субъект: {{data.subTitle}}
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row>
+      <ng-template #row>
+        <k-col class="col-auto">
+          <ng-template #col>
+            <k-button type="button" (click)="chooseFile($event)" [name]="getButtonName()"></k-button>
+            <input type="file" hidden #file (change)="changeFile($event)" [accept]="data?.extension" name="file"
+              formControlName="file" [multiple]="false" />
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row class="mt-4">
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <app-ui-autocomplete [required]="true" label="Объект"
+                                 [control]="formGroup.get('supervisedObjects')"
+                                 [type]="crudType.ReferenceSupervisedObject"
+                                 [addFilter]="supervisedFilter" field="address"
+                                 [fields]="stationSupervisedFields"
+                                 (selected)="supervisedSelected($event)"></app-ui-autocomplete>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+    <k-row class="mt-4">
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <app-ui-autocomplete [disabled]="!formGroup.get('supervisedObjects').value"
+                                 [required]="true"
+                                 label="Подразделение"
+                                 [control]="formGroup.get('subdivisionObjects')"
+                                 [type]="crudType.ReferenceSubdivision"
+                                 [addFilter]="subdivisionFilter"></app-ui-autocomplete>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+
+  </form>
+</mat-dialog-content>
+<k-row>
+  <ng-template #row>
+    <k-col>
+      <ng-template #col>
+        <button class="align-left" mat-raised-button mat-dialog-close>Закрыть</button>
+      </ng-template>
+    </k-col>
+    <k-col class="col-auto">
+      <ng-template #col>
+        <ng-container>
+          <button mat-raised-button color="primary" (click)="submit()">Загрузить</button>
+        </ng-container>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>

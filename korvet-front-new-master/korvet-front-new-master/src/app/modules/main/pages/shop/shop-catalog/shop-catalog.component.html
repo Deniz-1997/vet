@@ -1,0 +1,125 @@
+<ng-container [formGroup]="formGroup">
+  <app-title-view title="Каталог">
+    <ng-template #actionsTemplate>
+      <div class="check-st mt-2 mt-lg-3 mb-lg-3">
+        <input formControlName="showAllProducts" id="archive-template" type="checkbox">
+        <label for="archive-template">Показывать отсутствующие товары</label>
+      </div>
+    </ng-template>
+  </app-title-view>
+  <div class="form-wr container-fluid pb-4">
+    <mat-tab-group animationDuration="0ms" dynamicHeight="true" (selectedIndexChange)="selectedIndexChange($event)">
+      <mat-tab label="Поиск по наименованию">
+        <app-row class="mt-4 mb-4">
+          <ng-template #rowContent>
+            <app-col col="12" text="Введите наименование">
+              <ng-template #colContent>
+                <input type="text" class="inp-st seachInput" formControlName="seachInput" matInput>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </mat-tab>
+      <mat-tab label="Поиск по категориям">
+        <nav aria-label="breadcrumb" class="mt-4">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0)" (click)="getCategoriesByParent(null)">Каталог</a>
+            </li>
+            <ng-container *ngFor="let category of getSelectedCategoryParents(); last as isLast">
+              <li class="breadcrumb-item" aria-current="page" *ngIf="!isLast"><a href="javascript:void(0)"
+                  (click)="getCategoriesByParent(category)">{{category.name}}</a></li>
+              <li class="breadcrumb-item active" aria-current="page" *ngIf="isLast">{{category.name}}</li>
+            </ng-container>
+          </ol>
+        </nav>
+
+        <div class="row ml-1 mb-2">
+          <div class="col-6 mt-2 mb-2" *ngFor="let category of categotiesList;">
+            <a href="javascript:void(0)" class="d-inline"
+              (click)="getCategoriesByParent(category)">{{category.name}}</a>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+    <mat-divider class="mb-2"></mat-divider>
+    <div class="w-100 text-center">
+      <div *ngIf="productsLoading" class="loader"></div>
+    </div>
+    <div class="delivery">
+    <table class="table-info-st" *ngIf="!productsLoading">
+      <tr>
+        <th>Наименование</th>
+        <th>Цена</th>
+        <th>Единица измерения</th>
+        <th>Остаток</th>
+        <th></th>
+      </tr>
+      <ng-container *ngFor="let product of productsList;">
+        <tr
+          *ngIf="product.productStock?.length && getProductStockCount(product)!=0 || formGroup.get('showAllProducts').value">
+          <td>
+            {{product.name}}
+          </td>
+          <td>
+            {{product.price | price}}
+          </td>
+          <td>
+            {{product.measurementUnits?.name}}
+          </td>
+          <td>
+            {{product.productStock.length ? getProductStockCount(product) : 0}}
+          </td>
+          <td>
+            <button (click)="addProductToCart(product)" class="btn btn-outline-primary text-nowrap"
+              *ngIf="product.productStock.length && getProductStockCount(product) != 0">В корзину</button>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+    </div>
+    <div *ngIf="!productsLoading" class="delivery-grid">
+      <ng-container *ngFor="let product of productsList;">
+        <div class="border-bottom" *ngIf="product.productStock?.length && getProductStockCount(product)!=0 || formGroup.get('showAllProducts').value">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName="name">
+                <ng-template #colContent>
+                  <strong>{{product.name}}</strong>
+                </ng-template>
+              </app-col>
+              <app-col text="Цена">
+                <ng-template #colContent>
+                  <strong>{{product.price | price}}</strong>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col text="Единица измерения">
+                <ng-template #colContent>
+                  {{product.measurementUnits?.name}}
+                </ng-template>
+              </app-col>
+              <app-col text="Остаток">
+                <ng-template #colContent>
+                  {{product.productStock.length ? getProductStockCount(product) : 0}}
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col>
+                <ng-template #colContent>
+                  <a (click)="addProductToCart(product)" class="lnk-open"
+                     *ngIf="product.productStock.length && getProductStockCount(product) != 0">В корзину</a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

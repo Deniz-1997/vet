@@ -1,0 +1,127 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<!--{{loading$ | async}}:{{loading1$ | async}}:{{loading2$ | async}}-->
+
+<div class="body-header">
+  <div class="body-header__name">График выездов</div>
+</div>
+<app-row>
+  <ng-template #rowContent>
+    <app-col col="12 col-lg-9" class="overflow-auto" style="height: 700px">
+      <ng-template #colContent>
+        <table class="calendar-table">
+          <tbody>
+          <tr class="calendar-table__header">
+            <th colspan="2">Время</th>
+
+            <ng-container *ngFor="let key of objectKeys(scheduleDay)">
+              <ng-container *ngIf="!formGroup.controls.user.value || formGroup.controls.user.value.id == key">
+                <th>{{getFullName(scheduleDay[key].user)}}</th>
+              </ng-container>
+            </ng-container>
+
+            <th></th>
+          </tr>
+
+          <ng-container *ngFor="let hour of hours;">
+            <tr cdkDropList *ngFor="let step of steps; index as i" [id]="hour+'-'+step" [ngClass]="{'tr-border-top': i===0}">
+
+              <td *ngIf="i===0" class="td-clock__day" rowspan="6" style="width: 43px;">{{hour}}</td>
+              <td class="td-clock__minutes" style="width: 45px;">:{{step}}</td>
+
+              <ng-container *ngFor="let key of objectKeys(scheduleDay)">
+                <ng-container *ngIf="!formGroup.controls.user.value || formGroup.controls.user.value.id == key">
+
+                  <td cdkDrag  cdkDragBoundary=".calendar-table"
+                      (cdkDragEnded)="drop(scheduleDay[key].leaving[time(hour,step)])"
+                      (mouseover)="over(scheduleDay[key], hour, step)"
+                      (click)="addLeaving(scheduleDay[key].user,time(hour,step), hasSchedule(scheduleDay[key], hour, step))"
+                      [class.disabled]="hasSchedule(scheduleDay[key], hour, step) ? true: null"
+                      class="appointment">
+
+                    <ng-container *ngIf="scheduleDay[key].leaving[time(hour,step)]">
+                      <a (click)="goToView(scheduleDay[key].leaving[time(hour,step)].id, $event)"
+                         [style.background-color]="scheduleDay[key].leaving[time(hour,step)].leavingStatus.color"
+                         class="td-event">
+                        <strong>{{scheduleDay[key].leaving[time(hour, step)].leavingStatus.name}}</strong>
+                        <br/>
+                        {{scheduleDay[key].leaving[time(hour, step)].name}}
+                        ({{scheduleDay[key].leaving[time(hour, step)].pet}})
+                      </a>
+                    </ng-container>
+                  </td>
+                </ng-container>
+              </ng-container>
+
+              <td></td>
+            </tr>
+          </ng-container>
+
+
+          </tbody>
+        </table>
+      </ng-template>
+    </app-col>
+    <app-col col="12 col-lg-3">
+      <ng-template #colContent>
+        <form [formGroup]="formGroup">
+          <app-row>
+            <ng-template #rowContent>
+              <app-col   [required]="true" titleName=clinic >
+                <ng-template #colContent>
+                  <app-ui-autocomplete
+                    [control]="formGroup.get('unit')"
+                    [options]="unitItems"
+                    [type]="crudType.ReferenceUnit"
+                  ></app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row style="height: 300px">
+            <ng-template #rowContent>
+              <app-col class="d-flex">
+                <ng-template #colContent>
+                  <mat-calendar
+                    (selectedChange)="onSelect($event)"
+                    [selected]="selectedDate"></mat-calendar>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  titleName=professions>
+                <ng-template #colContent>
+                  <app-ui-mat-multi-select
+                    placeholder="Найти специальность"
+                    [selectFormControl]="formGroup.get('professions')"
+                    [type]="crudType.ReferenceProfession">
+                  </app-ui-mat-multi-select>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col  titleName=user >
+                <ng-template #colContent>
+                  <mat-form-field appearance="outline">
+                    <mat-select [placeholder]="getUserFullName()" disableOptionCentering formControlName="user">
+                      <mat-option [value]="0">Все</mat-option>
+                      <mat-option *ngFor="let key of objectKeys(scheduleDay)"
+                                  [value]="{id: scheduleDay[key].user.id, fullName: getFullName(scheduleDay[key].user)}">
+                        {{getFullName(scheduleDay[key].user)}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </form>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+

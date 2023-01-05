@@ -1,0 +1,32 @@
+:host app-icon-menu {
+  display: inline-block;
+}
+
+:host app-icon-menu span {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+:host .form-span a.form-span__lnk-btn {
+  line-height: 18px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.mat-menu-content .mat-menu-item {
+  line-height: 20px;
+  height: 20px;
+}
+
+.note-product {
+  font-size: 12px;
+  top: -18px;
+}
+
+:host .note {
+  font-size: 12px;
+}
+
+:host .note-error {
+  color: red;
+}

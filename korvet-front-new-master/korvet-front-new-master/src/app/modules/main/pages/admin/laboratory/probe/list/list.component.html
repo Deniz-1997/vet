@@ -1,0 +1,38 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'пробы',
+    title: 'Не найдено ни одной пробы',
+    subtitle: 'Вы можете добавить новую пробу',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Пробы"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Активна</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td>{{item.active ? 'Да' : 'Нет '}}<span *ngIf="!item.active" class="ico-voko"></span></td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

@@ -1,0 +1,51 @@
+
+.popup-wr {
+  width: 100%;
+}
+
+.check-st {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.check-st .check-st__col {
+  display: inline-block;
+}
+
+.check-st .check-st__col:not(:first-child) {
+  margin-left: 15px;
+}
+
+.popup-wr__body .form-span--date {
+  /*max-width: 50%;*/
+  /*display: inline-block;*/
+}
+
+.form-head.inline {
+  margin-right: 10px;
+}
+
+.form-body.inline input {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.form-body.inline textarea {
+  vertical-align: text-top;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.cdk-overlay-pane {
+  max-height: 90%;
+}
+
+.mat-dialog-container {
+  height: auto;
+}
+
+.textarea-st.inline {
+  /*width: 50% !important;*/
+}

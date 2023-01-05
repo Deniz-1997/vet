@@ -1,0 +1,52 @@
+<div *ngIf="data" class="position-relative">
+  <mat-form-field appearance="fill">
+    <mat-label>{{label}}</mat-label>
+    <input matInput type="text"
+           #resultInput class="custom-autocomplete-input" readonly (click)="openPanel()"
+           [placeholder]="placeholder"
+           [value]="resultInputValue"
+           [disabled]="disabled">
+    <mat-hint *ngIf="message">{{message}}</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="panelOpened" class="panel" #panel>
+    <div class="select-search">
+      <div class="text-right pt-2">
+        <a class="lnk-ico  mr-4" (click)="onDeselectAll()">Снять все</a>
+      </div>
+      <div class="select-search-header">
+        <mat-form-field appearance="outline">
+          <input #search autocomplete="off" type="text" matInput
+                 [formControl]="searchTextboxControl">
+          <div matSuffix *ngIf="dataLoading" class="loader mb-0"></div>
+          <button [disableRipple]="true" *ngIf="search.value && !dataLoading" matSuffix mat-icon-button
+                  aria-label="Clear" (click)="clearSearch($event)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-optgroup *ngIf="!data || data.length === 0">
+          <div>Значений не найдено</div>
+        </mat-optgroup>
+      </div>
+      <div class="select-search-body">
+        <mat-selection-list (selectionChange)="selectionChange($event)">
+          <ng-container *ngFor="let option of data">
+            <mat-list-option checkboxPosition="before"
+                             [value]="option"
+                             [ngStyle]="option?.padding"
+                             [selected]="isOptionSelected(option)">
+              <ng-container *ngIf="option.children?.length; else blockElse">
+                <p class="child-color">{{option.name}}</p>
+              </ng-container>
+              <ng-template #blockElse>
+                <p>{{option.name}}</p>
+              </ng-template>
+            </mat-list-option>
+          </ng-container>
+        </mat-selection-list>
+      </div>
+    </div>
+  </mat-form-field>
+</div>
+
+

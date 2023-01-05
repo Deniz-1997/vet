@@ -1,0 +1,57 @@
+<div class="position-relative" appResized (resized)="onResize($event)">
+  <ngx-loading [show]="loading"></ngx-loading>
+  <ng-container *ngIf="items.length">
+    <app-title-view [title]="title">
+      <ng-template #actionsTemplate>
+        <ng-container [ngTemplateOutlet]="titleActionsTemplate"></ng-container>
+      </ng-template>
+    </app-title-view>
+    <div *ngIf="!isMobile" class="delivery">
+      <table class="table table-borderless">
+        <ng-container [ngTemplateOutlet]="headTemplate"></ng-container>
+        <ng-template ngFor let-item [ngForOf]="items" [ngForTemplate]="itemTemplate"></ng-template>
+      </table>
+    </div>
+    <div *ngIf="isMobile" class="delivery-grid">
+      <div class=" container-fluid">
+        <div class="row">
+          <ng-template ngFor let-item [ngForOf]="items" [ngForTemplate]="itemTemplateGrid"></ng-template>
+        </div>
+      </div>
+    </div>
+    <div class="position-relative" *ngIf="!pageSize">
+      <div class="btn-show-add" *ngIf="appendLoading"><span class="loader"></span></div>
+      <a class="btn-show-add" *ngIf="!appendLoading && items.length < totalCount"
+         (click)="outAppend.emit({limit: limit, offset: offset})">
+        Показать ещё {{getRowCount()}} записей
+      </a>
+    </div>
+
+    <div class="position-relative" *ngIf="pageSize">
+      <div class="list-size" style="width: 100px;" *ngIf="items.length < totalCount">
+        <mat-form-field appearance="outline" class="mat-form-field-xs">
+          <mat-select disableOptionCentering [(value)]="pageSize" (valueChange)="settingPageSize(pageSize)">
+            <mat-option *ngFor="let page of pageSizeOptions" [value]="page">По {{page}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="btn-show-add" *ngIf="appendLoading"><span class="loader"></span></div>
+      <a class="btn-show-add" *ngIf="!appendLoading && items.length < totalCount"
+         (click)="outAppend.emit({limit: limit, offset: offset})">
+        {{items.length}} из {{totalCount}} Показать еще записей {{getRowCount()}}
+      </a>
+    </div>
+  </ng-container>
+  <app-empty-view
+    *ngIf="emptyOptions && !items.length && !loading"
+    [title]="emptyOptions.title"
+    [subtitle]="emptyOptions.subtitle"
+    [addLinInvisible]="emptyOptions.addLinInvisible"
+    [addLink]="emptyOptions.addLink"
+    [elementName]="emptyOptions.elementName"
+    [buttons]="emptyOptions.buttons"
+    (buttonClick)="outEmptyClick.emit($event)"
+    [search]="search"
+  ></app-empty-view>
+</div>

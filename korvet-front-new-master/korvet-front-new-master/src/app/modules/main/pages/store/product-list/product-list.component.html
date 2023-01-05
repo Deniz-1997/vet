@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <ng-container *ngIf="formGroup.get('documentProducts').value.length > 0">
+    <app-row *ngFor="let item of formGroup.get('documentProducts').controls; let i = index;">
+      <ng-template #rowContent>
+        <app-col col="12 col-sm-7" [required]="state.code === 'DRAFT'" titleName="name">
+          <ng-template #colContent>
+            <strong *ngIf="state.code !== 'DRAFT'">
+              {{item.get('product').value['name']}}
+            </strong>
+            <app-ui-autocomplete (selected)="setStockQuantity(item)" *ngIf="state.code === 'DRAFT'"
+                                 [addFilter]="productStockFilter" [control]="item.get('product')" [fields]="productStockFields"
+                                 [options]="stockProducts" [required]="true" [type]="crudType.ReferenceProduct" styleClass="space-normal">
+            </app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col col="6 col-sm-4" class="pt-2 pt-sm-0" text="Дозировка/количество" >
+          <ng-template #colContent>
+              <div *ngIf="state.code !== 'DRAFT'">
+                <strong>{{item.get('quantity').value}}</strong>
+              </div>
+              <div *ngIf="state.code === 'DRAFT'">
+                <input [formControl]="item.get('quantity')" class="inp-st" type="number" />
+              </div>
+              <small *ngIf="item.get('stockQuantity')" class="note">
+                Остаток: {{item.get('stockQuantity').value}}
+              </small>
+          </ng-template>
+        </app-col>
+        <app-col *ngIf="state.code === 'DRAFT'" col="6 col-sm-1" class="text-right d-none d-sm-block" style="margin-top: 30px" >
+          <ng-template #colContent>
+            <a (click)="removeProduct($event, i)"  class="tr-close"></a>
+          </ng-template>
+        </app-col>
+        <app-col *ngIf="state.code === 'DRAFT'" col="6 col-sm-1" class="text-right d-block d-sm-none pt-2 pt-sm-0" style="margin-top: 30px">
+          <ng-template #colContent>
+            <a (click)="removeProduct($event, i)"  class="lnk-delete">удалить товар</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </ng-container>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col>
+        <ng-template #colContent>
+          <a (click)="addProduct($event)" *ngIf="state.code === 'DRAFT'" class="form-span__lnk-btn" href="#">Добавить
+            товар</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>

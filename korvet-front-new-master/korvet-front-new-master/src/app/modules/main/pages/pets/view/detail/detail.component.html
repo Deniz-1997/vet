@@ -1,0 +1,172 @@
+<div *ngIf="pet" class="delivery">
+  <div *ngIf="showName" class="header">
+    <div class="header__name">
+      <app-icon-animal *ngIf="typeIcon !== undefined" [type]="typeIcon"></app-icon-animal>
+      <a class="header__name-lnk ml-1" routerLink="/pets/{{pet.id}}">{{pet.name}}</a>
+    </div>
+  </div>
+  <a *ngIf="!petToOwnerId" class="info-edit" routerLink="/pets/{{pet?.id}}/edit">
+    <app-icon-edit></app-icon-edit>
+  </a>
+  <a (click)="deletePetToOwners()" *ngIf="petToOwnerId" class="owners-item__close"></a>
+  <div class="info-tr">
+    <div class="info-th">Вид</div>
+    <div class="info-td">{{getData(pet, 'breed.type.name')}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Порода</div>
+    <div class="info-td">{{getData(pet, 'breed.name')}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Пол</div>
+    <div class="info-td">{{pet.gender === 'MALE' ? 'Самец' : pet.gender === 'FEMALE' ? 'Самка' : '-'}}</div>
+  </div>
+  <div *ngIf="!pet.isDead && !pet.dateOfDeath" class="info-tr">
+    <div class="info-th">Дата рождения</div>
+    <div class="info-td">{{pet.birthday | dateParse}}</div>
+  </div>
+  <div *ngIf="!pet.isDead || (pet.isDead && pet.dateOfDeath) " class="info-tr">
+    <div class="info-th">Возраст</div>
+    <div class="info-td">
+      <ng-container *ngIf="pet.isDead">{{(pet.birthday + ',' + pet.dateOfDeath) | age}}</ng-container>
+      <ng-container *ngIf="!pet.isDead">{{pet.birthday | age}}</ng-container>
+    </div>
+  </div>
+  <div *ngIf="pet?.chipNumber" class="info-tr">
+    <div class="info-th">Номер чипа</div>
+    <div class="info-td">{{pet.chipNumber}}</div>
+  </div>
+  <div *ngIf="pet?.isSterilized" class="info-tr">
+    <div class="info-th">Стерелизация</div>
+    <div class="info-td">Да</div>
+  </div>
+  <div *ngIf="pet?.aggressive" class="info-tr">
+    <div class="info-th">Агрессивность</div>
+    <div class="info-td">
+      <ng-container *ngIf="!pet?.aggressiveType">Да</ng-container>
+      <ng-container
+        *ngIf="pet?.aggressiveType">{{pet.aggressiveType.name}} {{pet.aggressiveType.level|aggressive_count_transform}}</ng-container>
+    </div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Живая масса</div>
+    <div class="info-td">{{pet?.actualWeight?.value | weight}}</div>
+  </div>
+  <div *ngIf="pet?.vaccinationDate && pet?.vaccinationExpired" class="info-tr">
+    <div class="info-th">Вакцинирован до</div>
+    <div class="info-td">
+      <span [ngClass]="{'color-red': pet?.vaccinationInvalid}"> {{pet?.vaccinationExpired | dateParse}}</span>
+    </div>
+  </div>
+  <div *ngIf="pet?.dateOfDeath && pet?.isDead" class="info-tr">
+    <div class="info-th">Дата смерти</div>
+    <div class="info-td">
+      {{pet.dateOfDeath | dateParse}}
+    </div>
+  </div>
+  <div *ngIf="pet?.dateOfRetiring && pet?.isRetiring" class="info-tr">
+    <div class="info-th">Дата Выбытия</div>
+    <div class="info-td">
+      {{pet.dateOfRetiring | dateParse}}
+    </div>
+  </div>
+  <div *ngFor="let identifier of pet?.identifiers" class="info-tr">
+    <div class="info-th">{{identifier.type.name}}</div>
+    <div class="info-td">{{identifier.value}}</div>
+  </div>
+  <a *ngIf="!pet.isDead && ownerId" [routerLink]="['/owners', ownerId, 'history', 'add', pet.id]"
+     class="btn-st btn-st--inline">Записать на прием</a>
+  <div class="info-lnk"><a *ngIf="false" __data-fancybox __href="#popup-history_changes"
+                           href="javascript:alert('Функция в разработке')">История изменений</a></div>
+</div>
+<div *ngIf="pet" class="delivery-grid">
+  <div class="d-flex p-1">
+    <div class="mr-auto p-1">
+        <div  *ngIf="showName">
+          <app-icon-animal *ngIf="typeIcon !== undefined" [type]="typeIcon"></app-icon-animal>
+          <a class="ml-1" style="font-size: 14px" routerLink="/pets/{{pet.id}}">{{pet.name}}</a>
+        </div>
+    </div>
+    <div class="p-1">
+      <a *ngIf="!petToOwnerId" class="info-edit" routerLink="/pets/{{pet?.id}}/edit">
+        <app-icon-edit></app-icon-edit>
+      </a>
+    </div>
+    <div class="p-1">
+      <a (click)="deletePetToOwners()" *ngIf="petToOwnerId" class="lnk-delete">удалить</a>
+    </div>
+  </div>
+
+  <div class="info-tr">
+    <div class="info-th">Вид</div>
+    <div class="info-td">{{getData(pet, 'breed.type.name')}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Порода</div>
+    <div class="info-td">{{getData(pet, 'breed.name')}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Пол</div>
+    <div class="info-td">{{pet.gender === 'MALE' ? 'Самец' : pet.gender === 'FEMALE' ? 'Самка' : '-'}}</div>
+  </div>
+  <div *ngIf="!pet.isDead && !pet.dateOfDeath" class="info-tr">
+    <div class="info-th">Дата рождения</div>
+    <div class="info-td">{{pet.birthday | dateParse}}</div>
+  </div>
+  <div *ngIf="!pet.isDead || (pet.isDead && pet.dateOfDeath) " class="info-tr">
+    <div class="info-th">Возраст</div>
+    <div class="info-td">
+      <ng-container *ngIf="pet.isDead">{{(pet.birthday + ',' + pet.dateOfDeath) | age}}</ng-container>
+      <ng-container *ngIf="!pet.isDead">{{pet.birthday | age}}</ng-container>
+    </div>
+  </div>
+  <div *ngIf="pet?.chipNumber" class="info-tr">
+    <div class="info-th">Номер чипа</div>
+    <div class="info-td">{{pet.chipNumber}}</div>
+  </div>
+  <div *ngIf="pet?.isSterilized" class="info-tr">
+    <div class="info-th">Стерелизация</div>
+    <div class="info-td">Да</div>
+  </div>
+  <div *ngIf="pet?.aggressive" class="info-tr">
+    <div class="info-th">Агрессивность</div>
+    <div class="info-td">
+      <ng-container *ngIf="!pet?.aggressiveType">Да</ng-container>
+      <ng-container
+        *ngIf="pet?.aggressiveType">{{pet.aggressiveType.name}} {{pet.aggressiveType.level|aggressive_count_transform}}</ng-container>
+    </div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Живая масса</div>
+    <div class="info-td">{{pet?.actualWeight?.value | weight}}</div>
+  </div>
+  <div *ngIf="pet?.vaccinationDate && pet?.vaccinationExpired" class="info-tr">
+    <div class="info-th">Вакцинирован до</div>
+    <div class="info-td">
+      <span [ngClass]="{'color-red': pet?.vaccinationInvalid}"> {{pet?.vaccinationExpired | dateParse}}</span>
+    </div>
+  </div>
+  <div *ngIf="pet?.dateOfDeath && pet?.isDead" class="info-tr">
+    <div class="info-th">Дата смерти</div>
+    <div class="info-td">
+      {{pet.dateOfDeath | dateParse}}
+    </div>
+  </div>
+  <div *ngIf="pet?.dateOfRetiring && pet?.isRetiring" class="info-tr">
+    <div class="info-th">Дата Выбытия</div>
+    <div class="info-td">
+      {{pet.dateOfRetiring | dateParse}}
+    </div>
+  </div>
+  <div *ngFor="let identifier of pet?.identifiers" class="info-tr">
+    <div class="info-th">{{identifier.type.name}}</div>
+    <div class="info-td">{{identifier.value}}</div>
+  </div>
+
+  <div class="row delivery-grid">
+    <div class="col">
+      <a *ngIf="!pet.isDead && ownerId" [routerLink]="['/owners', ownerId, 'history', 'add', pet.id]"
+         class="lnk-open">Записать на прием</a>
+    </div>
+  </div>
+</div>

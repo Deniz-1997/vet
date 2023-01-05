@@ -1,0 +1,73 @@
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row formGroupName="fullName">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=lastName col="4">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('fullName.lastName').value | titleCaseName" class="inp-st"
+              formControlName="lastName" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=firstName col="4">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('fullName.name').value | titleCaseName" class="inp-st" formControlName="name"
+              type="text">
+          </ng-template>
+        </app-col>
+        <app-col titleName=middleNameRequired col="4">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('fullName.middleName').value | titleCaseName" class="inp-st"
+              formControlName="middleName" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=phone col="4">
+          <ng-template #colContent>
+            <input appUiMaskPhone class="inp-st" formControlName="phone" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=email col="4">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="email" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row formGroupName="address">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=addressForm col="12">
+          <ng-template #colContent>
+            <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12">
+          <ng-template #colContent>
+            <app-ya-maps-field [coordinatesControl]="formGroup.get('address').get('coordinates')"></app-ya-maps-field>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="mainOwner" id="primary-owner" type="checkbox">
+              <label for="primary-owner">Основной владелец</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <button [disabled]="matchesLoading$|async" class="btn-st btn-st--right" type="submit">Добавить владельца
+  </button>
+</form>
+<app-owner-search (select)="addOwner($event)" [model]="formGroup"></app-owner-search>

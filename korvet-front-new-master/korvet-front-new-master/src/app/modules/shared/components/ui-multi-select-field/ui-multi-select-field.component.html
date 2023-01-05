@@ -1,0 +1,25 @@
+<div class="ui-selectmenu-body">
+  <a href="#"
+        class="ui-selectmenu-js ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"
+     #chooseBtn
+     (focus)="chooseClick($event)"
+     (click)="chooseClick($event)"
+  >
+      <span class="ui-selectmenu-icon ui-icon ui-icon-triangle-1-s"></span>
+      <span class="ui-selectmenu-text">{{chosen.length ? chosenTitle : 'Выбрать'}}</span>
+  </a>
+  <div class="ui-selectmenu-popup">
+    <div class="ui-selectmenu-popup__header" *ngIf="!searchInput">Можно выбрать несколько</div>
+    <div class="ui-selectmenu-popup__search" [hidden]="!searchInput">
+      <input type="text" class="inp-st" placeholder="Поиск" [formControl]="searchControl" #searchElement>
+    </div>
+    <div class="ui-selectmenu-popup__list" #choicesList>
+      <div class="ui-selectmenu-popup__item" *ngFor="let choice of choices; let i = index" (click)="choose(choice, $event)">
+        <div class="check-st">
+          <input id="checkbox-{{i}}" type="checkbox" tabindex="-1" [value]="{id: choice.id}" [(ngModel)]="choice.chosen">
+          <label for="checkbox-{{i}}">{{choice.name}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

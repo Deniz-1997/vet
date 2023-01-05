@@ -1,0 +1,133 @@
+.min-width-auto{
+    min-width: auto!important;
+}
+$subheader_gray_color:#9a9aa9;
+.subheader_name{
+    font-size: 12px;
+    display: block;
+    padding: 8px 0 0;
+    color:$subheader_gray_color;
+}
+
+%above_index{
+    z-index: 1;
+  }
+  .menu-column{
+      @extend %above_index;
+  }
+  .menu-column__ms-popup{
+      @extend %above_index;
+  }
+  .menu-column__user-menu-dr {
+      @extend %above_index;
+  }
+  .notifier__container{
+      @extend %above_index;
+  }
+  .table-info-st {
+      background-color: #ffffff;
+  }
+
+@media screen and (max-width: 1050px) {
+    #toggle_main_sidenav_from_menu{
+        display: block;
+    }
+    #toggle_main_sidenav a{
+        display: block;
+    }
+    .body-column{
+        padding-left:8px!important;
+        padding-right:8px!important;
+        padding-top:8px!important;
+    }
+    #main-sidenav{
+        visibility: hidden;
+    }
+}
+@media screen and (min-width: 1050px) {
+    #toggle_main_sidenav{
+        display: none;
+    }
+    #toggle_main_sidenav_from_menu{
+        display: none;
+    }
+    #main-sidenav{
+        visibility: visible!important;
+    }
+}
+
+#toggle_main_sidenav_from_menu{
+    margin-bottom:20px;
+    padding-left: 10px;
+}
+#toggle_main_sidenav_from_menu a{
+    text-align: center;
+    padding-left: 10px;
+}
+
+.min-width-auto{
+    min-width: auto!important;
+}
+$subheader_gray_color:#9a9aa9;
+.subheader_name{
+    font-size: 12px;
+    display: block;
+    padding: 8px 0 0;
+    color:$subheader_gray_color;
+}
+
+%above_index{
+    z-index: 1000;
+  }
+  .menu-column{
+      @extend %above_index;
+  }
+  .menu-column__ms-popup{
+      @extend %above_index;
+  }
+  .menu-column__user-menu-dr {
+      @extend %above_index;
+  }
+  .notifier__container{
+      @extend %above_index;
+  }
+  .table-info-st {
+      background-color: #ffffff;
+  }
+
+@media screen and (max-width: 1050px) {
+    #toggle_main_sidenav_from_menu{
+        display: block;
+    }
+    #toggle_main_sidenav a{
+        display: block;
+    }
+    .body-column{
+        padding-left:8px!important;
+        padding-right:8px!important;
+        padding-top:8px!important;
+    }
+    #main-sidenav{
+        visibility: hidden;
+    }
+}
+@media screen and (min-width: 1050px) {
+    #toggle_main_sidenav{
+        display: none;
+    }
+    #toggle_main_sidenav_from_menu{
+        display: none;
+    }
+    #main-sidenav{
+        visibility: visible!important;
+    }
+}
+
+#toggle_main_sidenav_from_menu{
+    margin-bottom:20px;
+    padding-left: 10px;
+}
+#toggle_main_sidenav_from_menu a{
+    text-align: center;
+    padding-left: 10px;
+}

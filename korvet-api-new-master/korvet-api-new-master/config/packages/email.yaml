@@ -1,0 +1,3 @@
+parameters:
+  webslon_email.resources.theme: '%kernel.project_dir%/templates/email/theme'
+  webslon_email.resources.template: '%kernel.project_dir%/templates/email/template'

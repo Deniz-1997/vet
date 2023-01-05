@@ -1,0 +1,18 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<k-row class="mt-2">
+  <ng-template #row>
+    <k-col cols="12">
+      <ng-template #col>
+        <mat-table mat-table [dataSource]="catalog$ | async">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef fxFlex="30"> Наименование</mat-header-cell>
+            <mat-cell *matCellDef="let item" fxFlex="30"><a [routerLink]="[item.url]">{{item.name}}</a></mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns" fxLayout="row"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" fxLayout="row"></mat-row>
+        </mat-table>
+      </ng-template>
+    </k-col>
+  </ng-template>
+</k-row>

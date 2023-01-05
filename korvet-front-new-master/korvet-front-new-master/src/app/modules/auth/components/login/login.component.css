@@ -1,0 +1,8 @@
+:host .autorize__form .autorize__form-footer a {
+  text-decoration: none;
+  color: #fff;
+}
+
+:host .autorize__form .autorize__form-footer a:hover {
+  text-decoration: underline;
+}

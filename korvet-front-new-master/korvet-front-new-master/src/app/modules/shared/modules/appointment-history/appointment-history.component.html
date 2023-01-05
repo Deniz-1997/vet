@@ -1,0 +1,123 @@
+<div *ngIf="appointment && appointment.id" class="form-wr container-fluid">
+  <app-row>
+    <ng-template #rowContent>
+      <app-col col="12" class="text-right">
+        <ng-template #colContent>
+          <a *ngIf=disabled target="blank" class="lnk-add"  href="/appointments/{{appointment.id}}">Открыть прием</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=dateAppointment col="6 col-lg-3">
+        <ng-template #colContent>
+          <strong>{{appointment.date}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=pet col="6 col-lg-3">
+        <ng-template #colContent>
+          <strong>{{appointment.pet.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=owner col="12 col-lg-3" class="pt-2 pt-lg-0 pb-2 pb-lg-0">
+        <ng-template #colContent>
+          <strong>{{appointment.owner.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=weight col="12 col-lg-3">
+        <ng-template #colContent>
+          <strong>
+            <ng-container *ngIf="appointment.appointmentWeight && !appointment.weightNotMeasured; else elseBlock">{{appointment.appointmentWeight.weight.value | weight}}</ng-container>
+            <ng-template #elseBlock>Не измерялся</ng-template>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=professions col="6 col-lg-3">
+        <ng-template #colContent>
+          <strong>{{appointment.profession?.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=expert col="6 col-lg-3">
+        <ng-template #colContent>
+          <strong>
+            <ng-container *ngIf="appointment.user?.surname"> {{appointment.user?.surname}} </ng-container>
+            <ng-container *ngIf="appointment.user?.name"> {{appointment.user?.name}} </ng-container>
+            <ng-container *ngIf="appointment.user?.patronymic"> {{appointment.user?.patronymic}} </ng-container>
+          </strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=typeOfAppeal col="12 col-lg-3" class="pt-2 pt-lg-0 pb-2 pb-lg-0">
+        <ng-template #colContent>
+          <strong>{{appointment.type.title}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=temperature col="12 col-lg-3" >
+        <ng-template #colContent>
+          <strong>
+            <ng-container *ngIf="appointment.appointmentTemperature && !appointment.temperatureNotMeasured; else elseBlock">{{appointment.appointmentTemperature.temperature.value}}</ng-container>
+            <ng-template #elseBlock>Не измерялась</ng-template>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="appointment.previous">
+    <ng-template #rowContent>
+      <app-col titleName=previousAppointment col="12 col-lg-12">
+        <ng-template #colContent>
+          <strong>
+            <ng-container *ngIf="appointment.previous.date">{{appointment.previous.date}}</ng-container>
+            :
+            <ng-container *ngIf="appointment.previous.name">{{appointment.previous.name}}</ng-container>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=anamnesis col="12 col-lg-6" class="pb-2 pb-lg-0">
+        <ng-template #colContent>
+          <strong>
+            <div [innerText]="appointment.name" class="form-txt"></div>
+          </strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=survey col="12 col-lg-6">
+        <ng-template #colContent>
+          <strong>
+            <div [innerText]="appointment.survey" class="form-txt"></div>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName=diagnosis col="12 col-lg-6" class="pb-2 pb-lg-0">
+        <ng-template #colContent>
+          <strong>
+            <div [innerText]="appointment.diagnosis" class="form-txt"></div>
+          </strong>
+        </ng-template>
+      </app-col>
+      <app-col titleName=prescription col="12 col-lg-6">
+        <ng-template #colContent>
+          <strong>
+            <div [innerText]="appointment.prescription" class="form-txt"></div>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>

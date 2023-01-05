@@ -1,0 +1,9 @@
+.container {
+  margin: 0 auto;
+  width: 90%;
+}
+@media #{$medium-and-up} {
+  .container {
+    width: 100%;
+  }
+}

@@ -1,0 +1,2 @@
+#webslon_cms:
+#  role_entity_class: App\Entity\Security\Role

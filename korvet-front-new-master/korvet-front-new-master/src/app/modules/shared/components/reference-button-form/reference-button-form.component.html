@@ -1,0 +1,64 @@
+<div *ngIf="!isEdit" class="row justify-content-lg-start">
+  <div *ngIf="backButton" class="col-3 col-sm-2 col-lg-2">
+    <a  [routerLink]="goListUrl" [hidden]="hidden" role="button" class="btn   btn-outline-secondary mb-2">Назад</a>
+  </div>
+  <div class="col-3 col-sm-2 col-lg-2 text-left" *ngIf="cancelButton">
+    <a [mat-dialog-close]="true"  (click)="exit($event)"  class="btn   btn-outline-secondary mb-2 mr-2">Отмена</a>
+  </div>
+  <div class="col-9 col-sm-10 col-lg-10 pl-5 pl-lg-0">
+    <div>
+      <div class="row  justify-content-sm-end">
+        <div class="col-12 col-lg-12 text-right d-inline-block">
+          <button  *ngIf="showExtraButton" type="button" (click)="isExtraButtonClick($event)" class="btn  btn-primary  mb-2 mr-0 mr-sm-4 mr-lg-4 "
+                   [class.btn-loader]="getPatchLoading$ | async">{{ExtraButtonName}}
+          </button>
+          <button type="submit" (click)="isButtonClick($event)"  class="btn btn-primary mb-2"
+                  [class.btn-loader]="getLoading$ | async"
+                  [disabled]="disabled">{{saveButtonName}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="cancelButton">
+  <app-button-close></app-button-close>
+</div>
+<div *ngIf="isEdit" class="d-flex">
+  <div class="mr-auto p-1 mt-2" *ngIf="removeAble">
+    <a *ngIf="!closeWithCapture;else linkWithCapture" [hidden]="hidden" href="#remove-reference" data-fancybox
+       class="lnk-delete" style="font-size: 14px">{{removeButtonName}}</a>
+    <ng-template #linkWithCapture>
+      <a [hidden]="hidden" (click)="onDelete($event)" class="lnk-delete"
+        style="font-size: 14px">{{removeButtonName}}</a>
+    </ng-template>
+  </div>
+  <div class="ml-auto p-1">
+    <a [routerLink]="goListUrl" [hidden]="hidden" class="btn   btn-outline-secondary">Отмена</a>
+  </div>
+  <div class="p-1" *ngIf="showExtraButton">
+    <button  type="button" (click)="isExtraButtonClick($event)" class="btn btn-primary"
+            [class.btn-loader]="getPatchLoading$ | async">{{ExtraButtonName}}
+    </button>
+  </div>
+  <div class="p-1 " *ngIf="showSaveButton">
+    <button  type="submit" (click)="isButtonClick($event)" class="btn btn-primary"
+            [class.btn-loader]="getPatchLoading$ | async">{{saveButtonName}}
+    </button>
+  </div>
+  <div class="popup-hide">
+    <div id="remove-reference" class="popup-close-id popup-wr">
+      <ngx-loading [show]="loadingRemove$|async"
+                   [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"></ngx-loading>
+      <div class="popup-wr__head">
+        Вы точно хотите удалить
+        элемент?
+        <div class="popup-wr__head-comment">Действие необратимо</div>
+      </div>
+      <div class="popup-wr__footer">
+        <a href="" class="lnk-open" data-fancybox-close>Отмена</a>
+        <a href="" class="lnk-delete float-right" (click)="remove($event)">Удалить</a>
+      </div>
+    </div>
+  </div>
+</div>

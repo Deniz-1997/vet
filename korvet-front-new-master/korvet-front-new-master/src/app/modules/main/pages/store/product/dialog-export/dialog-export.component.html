@@ -1,0 +1,50 @@
+<div class="fancybox-slide--html">
+  <form (submit)="submit()" [formGroup]="formGroup" class="popup-add popup-wr ">
+    <!--<div class="popup-wr__head title-required">-->
+    <!--<span>Выберите животное</span>-->
+    <!--</div>-->
+    <div class="popup-wr__body">
+      <div class="form-row form-row--column">
+        <div class="form-span form-span--date form-span--6">
+          <div class="form-head title-required">Дата от</div>
+          <div class="form-body">
+            <!--            <input type="text" class="inp-st datepicker" formControlName="dateFrom" appUiDatepicker="">-->
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['dateFrom'].hasError('required')"
+              formControlName="dateFrom"
+            ></app-datepicker-overview>
+          </div>
+        </div>
+        <div class="form-span form-span--time">
+          <div class="form-head title-required">Время от</div>
+          <div class="form-body">
+            <input appUiMaskTime class="inp-st time-mask" formControlName="timeFrom" type="text">
+          </div>
+        </div>
+        <div class="form-span form-span--date form-span--6">
+          <div class="form-head title-required">Дата до</div>
+          <div class="form-body">
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['dateTill'].hasError('required')"
+              formControlName="dateTill"
+            ></app-datepicker-overview>
+            <!--            <input type="text" class="inp-st datepicker" formControlName="dateTill" appUiDatepicker="">-->
+          </div>
+        </div>
+        <div class="form-span form-span--time">
+          <div class="form-head title-required">Время от</div>
+          <div class="form-body">
+            <input appUiMaskTime class="inp-st time-mask" formControlName="timeTill" type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-wr__footer">
+      <button [class.btn-loader]="loader" class="btn-st btn-st--right"
+              type="submit"
+      >Экспорт
+      </button>
+    </div>
+    <app-button-close></app-button-close>
+  </form>
+</div>

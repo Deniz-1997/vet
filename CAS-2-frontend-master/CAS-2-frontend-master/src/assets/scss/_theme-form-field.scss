@@ -1,0 +1,355 @@
+$outline-bg: map_get($corvet-accent, 100);
+$outline-bg-focus: white;
+$outline-color: $outline-bg;
+$outline-primary-color: #0d51b6;
+$outline-color-hover: $outline-color;
+$outline-color-warn: map_get($corvet-warn, 500);
+$outline-color-primary: map_get($corvet-primary, 500);
+$outline-color-accent: $outline-bg;
+$outline-bg-white: white;
+$label-disabled-color: grey;
+$outline-color-disabled: grey;
+$outline-border-width: 1px;
+$outline-border-radius: 4px;
+$text-color: #2f3540;
+
+.form-span.form-span-mat {
+  padding-bottom: 0;
+
+  & .inp-st {
+    margin-bottom: 1.34375em;
+  }
+}
+
+.form-span-right {
+  float: right;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mat-form-field {
+  width: 100%;
+  transition: background 0.3s ease, color 0.2s linear !important;
+
+  &.mat-form-field-xs {
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+
+    .mat-form-field-outline {
+      background: white;
+    }
+
+    & .mat-form-field-infix {
+      padding: 0.453125rem 0 0.828125rem 0; // 1.28125rem
+      border-top: 0.5rem solid transparent;
+    }
+  }
+
+  &-appearance-outline:not(.search-type) {
+
+    & .mat-form-field-infix {
+      padding: 0.89125rem 0 0.89125rem 0;
+      border-top: 0.5rem solid transparent;
+    }
+
+    & .mat-form-field-wrapper {
+      margin: 0;
+    }
+
+    & .mat-form-field-flex {
+      padding: 0 .75rem 0 1rem;
+    }
+
+    & .mat-form-field-outline-thick {
+      & .mat-form-field-outline-end,
+      & .mat-form-field-outline-gap,
+      & .mat-form-field-outline-start {
+        border-width: $outline-border-width;
+      }
+    }
+
+    .mat-form-field-outline-start {
+      border-radius: $outline-border-radius 0 0 $outline-border-radius;
+    }
+
+    .mat-form-field-outline-end {
+      border-radius: 0 $outline-border-radius $outline-border-radius 0;
+    }
+
+    .mat-form-field-outline {
+      color: $outline-color;
+      background: $outline-bg;
+      border-radius: $outline-border-radius + $outline-border-width;
+    }
+
+    .mat-form-field-outline-thick {
+      color: $outline-color-hover;
+    }
+
+    &.mat-focused {
+      transition: background 0.3s ease, color 0.2s linear !important;
+
+      .mat-form-field-outline-thick {
+        color: $outline-color-primary;
+      }
+
+      &.mat-accent .mat-form-field-outline-thick {
+        color: $outline-color-accent;
+      }
+
+      &.mat-warn .mat-form-field-outline-thick {
+        color: $outline-color-warn;
+      }
+    }
+
+    // Class repeated so that rule is specific enough to override focused accent color case.
+    &.mat-form-field-invalid.mat-form-field-invalid {
+      .mat-form-field-outline-thick {
+        color: $outline-color-warn;
+      }
+    }
+
+    &.mat-form-field-disabled,
+    &.mat-form-field-disableddd{
+      .mat-form-field-label {
+        color: $label-disabled-color;
+      }
+
+      .mat-form-field-outline {
+        color: $outline-color-disabled;
+      }
+    }
+
+    &.mat-form-field-disableddd {
+      pointer-events:none;
+
+      .mat-form-field-infix,
+      .mat-form-field-prefix,
+      .mat-form-field-suffix {
+        opacity: 0.3;
+      }
+
+      .mat-form-field-outline {
+        color: #e3e2e2; // $outline-color-disabled;
+      }
+
+    }
+
+    &.mat-focused {
+      & .mat-form-field-outline {
+        background: $outline-bg-focus;
+      }
+    }
+  }
+
+  &-appearance-outline.search-type {
+    transition: background 0.3s ease, color 0.2s linear !important;
+
+    & .mat-form-field-infix {
+      padding: 0.82rem 0;
+      border-top: 0.5rem solid transparent;
+    }
+
+    & .mat-form-field-wrapper {
+      margin: 0;
+      padding: 0;
+    }
+
+    & .mat-form-field-flex {
+      padding: 0 .75rem 0 1rem;
+    }
+
+    & .mat-form-field-outline-thick {
+      & .mat-form-field-outline-end,
+      & .mat-form-field-outline-gap,
+      & .mat-form-field-outline-start {
+        border-width: $outline-border-width;
+      }
+    }
+
+    .mat-form-field-outline-start {
+      border-radius: 0;
+    }
+
+    .mat-form-field-outline-end {
+      border-radius: 0 ;
+    }
+
+    .mat-form-field-outline {
+      transition: background 0.3s ease, color 0.2s linear !important;
+      color: $outline-primary-color;
+      background: $outline-bg-white;
+      border-radius: 0;
+    }
+
+    .mat-form-field-outline-thick {
+      transition: background 0.3s ease, color 0.2s linear !important;
+      color: $outline-primary-color;
+    }
+
+    &.mat-focused {
+      .mat-form-field-outline-thick {
+        color: $outline-color-primary;
+      }
+
+      &.mat-accent .mat-form-field-outline-thick {
+        color: $outline-color-accent;
+      }
+
+      &.mat-warn .mat-form-field-outline-thick {
+        color: $outline-color-warn;
+      }
+    }
+
+    // Class repeated so that rule is specific enough to override focused accent color case.
+    &.mat-form-field-invalid.mat-form-field-invalid {
+      .mat-form-field-outline-thick {
+        color: $outline-color-warn;
+      }
+    }
+
+    &.mat-form-field-disabled {
+      .mat-form-field-label {
+        color: $label-disabled-color;
+      }
+
+      .mat-form-field-outline {
+        color: $outline-color-disabled;
+      }
+    }
+
+    &.mat-focused {
+      & .mat-form-field-outline {
+        background: $outline-bg-white;
+      }
+    }
+  }
+}
+
+.show-error {
+  & .mat-form-field.ng-invalid .mat-form-field-outline {
+    color: $outline-color-warn;
+  }
+
+  & app-datepicker-overview.ng-invalid .mat-form-field-outline {
+    color: $outline-color-warn;
+  }
+}
+
+.mat-autocomplete-panel {
+  padding-bottom: 8px;
+}
+
+.mat-autocomplete-panel.space-normal {
+  & .mat-option {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    white-space: normal;
+    overflow: visible;
+    line-height: 16px;
+    height: auto;
+  }
+}
+
+.mat-select-panel {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.mat-option {
+  margin: 0 8px;
+  padding: 0 .625rem 0 .625rem;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 35px;
+  height: 35px;
+  border-radius: 4px;
+
+  &:hover:not(.mat-option-disabled),
+  &:focus:not(.mat-option-disabled) {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &.hide {
+    display: none;
+  }
+}
+
+.mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: $text-color;
+}
+
+.mat-pseudo-checkbox {
+  color: #b2b2b2;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+
+  &:after {
+    top: 4px;
+    left: 4px;
+    //width: 8px;
+    //height: 6px;
+  }
+}
+
+.mat-select-panel .mat-optgroup-label, .mat-select-panel .mat-option {
+  font-size: 12px;
+  color: $text-color;
+  line-height: 33px;
+  height: 33px;
+}
+
+.multiple-panel {
+  margin: 30px 28px 35px;
+  // min-width: calc(100% + 28px) !important;
+}
+
+.mat-pseudo-checkbox-checked {
+  background: map_get($corvet-primary, 500);
+}
+
+.mat-list-text {
+  font-size: 14px;
+}
+
+.form-body .mat-list-base {
+  & .mat-list-option {
+    height: 36px;
+
+    & .mat-list-item-content {
+      padding: 0;
+    }
+  }
+}
+
+.text-danger {
+  color: red;
+}
+
+.title-required:after {
+  color: red;
+  content: " *";
+}
+
+.mat-calendar-header {
+  padding-top: 0;
+}
+
+.mat-calendar-period-button {
+  background: white;
+  outline: none;
+}
+
+
+.mat-form-field-infix {
+  width: 100%;
+}
+
+.mat-icon-button, .mat-menu-item {
+  background: transparent;
+}

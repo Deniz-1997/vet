@@ -1,0 +1,63 @@
+<div class="fancybox-slide--html">
+  <div class="popup-history popup-wr" id="popup-temperature_changes">
+    <div class="popup-wr__head">История изменений</div>
+    <div class="popup-wr__body">
+      <ul class="menu-icon-lnk">
+        <li><a *ngIf="false" href="javascript:alert('Функция в разработке')"><span><app-icon-print></app-icon-print></span>Напечатать</a>
+        </li>
+        <li><a *ngIf="false" href="javascript:alert('Функция в разработке')"><span><app-icon-download></app-icon-download></span>Скачать</a>
+        </li>
+      </ul>
+    </div>
+    <div class="popup-wr__table">
+      <table class="delivery">
+        <thead>
+        <tr>
+          <th>Дата измерения</th>
+          <th>Возраст</th>
+          <th>Температура</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of temperatures$|async">
+          <td>{{petsViewService.getDateFormat(item.date)}}</td>
+          <td>{{pet.birthday | age}}</td>
+          <td>{{item.value}}</td>
+          <td>
+            <a (click)="onDelete(item)" class="tr-close"></a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="delivery-grid">
+        <div class="form-wr form-wr--adaptive container-fluid">
+          <ng-container *ngFor="let item of temperatures$|async">
+            <app-row class="d-flex p-1">
+              <ng-template #rowContent>
+                <app-col class="p-1" text="Дата">
+                  {{petsViewService.getDateFormat(item.date)}}
+                </app-col>
+                <app-col class="p-1" text="Возраст">
+                  {{pet.birthday | age}}
+                </app-col>
+                <app-col class="p-1" text="Температура">
+                  {{item.value}}
+                </app-col>
+              </ng-template>
+            </app-row>
+            <app-row class="d-flex p-1">
+              <ng-template #rowContent>
+                <app-col class="p-1">
+                  <a (click)="onDelete(item)" class="lnk-delete"></a>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngIf="temperaturesLoading$|async" class="text-center"><span class="loader"></span></div>
+    </div>
+    <app-button-close></app-button-close>
+  </div>
+</div>

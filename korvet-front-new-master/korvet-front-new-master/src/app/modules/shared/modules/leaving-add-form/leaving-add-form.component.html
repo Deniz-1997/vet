@@ -1,0 +1,140 @@
+<app-title-view [title]="title">
+</app-title-view>
+
+<div class="position-relative">
+  <ngx-loading [show]="loading"></ngx-loading>
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col class="pb-2 text-right">
+          <ng-template #colContent>
+            <app-owner-and-pet-created [owner]="owner" [ownerId]="ownerId"></app-owner-and-pet-created>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <div class="form-wr container-fluid" style="box-shadow: 0 0 0 0">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=dateAppointment col="12 col-lg-3">
+            <ng-template #colContent>
+              <app-datepicker-overview [dataError]="formGroup.controls['date'].hasError('required')"
+                                       formControlName="date"></app-datepicker-overview>
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=timeAppointment col="12 col-lg-3">
+            <ng-template #colContent>
+              <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-lg-3" titleName=owner *ngIf="formType === types.Leaving || formType === types.Pet">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('owner')"
+                [convertReturnResult]="convertResultForPets"
+                [fields]="fields"
+                [petId]="petId"
+                [type]="types.Owner"
+                [placeholder]="placeholderOwner">
+              </app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-lg-3" titleName=pet
+                   *ngIf="formType === types.Leaving || formType === types.Owner">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('pet')"
+                [convertReturnResult]="convertResultForPets"
+                [fields]="fieldsPet"
+                [ownerId]="ownerId"
+                [type]="types.Pet"
+                [placeholder]="placeholderPet"></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" [required]="true" titleName="reasonForLeaving">
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                placeholder="Укажите причину выезда"
+                [control]="formGroup.get('reasonForLeaving')"
+                [options]="reasonForLeaving"
+                [type]="types.ReferenceReasonForLeaving">
+              </app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" [required]="true" titleName=petitions>
+            <ng-template #colContent>
+              <textarea [value]="formGroup.get('name').value | firstLetter" class="textarea-st" cols="30"
+                        formControlName="name" rows="6" [placeholder]="placeholderPetitions"></textarea>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=professions col="12 col-lg-6">
+            <ng-template #colContent>
+              <app-ui-autocomplete [control]="formGroup.get('profession')" [options]="professions"
+                                   [type]="types.ReferenceProfession" field="name" [placeholder]="placeholderProfession"></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=expert col="12 col-lg-6">
+            <ng-template #colContent>
+              <ng-container *ngIf="hasProfession()">
+                <app-ui-autocomplete [addFilter]="isProfession()" [control]="formGroup.get('user')" [type]="types.User"
+                                     field="fullName"></app-ui-autocomplete>
+              </ng-container>
+              <ng-container *ngIf="!hasProfession()">
+                <input class="inp-st" disabled type="text">
+              </ng-container>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=typeOfAppeal col="12 col-lg-6" formGroupName="type">
+            <ng-template #colContent>
+              <mat-form-field appearance="outline">
+                <mat-select disableOptionCentering formControlName="code" name="type" placeholder="Не выбрано">
+                  <mat-option value="PRIMARY">Первичный</mat-option>
+                  <mat-option value="SECONDARY">Повторный</mat-option>
+                  <mat-option value="EVSD">эВСД</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=previousAppointment col="12 col-lg-6" *ngIf="formGroup.get('type.code').value === 'SECONDARY'">
+            <ng-template #colContent>
+              <div formGroupName="previous">
+                <mat-form-field appearance="outline">
+                  <mat-select disableOptionCentering formControlName="id" placeholder="Не выбрано">
+                    <mat-option *ngFor="let item of (previousLeavings)" [value]="item.id">
+                      {{item.date}} - {{item.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </form>
+  <div class="form-footer">
+    <app-reference-button-form
+      [isEdit]="false"
+      [showExtraButton]="true"
+      (buttonClick)="submit(false)"
+      ExtraButtonName="Сохранить и начать выезд"
+      (extraButtonClick)="submit(true)"
+    ></app-reference-button-form>
+  </div>
+</div>

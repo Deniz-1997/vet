@@ -1,0 +1,33 @@
+<div class="fancybox-slide--html position-relative">
+  <!--<ngx-loading [show]="loading$|async"></ngx-loading>-->
+  <div class="popup-preview popup-wr">
+    <div class="popup-wr__head">{{data.type.name}}</div>
+    <div class="popup-wr__body">
+      <div class="info-tr-list">
+        <div class="info-tr">
+          <div class="info-th">Дата приема</div>
+          <div class="info-td">{{data.date|dateParse:'dd.MM.yyyy'}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Время приема</div>
+          <div class="info-td">{{data.date|dateParse:'HH : mm'}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Специалист</div>
+          <div class="info-td">{{data.user.getFullName()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Комментарий</div>
+          <div class="info-td">{{data.comment}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="popup-wr__footer">
+      <button [mat-dialog-close]="'edit'" class="btn-st btn-st--left btn-st--gray" type="button">Редактировать</button>
+      <button (click)="deleteEvent()" class="btn-st btn-st--right btn-st--tr-red btn-st--uppercase btn-st--bold"
+              type="button">Удалить мероприятие
+      </button>
+    </div>
+    <app-button-close></app-button-close>
+  </div>
+</div>

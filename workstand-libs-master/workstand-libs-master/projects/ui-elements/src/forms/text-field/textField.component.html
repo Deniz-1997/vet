@@ -1,0 +1,24 @@
+<mat-form-field [appearance]="appearance">
+    <mat-label>{{label}}</mat-label>
+    <span matPrefix *ngIf="prefix">{{prefix}}</span>
+    <input  matInput #input [placeholder]="placeholder" [value]="value"
+            [formControl]="control"
+            [errorStateMatcher]="matcher"
+            [required]="required"
+            [maxLength]="maxLength"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [type]="type">
+    <mat-icon matSuffix *ngIf="suffixIcon">{{suffixIcon}}</mat-icon>
+    <mat-hint align="start" *ngIf="hint">{{hint}}</mat-hint>
+    <mat-hint align="end" *ngIf="maxLength !== '10000'">{{input.value.length}} / {{maxLength}}</mat-hint>
+
+    <mat-error *ngIf="control && control.hasError('required')">
+      <strong>{{textError}}</strong>
+    </mat-error>
+
+    <button *ngIf="value && clearable" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+

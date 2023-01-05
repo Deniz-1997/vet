@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <input type="text" matInput [formControl]="inputControl" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayWithFn" [class]="styleClass" (optionSelected)="optionSelected($event)" (closed)="onBlur()">
+    <div class="position-relative">
+      <ngx-loading [show]="loading"></ngx-loading>
+      <mat-option *ngFor="let option of filteredOptions$|async" [value]="option" [disabled]="option.disabled || null">
+        {{displayWithFn(option)}}
+      </mat-option>
+    </div>
+  </mat-autocomplete>
+</mat-form-field>

@@ -1,0 +1,85 @@
+<ng-container *ngIf="viewType === 'select'">
+
+  <mat-form-field appearance="outline" *ngIf="control">
+    <mat-label>{{title}}</mat-label>
+    <mat-select
+      [formControl]="control"
+      disableOptionCentering
+      [required]="required"
+      [multiple]="multiSelect"
+      [(value)]="value"
+      (selectionChange)="onSelected($event)"
+    >
+      <mat-option *ngFor="let item of reference" [value]="item.id">{{item.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="!control">
+    <mat-label>{{title}}</mat-label>
+    <mat-select
+      disableOptionCentering
+      [required]="required"
+      [multiple]="multiSelect"
+      [compareWith]="compareFn"
+      [(value)]="value"
+      (selectionChange)="onSelected($event)"
+    >
+      <mat-option *ngFor="let item of reference" value="{{item.id}}">{{item.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</ng-container>
+
+<ng-container *ngIf="viewType === 'radio'">
+  <ng-container *ngIf="control">
+    <div class="radio-box inline" *ngFor="let item of reference; let i = index;">
+      <input
+        type="radio"
+        id="entityRadioControl{{index}}{{i}}"
+        name="entityRadio{{index}}"
+        [formControl]="control"
+        [value]="item.id"
+      >
+      <label for="entityRadioControl{{index}}{{i}}">{{item.name}}</label>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!control">
+    <div class="radio-box inline" *ngFor="let item of reference; let i = index;">
+      <input
+        type="radio"
+        id="entityRadio{{index}}{{i}}"
+        name="entityRadio{{index}}"
+        [checked]="+value === +item.id"
+      >
+      <label for="entityRadio{{index}}{{i}}">{{item.name}}</label>
+    </div>
+  </ng-container>
+
+</ng-container>
+
+<ng-container *ngIf="viewType === 'checkbox'">
+  <ng-container *ngIf="control && checkboxFormArray">
+    <div class="check-st inline" *ngFor="let itemControl of checkboxFormArray.controls; let i = index;" style="margin-right: 5px">
+      <input
+        id="checkboxControl{{index}}{{i}}"
+        type="checkbox"
+        tabindex="-1"
+        [formControl]="itemControl"
+      >
+      <label for="checkboxControl{{index}}{{i}}">{{reference[i].name}}</label>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!control">
+    <div class="check-st inline" *ngFor="let item of reference; let i = index;" style="margin-right: 5px">
+      <input
+        id="checkbox{{index}}{{i}}"
+        type="checkbox"
+        tabindex="-1"
+        value="{{item.id}}"
+        [checked]="value && value.includes(item.id)"
+      >
+      <label for="checkbox{{index}}{{i}}">{{item.name}}</label>
+    </div>
+  </ng-container>
+</ng-container>

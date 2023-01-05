@@ -1,0 +1,119 @@
+Appointment: 'Прием'
+AppointmentType: 'Тип приема'
+FileOwner: 'Файл владельца'
+IdentifierHistory: 'История идентификаторов животных'
+FileMonitoredObject: 'Файл подконтрольного объекта'
+PrintForm: 'Печатная форма'
+AppointmentStatus: 'Статус приема'
+AppointmentTemplate: 'Шаблон приема'
+EventStatus: 'Статус события'
+Organization: 'Органихация'
+Status: 'Статус владельца'
+Product: 'Номенклатура'
+Profession: 'Должность'
+Unit: 'Ед. измерения'
+UploadedFile: 'Загруженный файл'
+AnimalDeath: 'Причина смерти животного'
+
+Email: 'Email сообщение'
+Template: 'Email шаблон'
+Theme: 'Email тема'
+
+Settings: 'Настройки системы'
+
+CashFlow: 'Документ движение средств'
+CashReceipt: 'Документ чек'
+CashierSchedule: 'График работы кассиров'
+CashRegister: 'ККМ'
+CashRegisterServer: 'Сервер ККМ'
+Shift: 'Смена'
+
+Action: 'Действие'
+ActionGroup: 'Группа действий'
+Icon: 'Иконка'
+
+Event: 'Мероприятие'
+File: 'Файл'
+Owner: 'Владелец'
+Pet: 'Животное'
+PetToOwner: 'Связь животного с владельцем'
+
+# OAuth
+AccessToken: 'Токен авторизации'
+AuthCode: 'Авторизационный код'
+Client: 'Приложение'
+RefreshToken: 'Токен продления авторизации'
+
+# Owner
+ContactPerson: 'Контактное лицо'
+FarmMember: 'Участник КФХ'
+MonitoredObject: 'Подконтрольный объект'
+MonitoredObjectActivity: 'Вид деятельности подконтрольного объекта'
+OwnerActivity: 'Вид деятельности владельца'
+
+# Pet
+Identifier: 'Идентификатор'
+Temperature: 'Температура'
+Weight: 'Вес'
+
+# Reference
+Breed: 'Порода'
+EventType: 'Тип мероприятия'
+FileType: 'Тип файла'
+PetType: 'Тип животных'
+PetLear: 'Масти животных'
+
+# Reference - Owner
+Activity: 'Вид деятельности'
+LegalForm: 'Правовая форма'
+
+# Reference - Pet
+IdentifierType: 'Тип идентификатора'
+
+# Security
+ClientGroup: 'Группа приложений'
+Group: 'Группа пользователей'
+Role: 'Роль'
+
+# User
+User: 'Пользователь'
+
+# Contractor
+Contractor: 'Контрагент'
+
+# WildAnimal
+WildAnimal: 'Дикое животное'
+TagForm: 'Форма бирки'
+TagColor: 'Цвет бирки'
+
+# Culling
+CullingRegistration: 'Регистрация отлова'
+
+# SterilizationType
+SterilizationType: 'Виды стерилизации'
+
+# VaccinationType
+VaccinationType: 'Вакцины'
+
+# Shelter
+Shelter: 'Приют'
+
+# Stock
+Stock: 'Склад'
+
+# FtpHistory
+FtpHistory: 'История импорта/экспорта отчетов 1С'
+
+ProductStock: "Остатки товаров на складах"
+
+#Document
+ProductReceipt: "Поступление товаров"
+ProductTransfer: "Перемещение товаров"
+DocumentHistory: "Таблица истории"
+
+# Form template
+FormTemplate: "Шаблоны форм"
+FormField: "Поля форм"
+FormFieldProperty: "Характеристики полей форм"
+
+

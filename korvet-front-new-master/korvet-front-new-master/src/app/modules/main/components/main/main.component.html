@@ -1,0 +1,19 @@
+<div class="wr-column">
+  <app-main-sidenav id="main-sidenav"></app-main-sidenav>
+  <div class="body-column">
+    <app-main-breadcrumbs
+      [style.display]="!(noAccessService.noAccess | async) ? 'block' : 'none'"></app-main-breadcrumbs>
+
+    <ng-container *ngIf="!(noAccessService.noAccess | async)">
+      <app-main-header></app-main-header>
+      <router-outlet></router-outlet>
+    </ng-container>
+
+    <ng-container *ngIf="noAccessService.noAccess | async">
+      <app-no-access></app-no-access>
+    </ng-container>
+
+  </div>
+</div>
+
+<app-main-user-menu></app-main-user-menu>

@@ -1,0 +1,25 @@
+<div class="conteiner-fluid pb-4 body-header">
+  <div class="row justify-content-between">
+    <div class="body-header__name col">История</div>
+    <div class="print-block col text-right">
+      <a class="lnk-ico form-span__lnk-btn" href="javascript:window.print()">
+        <app-icon-print></app-icon-print>
+        <span class="pl-3">Распечатать историю</span>
+      </a>
+    </div>
+  </div>
+</div>
+<div *ngFor="let appointment of appointments" [class.second]="isSecond(appointment)">
+  <app-appointment-history [appointment]="appointment"></app-appointment-history>
+  <!-- Блок шаблоны форм -->
+  <app-form-template-appointment-view
+    [appointment]="appointment">
+  </app-form-template-appointment-view>
+</div>
+<div *ngFor="let leaving of leaving" [class.second]="isSecond(leaving)">
+  <app-appointment-history [appointment]="leaving"></app-appointment-history>
+  <!-- Блок шаблоны форм -->
+  <app-form-template-appointment-view
+    [appointment]="leaving">
+  </app-form-template-appointment-view>
+</div>

@@ -1,0 +1,68 @@
+<app-wild-animal-card-view
+  [item]="item"
+  [loading]="loading$ | async"
+></app-wild-animal-card-view>
+
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <div class="header__name header__name--mr">Регистрация смерти</div>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=date col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['dateOfDeath'].hasError('required') || formGroup.controls['dateOfDeath'].hasError('validUrl')"
+              formControlName="dateOfDeath"
+            ></app-datepicker-overview>
+            <!--          <input type="text" class="inp-st datepicker" name="dateOfDeath" formControlName="dateOfDeath" appUiDatepicker>-->
+          </ng-template>
+        </app-col>
+        <app-col titleName=reason col="12 col-lg-8">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="causeOfDeath" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-list-img
+      (outDelete)=onDelete($event)
+      [images]=(wildAnimalFile$|async)
+    ></app-list-img>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col class="form-span">
+          <ng-template #colContent>
+            <a (click)="photoClick($event)" class="form-span__lnk-btn"><span class="ico-plus"></span> Добавить фотографию
+              смерти животного</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <input #photoInput (change)="photoUpload($event)" accept="image/jpeg,image/png,image/gif" class="ava-edit-input"
+           type="file">
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="6" class="text-left">
+          <ng-template #colContent>
+            <button (click)="onCancel()" *ngIf="item && item.dateOfDeath"
+                    class="btn btn-secondary btn-sm"
+                    type="button"
+            >Отменить регистрацию смерти животного
+            </button>
+          </ng-template>
+        </app-col>
+        <app-col col="6" class="text-right">
+          <ng-template #colContent>
+            <button class="btn btn-primary" type="submit">Сохранить</button>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+</form>

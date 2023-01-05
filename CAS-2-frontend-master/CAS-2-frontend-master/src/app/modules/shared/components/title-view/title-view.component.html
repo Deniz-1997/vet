@@ -1,0 +1,9 @@
+<div class="container-fluid">
+  <div [class]="class" *ngIf="title">
+    <h1>{{title}}</h1>
+    <div class="body-header__setting" *ngIf="actionsTemplate">
+      <ng-container [ngTemplateOutlet]="actionsTemplate"></ng-container>
+    </div>
+  </div>
+</div>
+

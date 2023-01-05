@@ -1,0 +1,71 @@
+{
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "project": ["tsconfig.json", "scripts/tsconfig.json"],
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    "scripts/bin/**/*.js",
+    "__tests__/**",
+    "coverage/**",
+    "*.config.js",
+    "jest.setup.ts",
+    ".gitignore"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/recommended",
+    "@vue/prettier",
+    "@vue/eslint-config-typescript"
+  ],
+  "rules": {
+    "vue/multi-word-component-names": 0,
+    "@typescript-eslint/no-explicit-any": "off",
+    "vue/no-deprecated-dollar-scopedslots-api": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "vue/no-deprecated-filter": "off",
+
+    "valid-typeof": ["error", { "requireStringLiterals": true }],
+    "accessor-pairs": "error",
+    "grouped-accessor-pairs": ["error", "getBeforeSet"],
+    "max-depth": ["error", 3],
+    "max-lines": ["error", 1000],
+    "max-lines-per-function": ["error", 35],
+    "max-nested-callbacks": ["error", 3],
+    "max-params": ["error", 3],
+    "no-alert": "error",
+    "no-console": ["error", { "allow": ["info", "warn", "error"] }],
+    "no-debugger": "error",
+    "no-empty": "error",
+    "no-empty-function": ["error", { "allow": ["constructors"] }],
+    "no-eq-null": "error",
+    "no-extra-boolean-cast": ["error", { "enforceForLogicalOperands": true }],
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "yoda": "error",
+
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/no-dynamic-delete": "error",
+    "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
+    "@typescript-eslint/prefer-optional-chain": "error",
+    "@typescript-eslint/prefer-readonly": ["error", { "onlyInlineLambdas": true }],
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": ["error"],
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-useless-constructor": ["error"]
+  }
+}

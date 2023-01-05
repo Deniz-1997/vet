@@ -1,0 +1,48 @@
+<div class="popup-hide">
+  <div class="popup-add-file popup-wr" id="popup-add-file">
+    <ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+                 [show]="isLoadFile|async"></ngx-loading>
+    <div class="popup-wr__head">Добавить файл</div>
+    <div class="popup-wr__body">
+      <form *ngIf="formGroup" [formGroup]="formGroup" appFormFocus>
+        <div class="form-row">
+          <div class="form-span">
+            <div class="form-head title-required">Укажите название файла</div>
+            <div class="form-body">
+              <input class="inp-st" formControlName="name" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-span">
+            <div class="form-head title-required">Выберите обращение</div>
+            <div class="form-body" formGroupName="appointment">
+              <app-ui-select
+                [control]="formGroup.get('appointment.id')"
+                [options]="appointments"
+              ></app-ui-select>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-span">
+            <div class="form-head title-required">Вид файла</div>
+            <div class="form-body" formGroupName="type">
+              <app-ui-select
+                [control]="formGroup.get('type.id')"
+                [options]="fileTypeItems"
+              ></app-ui-select>
+            </div>
+          </div>
+        </div>
+
+        <input #fileInput (change)="onFileChange($event)" class=""
+               style="opacity: 0; width: 0;" type="file">
+      </form>
+    </div>
+    <div class="popup-wr__footer">
+      <a class="btn-st btn-st--left btn-st--gray" data-fancybox-close href="">Отмена</a>
+      <a (click)="openFile($event)" class="btn-st btn-st--right" href="">Сохранить</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="autorize-wr">
+  <div class="autorize">
+    <div class="autorize__logo"><a routerLink="/auth"><img alt="" src="/assets/img/logo.svg"></a></div>
+    <div class="autorize__header">
+      Комплексное облачное решение <br>для ветеринарии
+    </div>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div class="autorize-footer">
+  <div class="autorize-footer__head">Служба поддержки</div>
+  <div class="autorize-footer__phone"><a [href]=configHref>{{config.tellText}}</a></div>
+  <div class="autorize-footer__mob"><a [href]=configMailto>{{config.email}}</a></div>
+</div>

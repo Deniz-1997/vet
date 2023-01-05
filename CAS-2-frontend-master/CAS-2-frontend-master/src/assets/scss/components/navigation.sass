@@ -1,0 +1,198 @@
+@import '../light'
+@import "~@korvet/styles/src/styles/tools/functions"
+@import "~@korvet/styles/src/styles/tools/theme"
+$navigation-drawer-border-width: 1px !default
+$navigation-drawer-mobile-temporary-elevation: 16 !default
+
+
+// Theme
++theme(krv-navigation-drawer) using($material)
+  background-color: map-get($material, 'navigation-drawer')
+
+  &:not(.krv-navigation-drawer--floating)
+    .krv-navigation-drawer__border
+      background-color: map-get($material, 'dividers')
+
+  .krv-divider
+    border-color: map-get($material, 'dividers')
+
+  .krv-navigation-drawer-block
+    &.krv-list-item--active
+      background-color: map-get($material, 'bg-color')
+      border-radius: 4px
+      color: map-get($material, 'text', 'main')
+
+      > .krv-list-group__items .krv-list-item > k-list-item-title.krv-list-item__title
+        color: map-get($material, 'text', 'primary') !important
+
+      > .krv-list-item .krv-list-item__icon
+        color: map-get($material, 'text', 'main')
+
+  .krv-list-group__items
+    .theme--light.krv-list-item:is(.krv-list-item--active)
+      color: map-get($material, 'text', 'primary_second') !important
+
+
+// Block
+.krv-navigation-drawer
+  -webkit-overflow-scrolling: touch
+  display: flex
+  flex-direction: column
+  left: 0
+  max-width: 100%
+  overflow: hidden
+  pointer-events: auto
+  top: 0 !important
+  transition-duration: 0.2s
+  transition-timing-function: map-get($transition, 'fast-out-slow-in')
+  transition-property: transform, visibility, width
+  +bootable()
+
+  &.krv-navigation-drawer--right
+    &:after
+      left: 0
+      right: initial
+
+  .krv-list:not(.krv-select-list)
+    background: inherit
+
+  .theme--light.krv-list-item:not(.krv-list-item--active):not(.krv-list-item--disabled)
+    color: white
+
+  .krv-list-group__items
+    .theme--light.krv-list-item:is(.krv-list-item--active)
+      color: black
+
+    .theme--light.krv-list-item--active:hover::before, .theme--light.krv-list-item--active::before
+      opacity: 0
+
+    .theme--light.krv-list-item
+      color: black !important
+//&:hover::before
+//  opacity: 0.3%
+//
+//&::before
+//  opacity: 0
+
+// Element
+.krv-navigation-drawer__border
+  position: absolute
+  right: 0
+  top: 0
+  height: 100%
+  width: $navigation-drawer-border-width
+
+.krv-navigation-drawer__content
+  height: 100%
+  overflow-x: hidden
+  overflow-y: auto
+/* width */
+::-webkit-scrollbar
+  width: 5px
+
+/* Track */
+::-webkit-scrollbar-track
+  box-shadow: inset 0 0 5px grey
+  border-radius: 10px
+
+/* Handle */
+::-webkit-scrollbar-thumb
+  background: #a0a0a0
+  border-radius: 10px
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover
+  background: #a0a0a0
+
+/* Track */
+::-webkit-scrollbar-track
+  box-shadow: inset 0 0 5px grey
+  border-radius: 10px
+
+/* Handle */
+::-webkit-scrollbar-thumb
+  background: #a0a0a0
+  border-radius: 10px
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover
+  background: #a0a0a0
+
+.krv-navigation-drawer__image
+  border-radius: inherit
+  height: 100%
+  position: absolute
+  top: 0
+  bottom: 0
+  z-index: -1
+  contain: strict
+  width: 100%
+
+  .krv-image
+    border-radius: inherit
+
+// Modifier
+.krv-navigation-drawer--bottom.krv-navigation-drawer--is-mobile
+  max-height: 50%
+  top: auto
+  bottom: 0
+  min-width: 100%
+
+.krv-navigation-drawer--right
+  left: auto
+  right: 0
+
+  > .krv-navigation-drawer__border
+    right: auto
+    left: 0
+
+.krv-navigation-drawer--absolute
+  z-index: 1
+
+.krv-navigation-drawer--fixed
+  z-index: 6
+
+.krv-navigation-drawer--absolute
+  position: absolute
+
+.krv-navigation-drawer--clipped:not(.krv-navigation-drawer--temporary):not(.krv-navigation-drawer--is-mobile)
+  z-index: 4
+
+.krv-navigation-drawer--fixed
+  position: fixed
+
+.krv-navigation-drawer--floating:after
+  display: none
+
+.krv-navigation-drawer--mini-variant
+  overflow: hidden
+
+  .krv-list-item
+    > *:first-child
+      margin-left: 0
+      margin-right: 0
+
+    > *:not(:first-child)
+      @include visually-hidden
+
+  .krv-list-group--no-action .krv-list-group__items,
+  .krv-list-group--sub-group
+    display: none
+
+  &.krv-navigation-drawer--custom-mini-variant
+    .krv-list-item
+      justify-content: center
+
+.krv-navigation-drawer--temporary
+  z-index: 7
+
+.krv-navigation-drawer--mobile
+  z-index: 6
+
+.krv-navigation-drawer--close
+  visibility: hidden
+
+.krv-navigation-drawer--is-mobile,
+.krv-navigation-drawer--temporary
+  &:not(.krv-navigation-drawer--close)
+    +elevation($navigation-drawer-mobile-temporary-elevation)

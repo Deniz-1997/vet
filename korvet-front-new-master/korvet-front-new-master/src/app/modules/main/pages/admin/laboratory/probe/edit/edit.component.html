@@ -1,0 +1,63 @@
+<div class="header">
+  <div *ngIf="id === 'create'; else elseBlock" class="header__name">Создать пробу</div>
+
+  <ng-template #elseBlock>
+    <div class="header__name">{{title}}</div>
+  </ng-template>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid pb-2">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="3">
+          <ng-template #colContent>
+            <app-button-active [control]="formGroup.get('active')"></app-button-active>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="name" col="12">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="materialType" col="6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('materialType')"
+                                 [type]="crudType.MaterialType"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName="packaging" col="6">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('packing')"
+            [type]="crudType.Packing"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName="vatRate" col="6">
+          <ng-template #colContent>
+            <app-ui-mat-select-enum [modelValue]="item?.vatRate" [options]="VatRateEnum" formControlName="vatRate">
+            </app-ui-mat-select-enum>
+          </ng-template>
+        </app-col>
+        <app-col titleName="price" col="6">
+          <ng-template #colContent>
+            <input class="inp-st" appPositiveNumber formControlName="price" type="number">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type">
+  </app-reference-button-form>
+</form>

@@ -1,0 +1,14 @@
+<div class="body-header">
+  <div class="body-header__name">История оплаты</div>
+</div>
+<mat-tab-group>
+  <mat-tab label="Приёмы">
+    <app-cash-receipt-history *ngIf="pet"  [type]="typeAppointment" [pet$]="pet"></app-cash-receipt-history>
+  </mat-tab>
+  <mat-tab label="Выезды">
+    <app-cash-receipt-history *ngIf="pet" [type]="typeLeaving" [pet$]="pet"></app-cash-receipt-history>
+  </mat-tab>
+</mat-tab-group>
+
+
+

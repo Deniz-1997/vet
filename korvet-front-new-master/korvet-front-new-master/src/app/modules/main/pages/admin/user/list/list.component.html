@@ -1,0 +1,168 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'нового пользователя',
+    title: 'Не найдено ни одного пользователи',
+    subtitle: 'Вы можете добавить нового пользователя',
+    addLink: ['create']
+  }"
+  [pageSize]="pageSize"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Пользователи"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Дата-Время</th>
+      <th>Имя пользователя</th>
+      <th>Почта/Телефон</th>
+      <th>Список групп</th>
+      <th>Статус</th>
+      <th *ngIf="authService.permissions('ROLE_ROOT')">Действие</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td>{{item.createdAt}}</td>
+      <td><a [routerLink]="[item.id]">{{item.getFullName()}}</a></td>
+      <td>{{item.email}}
+        <ng-container *ngIf="item.email && item.phoneNumber"><br></ng-container>
+        {{item.phoneNumber}}</td>
+      <td>
+        <ng-container *ngIf="item.groups">
+          {{item.groups|implode:'name'}}
+        </ng-container>
+      </td>
+      <td>
+        <span *ngIf="item.status" data-color='green'>Активна</span>
+        <span *ngIf="!item.status" data-color='red'>Неактивна</span>
+      </td>
+      <td *ngIf="authService.permissions('ROLE_ROOT')">
+        <button class="btn btn-outline-primary text-nowrap" type="button" (click)="switchUser(item.username)">Переключиться</button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <div class="d-none d-md-block">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="4" text="Имя пользователя">
+              <ng-template #colContent>
+                <a [routerLink]="[item.id]">{{item.getFullName()}}</a>
+              </ng-template>
+            </app-col>
+            <app-col col="2" class="mt-2" *ngIf="authService.permissions('ROLE_ROOT')" >
+              <ng-template #colContent>
+                <a class="lnk-open"  (click)="switchUser(item.username)">Переключиться</a>
+              </ng-template>
+            </app-col>
+            <app-col col="6"  class="mt-2 text-right">
+              <ng-template #colContent>
+                <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                  <span class="expand-lnk"></span>
+                  <span class="expand-text"></span>
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+      <app-row class="d-block d-md-none">
+        <ng-template #rowContent>
+          <app-col>
+            <ng-template #colContent>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col  text="Имя пользователя">
+                    <ng-template #colContent>
+                      <a [routerLink]="[item.id]">{{item.getFullName()}}</a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col col="6"  *ngIf="authService.permissions('ROLE_ROOT')" >
+                    <ng-template #colContent>
+                      <a class="lnk-open"  (click)="switchUser(item.username)">Переключиться</a>
+                    </ng-template>
+                  </app-col>
+                  <app-col col="6"  class="text-right">
+                    <ng-template #colContent>
+                      <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                        <span class="expand-lnk"></span>
+                        <span class="expand-text"></span>
+                      </a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Дата-Время">
+                      <ng-template #colContent>
+                        {{item.createdAt}}
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Почта/Телефон">
+                      <ng-template #colContent>
+                        {{item.email}}
+                        <ng-container *ngIf="item.email && item.phoneNumber">/{{item.phoneNumber}}</ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Список групп">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.groups">
+                          {{item.groups|implode:'name'}}
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Статус">
+                      <ng-template #colContent>
+                        <span *ngIf="item.status" data-color='green'>Активна</span>
+                        <span *ngIf="!item.status" data-color='red'>Неактивна</span>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

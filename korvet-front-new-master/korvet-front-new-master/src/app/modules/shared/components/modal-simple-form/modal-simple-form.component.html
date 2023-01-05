@@ -1,0 +1,20 @@
+<div class="fancybox-slide--html">
+  <div id="close-id" class="popup-wr">
+    <div class="popup-wr__head text-center" *ngIf="data.head">
+      <span [innerHTML]="data.head"></span>
+      <div class="popup-wr__head-comment" [innerHTML]="data.headComment" *ngIf="data.headComment"></div>
+    </div>
+    <div class="popup-wr__body">
+      <div class="form-body">
+        <input type="text" class="inp-st" [formControl]="control">
+      </div>
+    </div>
+    <div class="popup-wr__footer" *ngIf="data.actions && data.actions.length">
+      <ng-container *ngFor="let action of data.actions">
+        <button *ngIf="!action.action" [ngClass]="action.class" [mat-dialog-close]="action.action">{{action.title}}</button>
+        <button *ngIf="action.action" [ngClass]="action.class" (click)="submit()" [disabled]="!control.value.trim()">{{action.title}}</button>
+      </ng-container>
+    </div>
+    <app-button-close></app-button-close>
+  </div>
+</div>

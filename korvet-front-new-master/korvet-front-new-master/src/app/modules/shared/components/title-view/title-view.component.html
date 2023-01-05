@@ -1,0 +1,7 @@
+<div class="body-header" *ngIf="title">
+  <div class="body-header__name">{{title}}</div>
+  <div class="body-header__setting" *ngIf="actionsTemplate">
+    <ng-container [ngTemplateOutlet]="actionsTemplate"></ng-container>
+  </div>
+</div>
+

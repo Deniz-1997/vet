@@ -1,0 +1,127 @@
+<div class="form-wr container-fluid">
+  <app-row class="mt-1">
+    <ng-template #rowContent>
+      <app-col col="12 col-lg-6">
+        <ng-template #colContent>
+          <h2>Состояние - {{model.status.title}}</h2>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row class="mt-1">
+    <ng-template #rowContent>
+      <app-col col="12 col-lg-6" titleName="dateProbeSampling">
+        <ng-template #colContent>
+          <strong>
+            {{model.probeItem.probeSampling.date}}
+          </strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-lg-6" titleName="dateResearchEnd">
+        <ng-template #colContent>
+          <strong>
+            {{model.dateEnd}}
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col titleName="laboratory" col="12 col-lg-6">
+        <ng-template #colContent>
+          <div class="form-body">
+            <strong>
+              {{ model.laboratory?.name }}
+            </strong>
+          </div>
+        </ng-template>
+      </app-col>
+      <app-col titleName="researchName" col="12 col-lg-6">
+        <ng-template #colContent>
+          <div class="form-body">
+            <strong>
+              {{ model.research?.name }}
+            </strong>
+          </div>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row class="pb-3" *ngIf="model.probeItem?.probeSampling?.comment">
+    <ng-template #rowContent>
+      <app-col titleName="comments" col="12">
+        <ng-template #colContent>
+          <strong>
+            {{ model.probeItem?.probeSampling?.comment }}
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col col="12 col-lg-6" titleName="researchReason">
+        <ng-template #colContent>
+          <div class="form-body">
+            <strong>
+              {{ model.researchReason?.name }}
+            </strong>
+          </div>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-lg-6" titleName="researchPriority">
+        <ng-template #colContent>
+          <div class="form-body">
+            <strong>
+              {{ model.researchPriority?.name }}
+            </strong>
+          </div>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <ng-container *ngIf="model.probeItem">
+    <app-row class="pb-4">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3" titleName="probeName">
+          <ng-template #colContent>
+            <div class="form-body">
+              <strong>
+                {{ model.probeItem?.probe?.name }}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName="packaging">
+          <ng-template #colContent>
+            <div class="form-body">
+              <strong>
+                {{ model.probeItem?.packing?.name }}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName="marking">
+          <ng-template #colContent>
+            <div class="form-body">
+              <strong>
+                {{ model.probeItem?.code }}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName="quantity">
+          <ng-template #colContent>
+            <div class="form-body">
+              <strong>
+                {{ model.probeItem?.quantity?.value }}
+              </strong>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </ng-container>
+  <app-research-result [model]="model" *ngIf="showResult" [formBorder]="false"></app-research-result>
+</div>

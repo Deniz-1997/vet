@@ -1,0 +1,26 @@
+.form-wr {
+  background: none;
+  box-shadow: none;
+}
+
+.check-st.inline label,
+.radio-box.inline label{
+  padding-top: 15px;
+}
+
+.radio-box.inline label{
+  padding-bottom: 5px;
+}
+
+.check-st input + label:before,
+.check-st input:checked + label:after,
+.radio-box input + label:before,
+.radio-box input:checked + label:after {
+  top: 10px;
+}
+
+.check-st input + label,
+.radio-box input + label {
+  padding-left: 30px;
+  padding-right: 5px;
+}

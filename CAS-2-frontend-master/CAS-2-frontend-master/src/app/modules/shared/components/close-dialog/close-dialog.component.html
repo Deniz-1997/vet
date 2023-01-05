@@ -1,0 +1,14 @@
+<k-row class="parent-style">
+  <ng-template #row>
+    <k-col [class.text-center]="textCenter" class="bold">
+      <ng-template #col>
+        <k-header>{{title}}</k-header>
+      </ng-template>
+    </k-col>
+    <div class="btn-close-dialog">
+        <k-button type="icon" color="accent" iconBtn="close" (click)="close()"></k-button>
+    </div>
+  </ng-template>
+</k-row>
+
+

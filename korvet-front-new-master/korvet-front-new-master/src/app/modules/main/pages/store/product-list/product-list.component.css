@@ -1,0 +1,7 @@
+.tr-close{
+  opacity: 1;
+}
+
+:host .note {
+  font-size: 12px;
+}

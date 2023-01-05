@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Packages\Monolog\FluentLogger:
+    public: false
+    arguments:
+      - '@App\Packages\Monolog\FluentLogger'
+    calls:
+      - ['setAlternativeLogger', ['@logger']]
+
+  App\Packages\Monolog\FluentdHandler:
+    public: false
+    arguments:
+      - '@App\Packages\Monolog\FluentLogger'

@@ -1,0 +1,177 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'внесение / выплата',
+    title: 'Не найдено ни одного внесения / выплаты',
+    subtitle: 'Вы можете добавить внесение / выплату',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Внесения / выплаты"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Номер чека</th>
+      <th>Дата создания</th>
+      <th>ККМ</th>
+      <th>Кассир</th>
+      <th>Тип чека</th>
+      <th>Сумма</th>
+      <th>Статус</th>
+      <th>Действия</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td>{{item.fiscal.fiscalDocumentNumber}}</td>
+      <td>{{item.createdAt}}</td>
+      <td>{{item.cashRegister.name}}</td>
+      <td>
+        <ng-container *ngIf="item.cashier">{{item.cashier.getFullName()}}</ng-container>
+        <ng-container *ngIf="!item.cashier && item.creator">{{item.creator.getFullName()}}</ng-container>
+      </td>
+      <td>{{item.type?.title}}</td>
+
+      <td style="white-space: nowrap">{{item.total | price}}</td>
+      <td>{{item.fiscal.state.title}}</td>
+      <td>
+        <ng-container *ngIf="cashService.isNew(item)">
+          <button [matMenuTriggerFor]="menu" mat-icon-button>
+            <app-icon-menu></app-icon-menu>
+          </button>
+          <mat-menu #menu="matMenu">
+            <ng-container>
+              <a (click)="onCashRegisterRegister(item.id)" mat-menu-item>Пробить чек внесения / выплаты</a>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6" text="Дата создания">
+            <ng-template #colContent>
+              <strong>{{item.createdAt}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col col="6"  class="text-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample2">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col titleName="id">
+                      <ng-template #colContent>
+                        <a [routerLink]="[item.id]">{{item.id}}</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Номер чека">
+                      <ng-template #colContent>
+                        <strong>{{item.fiscal.fiscalDocumentNumber}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="ККМ">
+                      <ng-template #colContent>
+                        <strong>{{item.cashRegister.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Кассир">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.cashier"><strong>{{item.cashier.getFullName()}}</strong></ng-container>
+                        <ng-container *ngIf="!item.cashier && item.creator"><strong>{{item.creator.getFullName()}}</strong></ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Тип чека">
+                      <ng-template #colContent>
+                        <strong>{{item.type.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Сумма">
+                      <ng-template #colContent>
+                        <strong>{{item.total | price}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Статус">
+                      <ng-template #colContent>
+                        <strong>{{item.fiscal.state.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col >
+                      <ng-template #colContent>
+                        <ng-container *ngIf="cashService.isNew(item)">
+                          <button [matMenuTriggerFor]="menu" class="lnk-open">
+                            действия
+                          </button>
+                          <mat-menu #menu="matMenu">
+                            <ng-container>
+                              <a (click)="onCashRegisterRegister(item.id)" mat-menu-item>Пробить чек внесения / выплаты</a>
+                            </ng-container>
+                          </mat-menu>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

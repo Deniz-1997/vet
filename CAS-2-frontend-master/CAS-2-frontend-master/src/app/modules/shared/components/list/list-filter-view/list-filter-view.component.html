@@ -1,0 +1,36 @@
+<app-list-filter
+  [type]="type"
+  [hidden]="(totalCount$|async) === null"
+  [placeholder]="filterPlaceholder"
+  (outFilter)="filterList($event)"
+  [filterFields]="filterFields"
+  [mutableSearch]="mutableSearch"
+></app-list-filter>
+<app-list-view
+  [items]="items$|async"
+  [loading]="loading$|async"
+  [offset]="offset"
+  [limit]="limit"
+  [totalCount]="totalCount$|async"
+  (outAppend)="appendList($event)"
+  [appendLoading]="appendLoading$|async"
+  [title]="title"
+  [emptyOptions]="listEmptyOptions"
+  (outEmptyClick)="outEmptyClick.emit($event)"
+  [search]="search"
+  [pageSize]="pageSize"
+  (setPageSize)="setPageSize($event)"
+>
+  <ng-template #headTemplate>
+    <ng-container [ngTemplateOutlet]="listHeadTemplate"></ng-container>
+  </ng-template>
+  <ng-template #itemTemplate let-item>
+    <ng-container [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{item: item}"></ng-container>
+  </ng-template>
+  <ng-template #actionsTemplate>
+    <ng-container [ngTemplateOutlet]="titleActionsTemplate"></ng-container>
+  </ng-template>
+  <ng-template #itemTemplateGrid let-item>
+    <ng-container [ngTemplateOutlet]="listItemTemplateGrid" [ngTemplateOutletContext]="{item: item}"></ng-container>
+  </ng-template>
+</app-list-view>

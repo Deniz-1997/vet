@@ -1,0 +1,72 @@
+<ngx-loading
+  [show]="getLoading$ | async"
+></ngx-loading>
+<div class="header">
+  <div class="header__name">{{ getTitle() }}</div>
+  <div class="body-header__setting">
+    <a *ngIf="formGroup && formGroup.get('state.code').value === 'DRAFT'" class="lnk-edit" routerLink="edit">
+        <span class="lnk-edit__ico">
+          <app-icon-edit></app-icon-edit>
+        </span>
+      Редактировать
+    </a>
+  </div>
+</div>
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col  titleName=stockSender col="12 col-sm-6 col-lg-3"   formGroupName="state">
+          <ng-template #colContent>
+            <span>{{ formGroup.get('stockFrom').value['name'] }}</span>
+          </ng-template>
+        </app-col>
+        <app-col  titleName=stockRecipient  col="12 col-sm-6 col-lg-3" class="pb-2 pt-2 pb-lg-0 pt-lg-0" formGroupName="state">
+          <ng-template #colContent>
+            <span>{{ formGroup.get('stockTo').value['name'] }}</span>
+          </ng-template>
+        </app-col>
+        <app-col  titleName=dateRegistration  col="12 col-sm-6 col-lg-2" >
+          <ng-template #colContent>
+            <span>{{ formGroup.get('date').value }}</span>
+          </ng-template>
+        </app-col>
+        <app-col  titleName=createdAt col="12 col-sm-6 col-lg-2" class=" pt-2  pt-lg-0">
+          <ng-template #colContent>
+            <span>{{ formGroup.get('createdAt').value | slice:0:-3 }}</span>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <div class="form-wr form-wr--mmin">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col class="pb-2">
+          <ng-template #colContent>
+            <app-product-list
+              [documentProducts]="item.documentProducts"
+              [formGroup]="formGroup"
+              [state]="{code:'VIEW'}"
+              [stock]="formGroup.get('stockFrom')"
+            ></app-product-list>
+            <div *ngIf="!item.documentProducts || item.documentProducts.length < 1" style="text-align: center;">Нет товаров</div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+  <div class="form-footer">
+    <app-store-button-view
+      (changeStatus)="changeStatus($event)"
+      [goListUrl]="goListUrl()"
+      [id]="id"
+      [state]="formGroup.get('state').value"
+      [typeRemove]="crudType.ProductTransfer"
+      [type]="crudType.ProductTransferStatus"
+    >
+    </app-store-button-view>
+  </div>
+</form>
+

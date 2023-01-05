@@ -1,0 +1,48 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=name col="6" class="pb-2">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+        <app-col titleName=code col="6" class="pb-2">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="code" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=type col="6" class="pb-2">
+          <ng-template #colContent>
+            <select [options]="FieldTypeEnum" app-ui-select-field formControlName="type"></select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=description>
+          <ng-template #colContent>
+            <textarea class="textarea-st" cols="30" formControlName="description" rows="6"></textarea>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+  ></app-reference-button-form>
+</form>
+

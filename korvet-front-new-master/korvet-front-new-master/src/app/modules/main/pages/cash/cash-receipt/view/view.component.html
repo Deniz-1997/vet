@@ -1,0 +1,133 @@
+<ng-container *ngIf="item">
+
+  <div class="body-header container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="small">{{title}} #{{item.id}}</div>
+      </div>
+      <div class="col-auto" *ngIf="appointment || shopOrder">
+        <a class="small" *ngIf="appointment" [routerLink]="'/appointments/' + appointment.id">Прием №{{appointment.id}}</a>
+        <a class="small" *ngIf="shopOrder" [routerLink]="'/shop/goods-issue/' + shopOrder.id">Продажа №{{shopOrder.id}}</a>
+      </div>
+    </div>
+  </div>
+
+  <ng-container>
+    <div class="form-wr form-wr--mmin">
+      <div class="form__table form__table--txt">
+        <table>
+          <tr>
+            <th *ngIf="!isModeCashboxMobile" class="th-service">ККМ</th>
+            <th class="th-service">Тип Чека</th>
+            <th class="th-service">Статус:</th>
+            <th *ngIf="!isModeCashboxMobile" class="th--center" style="width: 120px">№ чека ККМ:</th>
+            <th *ngIf="!isModeCashboxMobile" class="th--center" style="width: 120px">Дата чека ККМ:</th>
+            <th class="th-service">Тип коррекции</th>
+            <th class="th-service">Способ доставки чека покупателю</th>
+          </tr>
+          <tr>
+            <td *ngIf="!isModeCashboxMobile">
+              <div class="form-txt">
+                <strong>{{item.cashRegister.name}}</strong>
+              </div>
+            </td>
+            <td>
+              <div><span>{{item.type.title}}</span></div>
+            </td>
+            <td [class.color-blue]="item.type.code === 'SELL_RETURN'"
+                [class.color-red]="item.fiscal.state.code === 'ERROR'"
+            >
+              <div class="form-txt">
+                <span [ngClass]="">{{item.fiscal.state.title}}</span>
+              </div>
+            </td>
+            <td *ngIf="!isModeCashboxMobile" class="td--center">
+              <div class="form-txt form-txt--center">
+                <span>{{item.fiscal.fiscalDocumentNumber}}</span>
+              </div>
+            </td>
+            <td *ngIf="!isModeCashboxMobile" class="td--center">
+              <div class="form-txt form-txt--center">
+                <span>{{item.fiscal.fiscalDocumentDateTime}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="form-txt">
+                <div>{{item.correctionType.title}}</div>
+              </div>
+            </td>
+            <td>
+              <div class="form-txt">
+                <span>{{item.deliveryType.title}}</span><br>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <app-cash-receipt-items-view [item]="item"></app-cash-receipt-items-view>
+
+  <div class="form-wr">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=paymentType col="10" style="width: 30%; float: right">
+          <ng-template #colContent>
+            <span>{{item.paymentType.title}}</span>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true"  text="К оплате, ₽" col="2" class="box-pay" style="text-align: right">
+          <ng-template #colContent>
+            <strong>
+              {{item.total?.toString()|price:''}}
+            </strong>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+
+  <div class="form-footer">
+    <ng-container *ngIf="cashService.isNew(item)">
+      <button
+        (click)="onBreakCheck()"
+        [class.btn-loader]="loading | async" class="btn-st btn-st--right mr-20" type="button">
+        Пробить чек
+      </button>
+    </ng-container>
+    <ng-container *ngIf="isModeCashboxMobile && cashService.isNew(item)">
+      <form class="form-device">
+        <mat-form-field class="example-full-width">
+          <input [formControl]="formCtrl" [matAutocomplete]="auto" aria-label="State" matInput
+                 placeholder="Выберите устройство">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let device of devices" [value]="device.name">
+              <span>{{ device.name }} #{{ device.id }}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+    </ng-container>
+    <ng-container *ngIf="cashService.isReturn(item) && cashService.isDone(item)">
+      <button
+        (click)="onReturn()"
+        [class.btn-loader]="loading | async" class="btn-st btn-st--right mr-20" type="button">
+        Сделать возврат
+      </button>
+    </ng-container>
+    <ng-container *ngIf="showClearReceiptBtn()">
+      <button
+        (click)="clearReceiptFromAppointment(item.id)"
+        [class.btn-loader]="loading | async" class="btn-st btn-st--right mr-20" type="button">
+        Открепить чек от
+        <ng-container *ngIf="appointment">приема</ng-container>
+        <ng-container *ngIf="shopOrder">продажи</ng-container>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!cashService.isDone(item) && !cashService.isPrinting(item)">
+      <a [routerLink]="'/cash/cash-receipt/' + item.id + '/edit'" class="btn-st btn-st--right">Редактировать</a>
+    </ng-container>
+  </div>
+
+</ng-container>

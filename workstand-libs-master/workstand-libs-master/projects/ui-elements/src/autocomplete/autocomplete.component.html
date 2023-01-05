@@ -1,0 +1,11 @@
+<mat-form-field appearance="fill">
+  <mat-label>{{label}}</mat-label>
+  <input type="text" class="autocomplete-input" matInput [placeholder]="placeholder" [formControl]="control" [matAutocomplete]="auto"
+         (blur)="onBlur()" (focus)="onFocus()" [required]="required" [readonly]="disabled"/>
+  <k-icon matPrefix name="search" class="magnifier"></k-icon>
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPetType.bind(this)">
+    <mat-option *ngFor="let option of filteredOptions" [value]="option" (click)="onSelected()">
+      {{option[field]}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

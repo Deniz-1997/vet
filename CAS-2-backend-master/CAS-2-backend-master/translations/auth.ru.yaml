@@ -1,0 +1,5 @@
+'Invalid username and password combination': 'Неверные логин или пароль'
+'Missing parameters. "username" and "password" required': 'Необходимо заполнить логин и пароль'
+'Refresh token has expired': 'Ваша сессия истекла, необходимо заново войти в систему'
+'Invalid refresh token': 'Ваша сессия истекла, необходимо заново войти в систему'
+'Your access is denied. Contact administrator': 'У вас закрыт доступ к системе. Обратитесь, пожалуйста, к администратору для получения доступа'

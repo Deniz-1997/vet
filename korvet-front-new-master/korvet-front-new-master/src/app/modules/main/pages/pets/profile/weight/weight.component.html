@@ -1,0 +1,52 @@
+<div class="body-header">
+  <div class="body-header__name">Вес</div>
+  <div class="body-header__setting">
+    <a class="lnk-add" class="lnk-add" data-fancybox href="#add-weight">Добавить</a>
+  </div>
+</div>
+<div *ngIf="(weight$|async).length>0" class="table-info">
+  <table class="table-info-st">
+    <tr>
+      <th>Дата измерения</th>
+      <th>Возраст</th>
+      <th>Вес</th>
+    </tr>
+    <tr>
+      <td>{{getDateFormat(currentWeight.date)}}</td>
+      <td>{{getAge(currentWeight.date)}}</td>
+      <td>{{currentWeight.value}}</td>
+    </tr>
+  </table>
+  <div class="info-lnk info-lnk--left"><a data-fancybox="" href="#popup-weight_changes">История изменений</a>
+  </div>
+</div>
+<div *ngIf="(weight$|async).length === 0" class="table-info">
+  <div class="no_data"><span>Нет данных</span>
+  </div>
+</div>
+<div class="popup-hide">
+  <div class="popup-history_changes popup-wr" id="popup-weight_changes">
+    <div class="popup-wr__head">История изменений</div>
+    <div class="popup-wr__body">
+      <ul class="menu-icon-lnk">
+        <li><a href=""><span><app-icon-print></app-icon-print></span>Напечатать</a></li>
+        <li><a href=""><span><app-icon-download></app-icon-download></span>Скачать</a></li>
+      </ul>
+    </div>
+    <div class="popup-wr__table">
+      <table>
+        <tr>
+          <th>Дата измерения</th>
+          <th>Возраст</th>
+          <th>Вес</th>
+        </tr>
+        <tr *ngFor="let item of weight$|async">
+          <td>{{getDateFormat(item.date)}}</td>
+          <td>{{getAge(item.date)}}</td>
+          <td>{{item.value}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <app-pets-profile-weight-add (addWeight)="addWeight($event)" [petId]="petId"></app-pets-profile-weight-add>
+</div>

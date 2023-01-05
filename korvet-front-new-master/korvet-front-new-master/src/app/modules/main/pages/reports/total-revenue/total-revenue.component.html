@@ -1,0 +1,49 @@
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <app-title-view title="Расшифровка по выручке"></app-title-view>
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=dateOf col="6 col-lg-3">
+          <ng-template #colContent>
+            <input appUiDatepicker="" class="inp-st datepicker" formControlName="startDate" type="text">
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=dateOn col="6 col-lg-3">
+          <ng-template #colContent>
+            <input appUiDatepicker="" class="inp-st datepicker" formControlName="endDate" type="text">
+          </ng-template>
+        </app-col>
+        <app-col titleName=clinic col="12 col-lg-6" class="pb-2">
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('unit')" [options]="unitItems"
+              [type]="crudType.ReferenceUnit"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12" titleName=category>
+          <ng-template #colContent>
+            <app-ui-mat-multi-select placeholder="Выбрать категории" [selectFormControl]="formGroup.get('categories')"
+            [type]="crudType.ReferenceCategoryNomenclature" [addFilter]="{parent_id: null}">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12" titleName=service>
+          <ng-template #colContent>
+            <app-ui-mat-multi-select placeholder="Выбрать услуги" [selectFormControl]="formGroup.get('products')"
+              [type]="crudType.ReferenceProduct">
+            </app-ui-mat-multi-select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <button [class.btn-loader]="loader" class="btn btn-primary float-right" type="submit">Сформировать отчет
+  </button>
+</form>

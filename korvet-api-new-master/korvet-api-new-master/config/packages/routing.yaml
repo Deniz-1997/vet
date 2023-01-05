@@ -1,0 +1,36 @@
+framework:
+    router:
+        strict_requirements: ~
+
+#history_enity:
+#    controller: App\Controller\EntityHistoryController
+#    prefix: /api
+#    path: /history/{aliasEntity}/{id}/
+
+#webslon_api_homepage:
+#    controller: App\Controller\SwaggerUIController
+#    path:   /
+#
+#app.swagger:
+#    path: /doc.json
+#    methods: GET
+#    defaults: { _controller: App\Controller\DocumentationController }
+#
+#app.swagger.oauth_redirect:
+#    path: /swagger/oauth2-redirect
+#    defaults: { _controller: App\Controller\OAuthRedirectController::swaggerOAuthAction }
+#
+#app.enum.list.all:
+#    path: /enum/
+#    methods: GET
+#    defaults: { _controller: App\Controller\EnumController::getAll }
+#
+#app.async.result.get:
+#    path: /async/result/{correlationId}/
+#    methods: GET
+#    controller: App\Controller\API\Async\AsyncOperationsController::getAsyncResponseAction
+#
+#app.amqp.messages.get:
+#    path: /amqp/messages
+#    methods: GET
+#    controller: App\Controller\AMQP\MessageController::getMessage

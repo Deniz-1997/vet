@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="24px" viewBox="0 0 18 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>01B64397-F3C2-4E2B-8FB0-E71D7E17EF01</title>
+    <desc>Created with sketchtool.</desc>
+    <defs></defs>
+    <g id="Авторизация" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.5">
+        <g id="01_login" transform="translate(-638.000000, -684.000000)" fill="#0747A6" fill-rule="nonzero">
+            <g id="Group-3" transform="translate(498.000000, 684.000000)">
+                <path d="M154,0 L144,0 C141.7944,0 140,1.7944 140,4 L140,20 C140,22.2056 141.7944,24 144,24 L154,24 C156.2056,24 158,22.2056 158,20 L158,4 C158,1.7944 156.2056,0 154,0 Z M156,20 C156,21.1 155.1,22 154,22 L144,22 C142.9,22 142,21.1 142,20 L142,19.6 L156,19.6 L156,20 Z M156,17.6 L142,17.6 L142,4 C142,2.9 142.9,2 144,2 L154,2 C155.1,2 156,2.9 156,4 L156,17.6 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

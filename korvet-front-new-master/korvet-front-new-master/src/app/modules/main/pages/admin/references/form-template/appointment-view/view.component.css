@@ -1,0 +1,21 @@
+.form-wr {
+  padding-bottom: 20px;
+}
+
+/*.form-row.border-b:not(:last-child) {*/
+/*  border-bottom: 1px solid #e1e1e1;*/
+/*}*/
+.form-row.border-b .form-span {
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+
+.form-row.border-b .form-span:not(:last-child) .form-row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.inline {
+  display: inline !important;
+  width: auto !important;
+}

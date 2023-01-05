@@ -1,0 +1,16 @@
+
+<div  *ngIf="(printForms$ | async) && size ==='normal'">
+  <div class="row pt-3">
+    <ng-container *ngFor="let printForm of printForms$ | async">
+
+        <div class="12 col-md-6">
+          <div class="form-wr print-form col-12">
+            <a (click)="onPrintForms(printForm, undefined)" class="lnk-open">
+              <app-icon-print></app-icon-print>
+              {{printForm.name}}
+            </a>
+          </div>
+        </div>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<app-title-view title="История оплаты"></app-title-view>
+<mat-tab-group>
+  <mat-tab label="Приёмы">
+    <app-cash-receipt-history *ngIf="owner.PersonType !== undefined" [type]="typeAppointment" [owner$]="owner"></app-cash-receipt-history>
+  </mat-tab>
+  <mat-tab label="Выезды">
+    <app-cash-receipt-history *ngIf="owner.PersonType !== undefined"  [type]="typeLeaving" [owner$]="owner"></app-cash-receipt-history>
+  </mat-tab>
+</mat-tab-group>
+
+
+

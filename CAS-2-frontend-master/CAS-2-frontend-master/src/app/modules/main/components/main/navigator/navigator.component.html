@@ -1,0 +1,157 @@
+<div class="z-index">
+  <div class="krv-overlay krv-overlay--absolute krv-overlay--active theme--dark"
+     style="z-index: 7;"
+     *ngIf="isShowMenu" @triggerBackgroundMenu
+     (click)="isShowMenu = false;changeIsShowMenu.emit(false)">
+  <div class="krv-overlay__scrim"
+       style="opacity: 0.46; background-color: rgb(33, 33, 33); border-color: rgb(33, 33, 33);"></div>
+  <div class="krv-overlay__content"></div>
+</div>
+<k-navigation appRemoveComponentTag temporary fixed [width]="widthNavigation"
+              [isActive]="isShowMenu"
+              [isMobile]="isMobile">
+  <ng-template #templateRef>
+    <div class="content">
+      <div class="pages">
+        <div class="text-center mt-2" *ngIf="showSwitchUserExit()">
+          <k-button (click)="switchUserExit()" type="button" name="Выйти из пользователя" color="warn"></k-button>
+        </div>
+        <k-list>
+          <ng-template #templateItems>
+            <k-list-item [link]="false">
+              <a href="/">
+                <k-list-item-icon>
+                  <img alt="logo" class="logo" src="../../../../../assets/img/cas2-logo.svg"/>
+                </k-list-item-icon>
+              </a>
+              <k-list-item-icon style="margin-left: 0;">
+                <app-main-notification class="notification"></app-main-notification>
+              </k-list-item-icon>
+            </k-list-item>
+            <k-list-item [link]="false">
+              <k-list-item-content class="text-center">
+                <k-list-item-title>
+                  {{user && user.user.FullName}}
+                </k-list-item-title>
+              </k-list-item-content>
+              <k-list-item-icon>
+                <app-main-user-menu></app-main-user-menu>
+              </k-list-item-icon>
+            </k-list-item>
+              <ng-container *ngIf="currentObject && userObjectList.length && typeObject !== 'station'; else blockElse">
+                <k-list-item [link]="false">
+                  <k-list-item-content class="text-center">
+                      <mat-form-field appearance="outline" >
+                        <mat-select [value]="currentObject.id" placeholder="Не выбрано"
+                                    (selectionChange)="selectObject($event)">
+                          <mat-option *ngFor="let item of userObjectList" [value]="item.id">
+                            <p>{{item.name}}</p>
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                  </k-list-item-content>
+                </k-list-item>
+              </ng-container>
+              <ng-template #blockElse>
+                <k-list dense nav>
+                  <ng-template #templateItems>
+                    <k-list-item>
+                      <k-list-item-content class="text-center">
+                        <a class="krv-application" (click)="openModelStationList($event)">Выбрать станцию</a>
+                      </k-list-item-content>
+                    </k-list-item>
+                  </ng-template>
+                </k-list>
+              </ng-template>
+          </ng-template>
+        </k-list>
+        <k-list dense nav>
+          <ng-template #templateItems>
+            <k-list-item>
+              <k-list-item-content class="text-center">
+                <a class="krv-application" [routerLink]="['/public', 'vaccinations']" target="blank">Реестр
+                  вакцинаций</a>
+              </k-list-item-content>
+            </k-list-item>
+          </ng-template>
+        </k-list>
+        <k-list dense nav>
+          <ng-template #templateItems>
+            <ng-container *ngFor="let item of items; let i = index;">
+              <div class="krv-navigation-drawer-block" [ngClass]="isActiveMenu(i)">
+                <k-list-item matRipple (click)="openMenu(i)" [ngClass]="isActiveMenu(i)" [routerLink]="getLink(item)">
+                  <k-list-item-icon>
+                    <k-icon [name]="getIconForMenu(item.buttonSettings.icon.class)"></k-icon>
+                  </k-list-item-icon>
+                  <k-list-item-content>
+                    <k-list-item-title>{{item.name}}</k-list-item-title>
+                  </k-list-item-content>
+                  <k-list-item-icon>
+                    <k-icon name="expand_more"
+                            [ngStyle]="{'transform': isOpenMenu(i)? 'rotate(180deg)' : 'rotate(0deg)'}"
+                            *ngIf="item.items.length"></k-icon>
+                  </k-list-item-icon>
+                </k-list-item>
+                <div class="krv-list-group--no-action" [ngClass]="isActiveMenu(i)" [@openClose]="isOpenMenu(i)"
+                     *ngIf="item.items.length">
+                  <div class="krv-list-group__items">
+                    <k-list-item matRipple [matRippleColor]="'#1976d230'"
+                                 *ngFor="let subItem of item.items; let subInd = index;"
+                                 [ngClass]="isActiveMenu(i, subInd)"
+                                 [routerLink]="getLink(subItem, 'sub')">
+                      <k-list-item-title>{{subItem.name}}</k-list-item-title>
+                    </k-list-item>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </k-list>
+      </div>
+      <div class="footer">
+        <k-list>
+          <ng-template #templateItems>
+            <k-list-item [link]="false" style="cursor: pointer;min-height: auto">
+              <k-list-item-content>
+                <k-list-item-title (click)="openSupportModal()">Написать в поддержку</k-list-item-title>
+              </k-list-item-content>
+            </k-list-item>
+            <k-list-item [link]="false" style="cursor: pointer;min-height: auto">
+              <k-list-item-content>
+                <a target="_blank" [href]="path" class="manual-link">Руководство пользователя</a>
+              </k-list-item-content>
+            </k-list-item>
+          </ng-template>
+        </k-list>
+
+        <k-list class="footer-small-txt">
+          <ng-template #templateItems>
+            <k-list-item-group>
+              <k-list-item [link]="false">
+                <k-list-item-title>
+                  <a [href]=configHref class="d-block">{{config.tellText}}</a>
+                </k-list-item-title>
+              </k-list-item>
+              <k-list-item [link]="false">
+                <k-list-item-title>
+                  <a [href]=configGlobalPhone class="d-block">{{config.globalPhoneText}}</a>
+                </k-list-item-title>
+              </k-list-item>
+              <k-list-item [link]="false">
+                <k-list-item-title>
+                  <a [href]=configMailto class="d-block">{{config.email}}</a>
+                </k-list-item-title>
+              </k-list-item>
+              <k-list-item [link]="false">
+                <k-list-item-title style="">
+                  @ 2019-{{date}} «CAS»
+                </k-list-item-title>
+              </k-list-item>
+            </k-list-item-group>
+          </ng-template>
+        </k-list>
+      </div>
+    </div>
+  </ng-template>
+</k-navigation>
+</div>

@@ -1,0 +1,33 @@
+.mat-option-loading {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: all 1s ease-in;
+  width: 100%;
+  position: absolute;
+  height: 100%;
+  z-index: 1;
+}
+
+.autocomplete-input {
+  padding-right: 30px;
+}
+
+.icon-container .loader {
+  width: 15px;
+  height: 15px;
+}
+
+.icon-container {
+  position: absolute;
+  right: 0;
+  top: calc(50% - 15px);
+}
+
+.autocomplete-search-icon {
+  width: 15px;
+  position: absolute;
+}
+
+.autocomplete-input{
+  margin-left: 25px;
+  width: calc(100% - 25px)!important;
+}

@@ -1,0 +1,110 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+
+<ng-container *ngIf="openDialog">
+  <app-close-dialog [title]="title"></app-close-dialog>
+</ng-container>
+<ng-container *ngIf="!openDialog">
+  <k-header>{{title}}</k-header>
+</ng-container>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div [class.k-form]="!openDialog" class="container-fluid">
+    <app-row class="d-flex flex-wrap justify-content-between">
+      <ng-template #rowContent>
+        <ng-container *ngFor="let property of properties">
+          <ng-container [ngSwitch]="property.type">
+            <ng-template [ngSwitchCase]="propertyViewType.INPUT_STRING">
+              <app-col  [lg]="property.col" col="12">
+                <ng-template #colContent>
+                  <app-text-field [required]="property.required" type="text" [label]="property.title" [control]="formGroup.get(property.name)">
+                  </app-text-field>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.CHECK_BOX">
+              <app-col [lg]="property.col" col="12">
+                <ng-template #colContent>
+                  <p><mat-checkbox color="primary" [required]="property.required"  [formControlName]="property.name">{{property.label}}</mat-checkbox></p>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.INPUT_INT">
+              <app-col  [lg]="property.col" col="12">
+                <ng-template #colContent>
+                  <mat-form-field appearance="fill">
+                    <mat-label>{{property.title}}</mat-label>
+                    <input matInput  [required]="property.required" type="number" [formControlName]="property.name">
+                  </mat-form-field>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.AUTOCOMPLETE">
+              <app-col [lg]="property.col" col="12">
+                <ng-template #colContent>
+                  <app-ui-autocomplete
+                    [label]="property.title"
+                    [control]="formGroup.get(property.name)"
+                    [field]="property.crudTypeReference === 'referenceLocation' ? 'address' : 'name'"
+                    [required]="property.required"
+                    [type]="property.crudTypeReference">
+                  </app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.DADATA_FULL_NAME">
+              <app-col [lg]="12" col="12">
+                <ng-template #colContent>
+                  <app-full-name-form
+                    [fullName]="fullName"
+                    (changeInput)="changeInput($event, property.name)">
+                  </app-full-name-form>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.SELECT">
+              <app-col [lg]="property.col" col="12" [formGroupName]="property.name">
+                <ng-template #colContent>
+                  <mat-form-field appearance="fill">
+                    <mat-label>{{property.title}}</mat-label>
+                    <mat-select disableOptionCentering [required]="property.required" formControlName="code" placeholder="Не выбрано">
+                      <mat-option *ngFor="let item of property.selectValues" [value]="item.id">
+                        {{item.name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.MULTISELECT">
+              <app-col [lg]="property.col" col="12" [formGroupName]="property.name">
+                <ng-template #colContent>
+                  <app-ui-multi-select-field
+                    [label]="property.title"
+                    [selectFormControl]="formGroup.get(property.name)"
+                    [type]="property.crudTypeReference">
+                  </app-ui-multi-select-field>
+                </ng-template>
+              </app-col>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="propertyViewType.DATE">
+              <app-col  [lg]="property.col" col="12">
+                <ng-template #colContent>
+                  <app-datepicker-overview [label]="property.title" [required]="property.required"
+                                           [formControlName]="property.name"></app-datepicker-overview>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+    </app-row>
+  </div>
+      <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type" [hidden]="openDialog"></app-reference-button-form>
+</form>

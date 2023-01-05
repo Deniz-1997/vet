@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill"
+                [ngClass]="{'mat-form-field-invalid': dataError, 'mat-form-field-disableddd': isDisabled}">
+  <mat-label>{{label}}</mat-label>
+  <input #inputElement matInput [textMask]="mask" [matDatepicker]="picker" [value]="innerValue"
+         (dateInput)="addEvent('input', $event)"
+         (dateChange)="addEvent('change', $event)"
+         [required]="required"
+         (click)="picker.open()"
+         [max]="maxDate"
+         [min]="minDate">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

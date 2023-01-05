@@ -1,0 +1,33 @@
+@import './src/styles.scss';
+$margin: 10px;
+
+.border-column {
+  border-left: 1px solid;
+}
+
+.container-text {
+  margin-bottom: $margin;
+  overflow: hidden;
+  position: relative;
+  word-wrap: break-word;
+}
+.parent {
+  cursor: pointer;
+  .icon {
+    font-size: 13px;
+    color: $fontColor;
+  }
+  &:hover {
+    color: $primary;
+  }
+}
+
+.child {
+  margin: $margin 0 $margin 0;
+  padding-left: 15px;
+  font-size: 15px;
+  color: $fontColor;
+}
+.child::before {
+  content: 'Пользователи: ';
+}

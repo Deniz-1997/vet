@@ -1,0 +1,126 @@
+<app-list-filter-view
+  (outFilter)="setFilters($event)"
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'Поступление товаров',
+    title: 'Не найдено ни одного товара',
+    subtitle: 'Вы можете добавить товар',
+    addLink: ['create']
+  }"
+  [order]="order"
+  [sort]="sort"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Поступление товаров"
+>
+  <ng-template #titleActionsTemplate>
+    <a (click)="download()" class="lnk-ico">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>
+        <a (click)="sorting('number', $event)">
+          Номер
+        </a>
+      </th>
+      <th><a (click)="sorting('state', $event)">
+        Статус
+      </a></th>
+      <th>Склад</th>
+      <th>
+        <a (click)="sorting('date', $event)">
+          Дата регистрации
+        </a>
+      </th>
+      <th>Создан</th>
+      <th>Количество позиций</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.number]">{{item.number}}</a></td>
+      <td>{{item.state.title}}</td>
+      <td>{{item.stock.name}}</td>
+      <td>{{item.date}}</td>
+      <td>{{item.createdAt}}</td>
+      <td>{{item.documentProducts.length }}</td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6 col-md-4" text="Склад">
+            <ng-template #colContent>
+              <strong>{{item.stock.name}}</strong>
+            </ng-template>
+          </app-col>
+          <app-col col="6 col-md-4" text="Дата регистрации">
+            <ng-template #colContent>
+              <a (click)="sorting('date', $event)">{{item.date}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-4 pt-2 pt-md-0"  class="text-left text-md-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample2">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Номер">
+                      <ng-template #colContent>
+                        <a [routerLink]="[item.number]">{{item.number}}</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Статус">
+                      <ng-template #colContent>
+                        <a (click)="sorting('state', $event)">{{item.state.title}}</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Создан">
+                      <ng-template #colContent>
+                        <strong>{{item.createdAt}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Количество позиций">
+                      <ng-template #colContent>
+                        <strong>{{item.documentProducts.length }}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

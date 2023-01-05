@@ -1,0 +1,29 @@
+:host .inp-st[readonly] {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #e3e2e2;
+  color: #e3e2e2;
+  pointer-events: none;
+}
+
+:host .tab-box .owners-item__close {
+  z-index: 1;
+}
+
+:host .small {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+:host .note {
+  font-size: 12px;
+}
+
+:host .note-error {
+  color: red;
+}
+
+.note-product {
+  font-size: 12px;
+  top: -18px;
+}

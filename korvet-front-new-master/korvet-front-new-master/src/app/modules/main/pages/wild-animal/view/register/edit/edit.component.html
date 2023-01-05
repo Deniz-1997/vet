@@ -1,0 +1,438 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+             [show]="loading$|async"
+></ngx-loading>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup" disabled="true">
+  <ng-container *ngIf="wildAnimal && wildAnimal.dateOfDeath">
+    <div class="box-empty">
+      <h3> Зарегистрирована смерть животного. Отлов невозможен. </h3>
+    </div>
+  </ng-container>
+  <div *ngIf="wildAnimal && !wildAnimal.dateOfDeath" class="form-wr container-fluid">
+    <div class="header__name header__name--mr">Регистрация отлова</div>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=contractor col="12 col-lg-6">
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('contractor')"
+              [fields]="contractorFields"
+              [options]="ReferenceContractorItems$"
+              [type]="crudType.ReferenceContractor"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col titleName=employeeName col="12 col-lg-6">
+          <ng-template #colContent>
+            <ng-container *ngIf="hasType()">
+              <mat-form-field appearance="outline">
+                <mat-select disableOptionCentering formControlName="contactPerson" placeholder="Не выбрано">
+                  <mat-option *ngFor="let person of contactPersons" [value]="person">
+                    {{person.person.fullName.lastName}}
+                    {{person.person.fullName.name}}
+                    {{person.person.fullName.middleName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngIf="!hasType()">
+              <input class="inp-st" disabled type="text">
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=date col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['date'].hasError('required') || formGroup.controls['date'].hasError('validUrl')"
+              formControlName="date"
+            ></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-4" [required]="true" text="Место: город, улица, дом" formGroupName="address">
+          <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st" formControlName="full" type="text">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-4" class="pt-2 pt-lg-0" titleName=geoCoordinates formGroupName="address">
+          <ng-template #colContent>
+              <input class="inp-st" formControlName="coordinates" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col text="Номер и дата обращения (жалобы, зарегистрированного обращения)"></app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-8">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="appealNumber" type="text">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-4" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['appealDate'].hasError('required') || formGroup.controls['appealDate'].hasError('validUrl')"
+              formControlName="appealDate"
+            ></app-datepicker-overview>
+            <!--                <input type="text" class="inp-st datepicker" name="appealDate" formControlName="appealDate"-->
+            <!--                       appUiDatepicker>-->
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+      <app-list-img
+        (outDelete)=onDelete($event)
+        [images]=arrayImagesType(CullingRegistrationFileTypeEnum[1])
+      ></app-list-img>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col class="pb-2">
+            <ng-template #colContent>
+              <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[1])" class="form-span__lnk-btn"><span
+                class="ico-plus"></span> Добавить фотографию отлова</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+
+    <div class="header__name header__name--mr">Вакцинация</div>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=date col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['vaccinationDate'].hasError('required') || formGroup.controls['vaccinationDate'].hasError('validUrl')"
+              formControlName="vaccinationDate"
+            ></app-datepicker-overview>
+            <!--          <input type="text" class="inp-st datepicker" name="vaccinationDate" formControlName="vaccinationDate"-->
+            <!--                 appUiDatepicker>-->
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-8" titleName=employeeName>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('vaccinationUser')"
+              [options]="users$"
+              [type]="crudType.User"
+              field="fullName"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <div class="form-head">Название вакцины</div>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('vaccinationType')"
+              [options]="ReferenceVaccinationType$"
+              [type]="crudType.ReferenceVaccinationType"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+      <app-list-img
+        (outDelete)=onDelete($event)
+        [images]=arrayImagesType(CullingRegistrationFileTypeEnum[2])
+      ></app-list-img>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col class="pb-2">
+            <ng-template #colContent>
+              <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[2])" class="form-span__lnk-btn"><span
+                class="ico-plus"></span>
+                Добавить фотографию вакцины</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+
+    <ng-container
+      *ngIf="(wildAnimal && !wildAnimal.isSterilized) || model.sterilizationType || model.sterilizationDate || model.sterilizationUser">
+      <div class="header__name header__name--mr">Стерилизация</div>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=date col="12 col-lg-4">
+            <ng-template #colContent>
+              <app-datepicker-overview
+                [dataError]="formGroup.controls['sterilizationDate'].hasError('required') || formGroup.controls['sterilizationDate'].hasError('validUrl')"
+                formControlName="sterilizationDate"
+              ></app-datepicker-overview>
+              <!--          -->
+              <!--          <input type="text" class="inp-st datepicker" name="sterilizationDate" formControlName="sterilizationDate"-->
+              <!--                 appUiDatepicker>-->
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-lg-8" titleName=employeeName>
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('sterilizationUser')"
+                [options]="users$"
+                [type]="crudType.User"
+                field="fullName"
+              ></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName=method>
+            <ng-template #colContent>
+              <app-ui-autocomplete
+                [control]="formGroup.get('sterilizationType')"
+                [options]="ReferenceSterilizationType$"
+                [type]="crudType.ReferenceSterilizationType"
+              ></app-ui-autocomplete>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+
+      <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+        <app-list-img
+          (outDelete)=onDelete($event)
+          [images]=arrayImagesType(CullingRegistrationFileTypeEnum[3])
+        ></app-list-img>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col class="pb-2">
+              <ng-template #colContent>
+                <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[3])" class="form-span__lnk-btn"><span
+                  class="ico-plus"></span>
+                  Добавить фотографию стерилизации</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </ng-container>
+    </ng-container>
+
+    <div class="header__name header__name--mr">Биркование</div>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=date col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['tagDate'].hasError('required') || formGroup.controls['tagDate'].hasError('validUrl')"
+              formControlName="tagDate"
+            ></app-datepicker-overview>
+            <!--          <input type="text" class="inp-st datepicker" name="tagDate" formControlName="tagDate" appUiDatepicker>-->
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName=form>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('tagForm')"
+              [options]="ReferenceTagForm$"
+              [type]="crudType.ReferenceTagForm"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" titleName=color>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('tagColor')"
+              [options]="ReferenceTagColor$"
+              [type]="crudType.ReferenceTagColor"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-2" titleName=number>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="tagNumber" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=text>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="tagText" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+      <app-list-img
+        (outDelete)=onDelete($event)
+        [images]=arrayImagesType(CullingRegistrationFileTypeEnum[4])
+      ></app-list-img>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col class="pb-2">
+            <ng-template #colContent>
+              <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[4])" class="form-span__lnk-btn"><span
+                class="ico-plus"></span>
+                Добавить фотографию стерилизации</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+
+    <div class="header__name header__name--mr">Период карантина</div>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=dateOf col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['quarantinePeriodStartTime'].hasError('required') || formGroup.controls['quarantinePeriodStartTime'].hasError('validUrl')"
+              formControlName="quarantinePeriodStartTime"
+            ></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col titleName=dateOn col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['quarantinePeriodEndTime'].hasError('required') || formGroup.controls['quarantinePeriodEndTime'].hasError('validUrl')"
+              formControlName="quarantinePeriodEndTime"
+            ></app-datepicker-overview>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+      <app-list-img
+        (outDelete)=onDelete($event)
+        [images]=arrayImagesType(CullingRegistrationFileTypeEnum[6])
+      ></app-list-img>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col class="pb-2">
+            <ng-template #colContent>
+              <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[6])" class="form-span__lnk-btn"><span
+                class="ico-plus"></span>
+                Добавить фотографию карантинного периода</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+
+    <div class="header__name header__name--mr">Выбытие</div>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=date col="12 col-lg-4">
+          <ng-template #colContent>
+            <app-datepicker-overview
+              [dataError]="formGroup.controls['releaseDate'].hasError('required') || formGroup.controls['releaseDate'].hasError('validUrl')"
+              formControlName="releaseDate"
+            ></app-datepicker-overview>
+
+            <!--          <input type="text" class="inp-st datepicker" name="releaseDate" formControlName="releaseDate" appUiDatepicker>-->
+          </ng-template>
+        </app-col>
+        <app-col titleName=type col="12 col-lg-4" formGroupName="releaseType">
+          <ng-template #colContent>
+            <select [options]="WildAnimalReleaseTypeEnum"
+                    app-ui-select-field
+                    formControlName="code">
+            </select>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="formGroup.controls.releaseType.value.code === 'SHELTER'">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-4" titleName=inn>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="releaseInn" type="text">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-4" class="pt-2 pt-lg-0" titleName=appellation>
+          <ng-template #colContent>
+            <app-ui-autocomplete
+              [control]="formGroup.get('releaseShelter')"
+              [options]="ReferenceShelter$"
+              [type]="crudType.ReferenceShelter"
+            ></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-4" titleName=address formGroupName="releaseAddress">
+          <ng-template #colContent>
+            <input appYaMapsSuggestion class="inp-st" formControlName="full" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="formGroup.controls.releaseType.value.code === 'NEW_OWNERS'">
+      <ng-template #rowContent>
+        <app-col titleName=releaseNewOwners>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="releaseNewOwners" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row *ngIf="formGroup.controls.releaseType.value.code === 'STREET'">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-6" titleName=address formGroupName="releaseAddress">
+          <ng-template #colContent>
+            <input appYaMapsSuggestion class="inp-st" formControlName="full" type="text">
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-6" class="pt-2 pt-lg-0" titleName=geoCoordinates formGroupName="releaseAddress">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="coordinates" type="text">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <ng-container *ngIf="CullingRegistrationFileTypeEnum">
+      <app-list-img
+        (outDelete)=onDelete($event)
+        [images]=arrayImagesType(CullingRegistrationFileTypeEnum[5])
+      ></app-list-img>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col class="pb-2">
+            <ng-template #colContent>
+              <a (click)="photoClick($event, CullingRegistrationFileTypeEnum[5])" class="form-span__lnk-btn"><span
+                class="ico-plus"></span>
+                Добавить фотографию выбытия</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </ng-container>
+
+    <div class="form-footer">
+      <button [class.btn-loader]="getLoading$ | async" class="btn-st btn-st--right" type="submit">Сохранить</button>
+    </div>
+
+    <input #photoInput (change)="photoUpload($event)" accept="image/jpeg,image/png,image/gif" class="ava-edit-input"
+           type="file">
+  </div>
+</form>
+

@@ -1,0 +1,12 @@
+<ng-container [ngSwitch]="type">
+  <ng-container *ngSwitchCase="0">
+    <i class="material-icons"
+       [style.fontSize]="size + sizeType"
+       [ngClass]="class"
+       [ngStyle]="style"
+    >{{name}}</i>
+  </ng-container>
+  <ng-container *ngSwitchCase="1">
+    <img [src]="getSrcImg()" [ngClass]="class" [attr.alt]="alt">
+  </ng-container>
+</ng-container>

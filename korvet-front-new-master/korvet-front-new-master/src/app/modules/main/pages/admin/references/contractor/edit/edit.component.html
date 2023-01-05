@@ -1,0 +1,43 @@
+<form [formGroup]="typeFormGroup">
+  <div class="form-wr form-wr--mmin form-wr--radio">
+    <div class="radio-box">
+      <input [value]="personType.ENTREPRENEUR" formControlName="type" id="status-ip" type="radio">
+      <label for="status-ip">ИП</label>
+    </div>
+    <div class="radio-box">
+      <input [value]="personType.LEGAL_ENTITY" formControlName="type" id="status-ur" type="radio">
+      <label for="status-ur">Юр. лицо</label>
+    </div>
+  </div>
+</form>
+<div class="position-relative">
+  <ngx-loading [show]="loading$|async"></ngx-loading>
+</div>
+<div *ngIf="!(loading$|async)" [ngSwitch]="typeFormGroup.value['type']">
+  <app-contractor-legal-form (cancelForm)="cancel()"
+                             (getMatches)="getMatches($event)"
+                             (submitForm)="submit($event)"
+                             *ngSwitchCase="personType.LEGAL_ENTITY"
+                             [appointments]="appointments$|async"
+                             [fileTypes$]="fileTypes$"
+                             [files]="files$|async"
+                             [legalForms$]="ownerLegalForms$"
+                             [model]="owner$|async"
+                             [routeList]="['/admin','references', 'contractor']"
+                             [showBlockFile]="false"
+                             [type]="type"
+                             buttonName="контрагента"
+  ></app-contractor-legal-form>
+  <app-contractor-entrepreneur-form (cancelForm)="cancel()"
+                                    (getMatches)="getMatches($event)"
+                                    (submitForm)="submit($event)"
+                                    *ngSwitchCase="personType.ENTREPRENEUR"
+                                    [appointments]="appointments$|async"
+                                    [choicesActivities]="ownerActivities$|async"
+                                    [fileTypes$]="fileTypes$"
+                                    [files]="files$|async"
+                                    [model]="owner$|async"
+  ></app-contractor-entrepreneur-form>
+
+</div>
+

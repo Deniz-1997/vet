@@ -1,0 +1,40 @@
+<div class="form-wr form-wr--mmin position-relative">
+  <ngx-loading [show]="loading$|async"></ngx-loading>
+  <div class="form-header">Привязанные услуги</div>
+  <div class="form__table">
+    <table *ngIf="productToServices$|async as productToServices">
+      <tr>
+        <th>Наименование</th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let productToService of productToServices">
+        <td>
+          <div class="form-txt">
+            <strong>{{productToService.paymentService.name}}</strong>
+          </div>
+        </td>
+        <td><a (click)="remove(productToService)" class="tr-close"></a></td>
+      </tr>
+      <tr *ngIf="addMode">
+        <td colspan="2">
+          <app-ui-autocomplete-field
+            (selectedOn)="onSelected($event)"
+            [baseParams]="autocompleteBaseParams"
+            [control]="control"
+            [type]="autocompleteType"
+          ></app-ui-autocomplete-field>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <app-row>
+    <ng-template #rowContent>
+      <app-col class="pb-2">
+        <ng-template #colContent>
+          <a (click)="add()" class="form-span__lnk-btn">{{addMode ? 'Скрыть' : 'Добавить услугу'}}</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>

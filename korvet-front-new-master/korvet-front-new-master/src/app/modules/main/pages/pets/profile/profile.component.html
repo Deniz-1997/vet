@@ -1,0 +1,257 @@
+<ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+             [show]="loading$|async"
+></ngx-loading>
+<div class="header">
+  <a class="btn-st btn-st--right" routerLink="/pets/{{pet.id}}/add-appointment">Записать на прием</a>
+  <div class="header__name">
+    <span><img alt="" src="assets/icons/animals/344924-200-copy.png"
+               srcset="assets/icons/animals/344924-200-copy@2x.png 2x, img/344924-200-copy@3x.png 3x"
+               style="width: 31px; height: 23px;"></span>
+    {{pet.name}}
+  </div>
+</div>
+<div class="tab">
+  <ul class="tab-btn">
+    <li><a (click)="setTabs(1,$event)" [ngClass]="{'active':tabs===1}" href="">Профиль и Владельцы</a></li>
+    <li><a (click)="setTabs(2,$event)" [ngClass]="{'active':tabs===2}" href="">Амбулаторная карта</a></li>
+    <li><a (click)="setTabs(3,$event)" [ngClass]="{'active':tabs===3}" href="">История обращений</a></li>
+    <li><a (click)="setTabs(4,$event)" [ngClass]="{'active':tabs===4}" href="">Документы</a></li>
+  </ul>
+  <div class="tab-list">
+    <div [hidden]="tabs!=1" class="tab-item">
+      <div class="tab-box">
+        <a class="info-edit" routerLink="/pets/{{pet.id}}/edit">
+          <app-icon-edit></app-icon-edit>
+        </a>
+        <div class="info-tr">
+          <div class="info-th">Вид</div>
+          <div class="info-td">{{getPetType()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Порода</div>
+          <div class="info-td">{{getPetBreed()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Пол</div>
+          <div class="info-td">{{pet.gender === 'MALE' ? 'Самец' : pet.gender === 'FEMALE' ? 'Самка' : '-'}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Возраст</div>
+          <div class="info-td">{{pet.birthday | age}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Живая масса</div>
+          <div class="info-td">{{pet.weight | weight}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Приметы</div>
+          <div class="info-td">{{pet.description}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Масть</div>
+          <div class="info-td">{{pet.lear?.name}}</div>
+        </div>
+        <div *ngIf="pet.chipNumber" class="info-tr">
+          <div class="info-th">Чип</div>
+          <div class="info-td">{{pet.chipNumber}}</div>
+        </div>
+        <div *ngFor="let identifier of pet.identifiers" class="info-tr">
+          <div class="info-th">{{identifier.type.name}}</div>
+          <div class="info-td">{{identifier.value}}</div>
+        </div>
+
+        <div class="info-lnk"><a *ngIf="false" __data-fancybox
+                                 __href="#popup-history_changes" href="javascript:alert('Функция в разработке')">История
+          изменений</a></div>
+      </div>
+    </div>
+    <div [hidden]="tabs!=2" class="tab-item">
+      <div class="body-header">
+        <div class="body-header__name">Амбулаторная карта</div>
+        <div class="body-header__setting">
+          <a class="lnk-ico" href="">
+            <app-icon-print></app-icon-print>
+          </a>
+          <a class="lnk-ico" href="">
+            <app-icon-download></app-icon-download>
+          </a>
+        </div>
+      </div>
+      <div class="tab-box">
+        <a class="info-edit" routerLink="/pets/{{pet.id}}/edit">
+          <app-icon-edit></app-icon-edit>
+        </a>
+        <div class="info-tr">
+          <div class="info-th">Вид</div>
+          <div class="info-td">{{getPetType()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Порода</div>
+          <div class="info-td">{{getPetBreed()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Пол</div>
+          <div class="info-td">{{pet.gender === 'MALE' ? 'Самец' : pet.gender === 'FEMALE' ? 'Самка' : '-'}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Возраст</div>
+          <div class="info-td">{{this.getAge()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Живая масса</div>
+          <div class="info-td">{{getWeight()}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Приметы</div>
+          <div class="info-td">{{pet.description}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Масть</div>
+          <div class="info-td">{{pet.lear?.name}}</div>
+        </div>
+        <div *ngIf="pet.chipNumber" class="info-tr">
+          <div class="info-th">Чип</div>
+          <div class="info-td">{{pet.chipNumber}}</div>
+        </div>
+        <div *ngFor="let identifier of pet.identifiers" class="info-tr">
+          <div class="info-th">{{identifier.type.name}}</div>
+          <div class="info-td">{{identifier.value}}</div>
+        </div>
+
+        <div class="info-lnk"><a *ngIf="false" __data-fancybox
+                                 __href="#popup-history_changes" href="javascript:alert('Функция в разработке')">История
+          изменений</a></div>
+      </div>
+
+      <div class="body-row">
+        <div class="body-span body-span--6">
+          <app-pets-profile-temperature [petBirthday]="pet.birthday" [petId]="id"></app-pets-profile-temperature>
+        </div>
+        <div class="body-span body-span--6">
+          <app-pets-profile-weight (setWeight)="setWeight($event)" [petBirthday]="pet.birthday"
+                                   [petId]="id"></app-pets-profile-weight>
+        </div>
+      </div>
+
+      <app-pets-profile-events [events$]="events$" [pet$]="pet$" limit="5"></app-pets-profile-events>
+
+      <div *ngIf="false">
+        <div class="body-header">
+          <div class="body-header__name">Лабораторные исследования</div>
+          <div class="body-header__setting">
+            <a class="lnk-ico" href="">
+              <app-icon-print></app-icon-print>
+            </a>
+            <a class="lnk-ico" href="">
+              <app-icon-download></app-icon-download>
+            </a>
+          </div>
+        </div>
+        <div class="table-info">
+          <table class="table-info-st">
+            <tr>
+              <th>№</th>
+              <th>Тип исследования</th>
+              <th>Дата взятия</th>
+              <th>Дата исследования</th>
+              <th>Результат</th>
+            </tr>
+            <tr>
+              <td>1234556</td>
+              <td>Анализ крови</td>
+              <td>12.08.18</td>
+              <td>12.08.18</td>
+              <td><a href="">Скачать</a></td>
+            </tr>
+            <tr>
+              <td>1234556</td>
+              <td>Анализ крови</td>
+              <td>12.08.18</td>
+              <td>12.08.18</td>
+              <td><a href="">Скачать</a></td>
+            </tr>
+            <tr>
+              <td>1234556</td>
+              <td>Анализ крови</td>
+              <td>12.08.18</td>
+              <td>12.08.18</td>
+              <td><a href="">Скачать</a></td>
+            </tr>
+            <tr>
+              <td>1234556</td>
+              <td>Анализ крови</td>
+              <td>12.08.18</td>
+              <td>12.08.18</td>
+              <td><a href="">Скачать</a></td>
+            </tr>
+            <tr>
+              <td>1234556</td>
+              <td>Анализ крови</td>
+              <td>12.08.18</td>
+              <td>12.08.18</td>
+              <td><a href="">Скачать</a></td>
+            </tr>
+          </table>
+        </div>
+        <a class="btn-show-add" href="">Показать все 40 записей</a>
+      </div>
+      <app-pets-profile-appointments [items$]="appointments$" [pet$]="pet$" limit="5"></app-pets-profile-appointments>
+    </div>
+    <div [hidden]="tabs!==3" class="tab-item">
+      <app-pets-profile-appointments [items$]="appointments$" [pet$]="pet$" limit="20"></app-pets-profile-appointments>
+    </div>
+    <div [hidden]="tabs!==4" class="tab-item">
+      <app-pets-profile-document [appointments]="appointments$" [loadOne]="tabs === 4" [petId]="id"
+                                 limitRow="6"></app-pets-profile-document>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="tabs!==1">
+  <div class="body-header">
+    <div class="body-header__name">Владельцы</div>
+    <div class="body-header__setting">
+      <a *ngIf="getOwnersLength()>0" class="lnk-add" routerLink="/owners/create/{{pet.id}}">Добавить</a>
+    </div>
+  </div>
+  <div *ngIf="getOwnersLength()===0" class="box-empty">
+    <h3>
+      Нет ни одного владельца.
+      <span>Вы можете добавить владельца</span>
+    </h3>
+    <div class="box-empty__btn"><a class="btn-st btn-st--inline btn-st--plus" routerLink="/owners/create/{{pet.id}}">Добавить
+      владельца</a></div>
+  </div>
+  <div *ngIf="getOwnersLength()>0" class="owners-list">
+    <div *ngFor="let item of pet.owners | mainOwner:['mainOwner']:'-1'" class="owners-item">
+      <a (click)="deleteOwner(item);" class="owners-item__close" href="javascript:void(0)"></a>
+      <div class="owners-item__name">
+        <a class="header__name-lnk" routerLink="/owners/{{item.owner.id}}/profile">{{item.owner.name}}</a>
+      </div>
+      <div *ngIf="item.mainOwner === true" class="owners-item__info">Основной владелец</div>
+      <div *ngIf="item.mainOwner === false" class="owners-item__info"><a (click)="setOwnerAsMain(item);"
+                                                                         href="javascript:void(0)">Сделать
+        основным</a></div>
+      <div class="info-tr-list">
+        <div class="info-tr">
+          <div class="info-th">Адрес</div>
+          <div class="info-td">{{item.owner.address.full}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Телефон</div>
+          <div class="info-td">{{item.owner.phone}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Почта</div>
+          <div class="info-td"><a routerLink="mailto:{{item.owner.email}}">{{item.owner.email}}</a></div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Статус</div>
+          <div class="info-td color-red">???</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-pets-profile-events [events$]="events$" [pet$]="pet$"></app-pets-profile-events>
+</div>

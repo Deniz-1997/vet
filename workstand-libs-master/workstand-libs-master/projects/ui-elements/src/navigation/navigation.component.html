@@ -1,0 +1,12 @@
+<aside
+  [ngClass]="classes"
+  [style]="styles"
+  data-booted="true">
+  <div class="krv-navigation-drawer__content">
+    <ng-template *ngTemplateOutlet="templateRef;"></ng-template>
+  </div>
+  <div class="krv-navigation-drawer__append">
+    <ng-template *ngTemplateOutlet="footerNavigation"></ng-template>
+  </div>
+  <div class="krv-navigation-drawer__border"></div>
+</aside>

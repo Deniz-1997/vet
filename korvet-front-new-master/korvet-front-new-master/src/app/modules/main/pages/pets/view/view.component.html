@@ -1,0 +1,52 @@
+<ngx-loading [show]="loading$ | async"></ngx-loading>
+<div *ngIf="pet" class="header">
+  <a *ngIf="!pet.isDead" [class.btn-st--disabled]="isEmptyOwner()" class="btn-st btn-st--right"
+     routerLink="/pets/{{pet?.id}}/add-appointment">Записать на прием</a>
+  <div class="header__name">
+    <app-icon-animal *ngIf="iconType !== undefined" [type]="iconType"></app-icon-animal>
+    {{pet.name}}
+  </div>
+</div>
+<div class="tab">
+  <ul class="tab-btn delivery">
+    <li *ngFor="let tab of tabs; let i = index"><a [class.disabled]="isEmptyOwner()&&i>0"
+                                                   [routerLinkActiveOptions]="{exact: true}"
+                                                   [routerLink]="tab.link"
+                                                   routerLinkActive="active">{{tab.title}}</a></li>
+  </ul>
+  <div class="delivery-grid">
+    <div class="d-none d-md-block">
+      <div class="d-flex p-1">
+        <ng-container *ngFor="let tab of tabs; let i = index">
+          <div class="p-1">
+            <a [routerLinkActiveOptions]="{exact: true}" class="lnk-open" [routerLink]="tab.link"
+               routerLinkActive="active">{{tab.title}}</a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="d-block d-md-none">
+      <div class="row">
+        <ng-container *ngFor="let tab of tabs; let i = index">
+          <div class="col-12">
+            <a [routerLinkActiveOptions]="{exact: true}" class="lnk-open" [routerLink]="tab.link"
+               routerLinkActive="active">{{tab.title}}</a>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="tab-list">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+<app-pets-view-profile-detail *ngIf="router.url.indexOf('/profile')>0 && !isEmptyOwner()"
+                              [pet]="pet"></app-pets-view-profile-detail>
+<div *ngIf="isEmptyOwner()" class="box-empty">
+  <h3>
+    У животного нет владельца
+    <span>Для совершения действий, необходимо добавить владельца</span>
+  </h3>
+  <div class="box-empty__btn"><a class="btn-st btn-st--inline" href="" routerLink="/owners/create/{{pet.id}}">Добавить
+    владельца</a></div>
+</div>

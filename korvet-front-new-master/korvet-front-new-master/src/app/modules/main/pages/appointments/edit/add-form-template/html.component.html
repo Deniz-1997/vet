@@ -1,0 +1,38 @@
+<div  class="form-wr  container-fluid">
+  <div class="form-header">Шаблоны приемов</div>
+  <app-row class="justify-content-between">
+    <ng-template #rowContent>
+      <app-col  class="col-12 col-lg-9">
+        <ng-template #colContent>
+          <app-ui-autocomplete
+            [addFilter]="{'active':true}"
+            [control]="control"
+            [limit]="limit"
+            [options]="template$"
+            [type]="crudType.FormTemplate"
+          ></app-ui-autocomplete>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-lg-3" class="pt-1 text-right">
+        <ng-template #colContent>
+          <a (click)="addTemplateTo('add')" [ngClass]="{'disabled' : hasTemplate()}"
+             class="btn btn-outline-primary mr-4 mb-2"
+             href="javascript:void(0)">
+            Добавить
+          </a>
+          <a (click)="addTemplateTo('show')" [ngClass]="{'disabled' : hasTemplate()}"
+             class="btn btn-outline-primary mb-2 mr-4"
+             href="javascript:void(0)">
+            Показать
+          </a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+</div>
+
+
+
+
+
+

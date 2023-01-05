@@ -1,0 +1,67 @@
+<div class="menu-column">
+  <div class="menu-column__body">
+    <div class="menu-column__slider ng-tns-c8-1 ng-star-inserted" id="toggle_main_sidenav_from_menu">
+      <a (click)="HideSideNav()" class="menu-column__slider-h ng-tns-c8-1 ng-star-inserted">Скрыть меню</a>
+    </div>
+    <div class="menu-column__slider ng-tns-c8-1 ng-star-inserted" *ngIf="showSwitchUserExit()">
+      <a (click)="SwitchUserExit()" class="menu-column__slider-h ng-tns-c8-1 ng-star-inserted">Выйти из пользователя</a>
+    </div>
+    <div class="menu-column__head">
+      <app-main-notification></app-main-notification>
+    </div>
+    <div class="menu-column__user">
+      <div class="menu-column__user-menu">
+        <div class="menu-column__user-menu-ico">
+          <a appUiUserMenu>
+            <app-icon-menu color="white"></app-icon-menu>
+          </a>
+        </div>
+      </div>
+      <div class="menu-column__user-name">
+        <a routerLink="/lk">{{user && user.user.FullName}}</a>
+        <br>{{user && user.user.additionalFields.position}}
+      </div>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col *ngIf="user && user.user['roles'].indexOf('ROLE_CASHIER') > -1">
+            <ng-template #colContent>
+              <div class="form-btn__check form-btn__check--span">
+                <div class="check-st modify-checkbox">
+                  <input (change)="modeCashbox()" [(ngModel)]="isChecked" id="mode-cashbox" type="checkbox">
+                  <label for="mode-cashbox">Режим мобильной кассы</label>
+                </div>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+    <div class="menu-column__lnk-add">
+      <a [routerLink]="['/appointments', 'create']">
+        <app-icon-plus></app-icon-plus>
+        Создать прием
+      </a>
+    </div>
+    <div class="menu-column__lnk-add">
+      <a [routerLink]="['/leaving', 'leaving-create']">
+        <app-icon-plus></app-icon-plus>
+        Создать выезд
+      </a>
+    </div>
+
+    <app-menu-column-slider [menu]="menuService.sidenav"></app-menu-column-slider>
+
+  </div>
+  <div class="menu-column__footer mt-3">
+    <p class="mb-3"><a (click)="openSupportModal()" class="support-link">Написать в поддержку</a></p>
+    <p class="mb-3"><a  target="_blank" href="{{path}}" class="manual-link "> Руководство пользователя</a></p>
+    <div class="menu-column__footer-cont">
+      <a [href]=configHref class="d-block">{{config.tellText}}</a>
+      <a [href]=configGlobalPhone class="d-block">{{config.globalPhoneText}}</a>
+      <a [href]=configMailto class="d-block">{{config.email}}</a>
+    </div>
+    <div class="menu-column__copyrighted">
+      @ 2019-{{date}} «KORVET»
+    </div>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    elementName: 'типа ветеринарных паспортов',
+    title: 'Не найдено ни одного типа ветеринарных паспортов',
+    subtitle: 'Вы можете добавить тип ветеринарных паспортов',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="Типы ветеринарных паспортов"
+>
+  <ng-template #titleActionsTemplate>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Наименование</th>
+      <th>Маска ввода номера фронт</th>
+      <th>Маска ввода номера бек</th>
+      <th>Значение по умолчанию</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+
+    <tr>
+      <td>{{item.id}}</td>
+      <td><a [routerLink]="[item.id]">{{item.name}}</a></td>
+      <td>{{item.numberMaskFront }}</td>
+      <td>{{item.numberMask }}</td>
+      <td>
+        <ng-container *ngIf="item.isDefault; else elseBlock">Да</ng-container>
+        <ng-template #elseBlock>Нет</ng-template>
+      </td>
+    </tr>
+  </ng-template>
+</app-list-filter-view>

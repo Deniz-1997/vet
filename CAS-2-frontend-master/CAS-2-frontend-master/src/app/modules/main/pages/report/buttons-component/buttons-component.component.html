@@ -1,0 +1,20 @@
+<ng-container *ngIf="disabled !== undefined">
+  <k-row  fxLayout="row">
+    <ng-template #row>
+      <k-col cols="6" class="text-left">
+        <ng-template #col>
+          <button mat-raised-button (click)="closeReport.emit($event)">
+            Назад
+          </button>
+        </ng-template>
+      </k-col>
+      <k-col cols="6" class="text-right">
+        <ng-template #col>
+          <button mat-raised-button [disabled]="disabled.disabledOne"  class="mr-4"  (click)="leftButton.emit(statusOne)">{{buttonName.one}}</button>
+          <button mat-raised-button [disabled]="disabled.disabledTwo" color="primary"  (click)="leftButton.emit(statusTwo)">{{buttonName.two}}</button>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </k-row>
+</ng-container>
+

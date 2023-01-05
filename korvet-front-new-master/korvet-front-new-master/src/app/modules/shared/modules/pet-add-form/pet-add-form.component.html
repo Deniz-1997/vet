@@ -1,0 +1,325 @@
+<ngx-loading [show]="(loading$|async) || !formGroup"></ngx-loading>
+<app-title-view *ngIf="!openDialog"  [title]="'Добавить животное'">
+</app-title-view>
+<div *ngIf="openDialog"  class="row fancybox-slide--html">
+  <div class="col ml-2">
+    <app-title-view  [title]="'Добавить животное'">
+    </app-title-view>
+    <app-button-close></app-button-close>
+  </div>
+</div>
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+  <div class="form-wr container-fluid">
+    <app-row class="pb-2 pb-lg-0">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=view col="12 col-lg-3">
+          <ng-template #colContent>
+            <app-ui-autocomplete (selected)="onChangeType()" [control]="formGroup.get('type')" [options]="petTypesItems"
+              [type]="crudType.ReferencePetType" placeholder="Собака"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=breed col="12 col-lg-3" class="pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <ng-container *ngIf="hasType()">
+              <app-ui-autocomplete (selected)="onChangeBreed()" [control]="formGroup.get('breed')"
+                [options]="breedItems" [petId]="formGroup.value.type.id" [type]="crudType.ReferenceBreed">
+              </app-ui-autocomplete>
+            </ng-container>
+            <ng-container *ngIf="!hasType()">
+              <input class="inp-st" disabled type="text" placeholder="Сенбернар">
+            </ng-container>
+          </ng-template>
+        </app-col>
+        <app-col titleName=suit col="12 col-lg-3" >
+          <ng-template #colContent>
+            <app-ui-autocomplete *ngIf="formGroup.get('breed').value?.id"
+              [addFilter]="{'breed.id': formGroup.get('breed').value?.id}" [control]="formGroup.get('lear')"
+              [options]="petLearItems" [type]="crudType.ReferencePetLear"></app-ui-autocomplete>
+            <ng-container *ngIf="!formGroup.get('breed').value?.id">
+              <input class="inp-st" disabled type="text" placeholder="Рыжая">
+            </ng-container>
+          </ng-template>
+        </app-col>
+        <app-col titleName=signs col="12 col-lg-3" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('description').value | firstLetter" class="inp-st"
+              formControlName="description" name="description" type="text" placeholder="Белое пятно на правом ухе">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row class="pb-2 pb-lg-0">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=nickName col="12 col-lg-3" class="pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <input [value]="formGroup.get('name').value | firstLetter" class="inp-st" formControlName="name" name="name"
+              type="text" placeholder="Бобик">
+          </ng-template>
+        </app-col>
+        <app-col titleName=gender col="12 col-lg-3" >
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select disableOptionCentering formControlName="gender" placeholder="Не выбрано">
+                <mat-option value="FEMALE">Самка</mat-option>
+                <mat-option value="MALE">Самец</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+        <app-col [required]="true" titleName=birthDay col="12 col-lg-3" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <app-datepicker-overview [dataError]="formGroup.controls.birthday.invalid" formControlName="birthday">
+            </app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3">
+          <ng-template #colContent>
+            <app-row class="justify-content-start">
+              <ng-template #rowContent>
+                <app-col col="12 col-lg-6" class="pb-2 pb-lg-0" titleName=numberOfYears>
+                  <ng-template #colContent>
+                    <input (input)="setBirthdayByYearsAndMonth()" class="inp-st" formControlName="numberOfYears" max="30"
+                           min="0" name="numberOfYears" type="number">
+                  </ng-template>
+                </app-col>
+                <app-col col="12 col-lg-6" titleName=numberOfMonths >
+                  <ng-template #colContent>
+                    <input (input)="setBirthdayByYearsAndMonth()" class="inp-st" formControlName="numberOfMonths" max="11"
+                           min="0" name="numberOfMonths" type="number">
+                  </ng-template>
+                </app-col>
+              </ng-template>
+            </app-row>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row class="pb-2 pb-lg-0">
+      <ng-template #rowContent>
+        <app-col titleName=chipNumber col="12 col-lg-6" class="pb-2 pb-lg-0">
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="chipNumber" name="chipNumber" type="text" placeholder="8594573299">
+          </ng-template>
+        </app-col>
+        <app-col titleName=isSterilized col="12 col-lg-3">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select disableOptionCentering formControlName="isSterilized" placeholder="Не выбрано">
+                <mat-option [value]="true">Да</mat-option>
+                <mat-option [value]="false">Нет</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+        <app-col titleName=vaccinationDate col="12 col-lg-3">
+          <ng-template #colContent>
+            <app-datepicker-overview formControlName="vaccinationDate"></app-datepicker-overview>
+            <small *ngIf="vaccinationInvalid()" class="note-error">
+              Cрок истек
+            </small>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row class="pb-2 pb-lg-2">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="aggressive" id="pet-aggressive" placeholder="" type="checkbox" value="">
+              <label for="pet-aggressive">Животное агрессивно</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-12" class="pt-2 pt-lg-0" titleName=aggressive *ngIf="formGroup.get('aggressive').value">
+          <ng-template #colContent>
+            <ng-container *ngIf="isAggressive()">
+              <app-ui-autocomplete [control]="formGroup.get('aggressiveType')" [options]="aggresiveTypeItems"
+                [type]="crudType.ReferencePetAggressiveType"></app-ui-autocomplete>
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row formGroupName="address" class="pb-2 pb-lg-2">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-9"  [required]="true" titleName=addressForm>
+          <ng-template #colContent>
+            <input [readonly]="isReadonly" appYaMapsSuggestion class="inp-st" formControlName="full" name="full"
+              type="text" placeholder="г. Москва, ул. Тверская, д. 9">
+          </ng-template>
+        </app-col>
+        <app-col titleName=apartmentNumber col="12 col-lg-3" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <input [readonly]="isReadonly" class="inp-st" formControlName="apartmentNumber" name="apartmentNumber"
+              type="text" placeholder="99">
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row class="pb-2 pb-lg-2"
+      *ngIf="(model.owners && model.owners.length > 0 && findAddressMainOwner()) || (owner && owner.address.full)">
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-12">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="useOwnerAddress" id="primary-owner" placeholder="" type="checkbox">
+              <label for="primary-owner">Использовать адрес владельца</label>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row class="pb-2 pb-lg-2">
+      <ng-template #rowContent>
+        <app-col titleName=veterinaryPassportType col="12 col-lg-6" class="pt-2 pt-lg-0">
+          <ng-template #colContent>
+            <mat-form-field appearance="outline">
+              <mat-select (ngModelChange)="onSetMask()" [compareWith]="compareFn" disableOptionCentering
+                formControlName="veterinaryPassportType" placeholder="Не выбрано">
+                <mat-option *ngFor="let item of veterinaryPassportType$ | async" [value]="item">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-template>
+        </app-col>
+        <app-col titleName=veterinaryPassportNumber col="12 col-lg-6">
+          <ng-template #colContent>
+            <input *ngIf="passportTypMask['showMask']" [textMask]="passportTypMask" class="inp-st"
+              formControlName="veterinaryPassportNumber" type="text">
+            <input *ngIf="!passportTypMask['showMask']" class="inp-st" formControlName="veterinaryPassportNumber"
+              maxLength="30" type="text" placeholder="947594299">
+            <div *ngIf="formGroup.get('veterinaryPassportNumber').invalid" class="error-message">Некорректный номер
+              ветеринарного паспорта
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+
+
+    <div formArrayName="identifiers">
+      <app-row class="pb-2 pb-lg-2" *ngFor="let identifier of formGroup.controls.identifiers.controls; let i=index" [formGroupName]="i">
+        <ng-template #rowContent>
+          <app-col titleName=idType col="12 col-lg-6"  formGroupName="type">
+            <ng-template #colContent>
+              <app-ui-select [control]="formGroup.get('identifiers.'+i+'.type.id')" [options]="identifierItems">
+              </app-ui-select>
+            </ng-template>
+          </app-col>
+          <app-col titleName=number col="10 col-lg-5" class="pt-2 pt-lg-0">
+            <ng-template #colContent>
+              <input class="inp-st inp-st--namber" formControlName="value" name="value" type="text">
+            </ng-template>
+          </app-col>
+          <app-col col="1 col-lg-1" class="mt-3 align-self-center">
+            <ng-template #colContent>
+              <a (click)="setRemoveIdentifiers(i, $event)" class="tr-close" data-fancybox href="#remove-ident"
+                style="opacity: 1;"></a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+            <div class="form-span">
+              <a href="" class="form-span__lnk-btn" (click)="addIdentifier($event)">Добавить идентификатор</a>
+            </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="isDead" id="is-dead" placeholder="" type="checkbox">
+              <label for="is-dead">Животное мертво</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3"  class="pt-2 pt-lg-0" titleName=dateOfDeath *ngIf="formGroup.get('isDead').value">
+          <ng-template #colContent>
+            <app-datepicker-overview [dataError]="formGroup.controls.dateOfDeath.invalid"
+              [isDisabled]="formGroup.controls.dateOfDeath.disabled" [maxDate]="toDay" formControlName="dateOfDeath">
+            </app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col titleName=animalDeath col="12 col-lg-6"  *ngIf="formGroup.get('isDead').value">
+          <ng-template #colContent>
+            <ng-container *ngIf="isDead()">
+              <app-ui-autocomplete [control]="formGroup.get('animalDeath')" [options]="animalDeathItems"
+                [type]="crudType.ReferenceAnimalDeath"></app-ui-autocomplete>
+            </ng-container>
+            <ng-container *ngIf="!isDead()">
+              <input class="inp-st" disabled type="text">
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <app-row>
+      <ng-template #rowContent>
+        <app-col col="12 col-lg-3">
+          <ng-template #colContent>
+            <div class="check-st">
+              <input formControlName="isRetiring" id="is-retiring" placeholder="" type="checkbox">
+              <label for="is-retiring">Животное выбыло</label>
+            </div>
+          </ng-template>
+        </app-col>
+        <app-col col="12 col-lg-3" class="pt-2 pt-lg-0" titleName=dateOfRetiring *ngIf="formGroup.get('isRetiring').value">
+          <ng-template #colContent>
+            <app-datepicker-overview [dataError]="formGroup.controls.dateOfRetiring.invalid"
+                                     [isDisabled]="formGroup.controls.dateOfRetiring.disabled" [maxDate]="toDay" formControlName="dateOfRetiring">
+            </app-datepicker-overview>
+          </ng-template>
+        </app-col>
+        <app-col titleName=isRetiring col="12 col-lg-6" *ngIf="formGroup.get('isRetiring').value">
+          <ng-template #colContent>
+            <ng-container *ngIf="isRetiring()">
+              <app-ui-autocomplete [control]="formGroup.get('petRetiring')" [options]="petRetiringItems"
+                                   [type]="crudType.ReferencePetReasonRetiringType"></app-ui-autocomplete>
+            </ng-container>
+            <ng-container *ngIf="!isRetiring()">
+              <input class="inp-st" disabled type="text">
+            </ng-container>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+  </div>
+</form>
+<div class="form-footer">
+  <app-reference-button-form
+    [goListUrl]="'/pets/' + id"
+    [goListUrlAfterRemove]="'/pets'"
+    [id]="id"
+    [type]="type"
+    [backButton]="true"
+    [hidden]="backButton"
+    [isEdit]="(id ? true : false)"
+    (buttonClick)="submit()"
+    removeButtonName="УДАЛИТЬ ЖИВОТНОЕ"
+  ></app-reference-button-form>
+</div>
+
+<ng-container *ngIf="formGroup">
+  <app-pet-search *ngIf="!openDialog" (select)="addPet($event)" [model]="formGroup"></app-pet-search>
+</ng-container>

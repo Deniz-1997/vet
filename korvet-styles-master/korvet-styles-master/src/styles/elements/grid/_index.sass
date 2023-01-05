@@ -1,0 +1,179 @@
+@import '../../../styles/styles.sass'
+@import 'mixins'
+
+@mixin firefox()
+  @-moz-document url-prefix()
+    @content
+
+.kvr-main
+  +bootable()
+
+  display: flex
+  flex: 1 0 auto
+  max-width: 100%
+  transition: $main-transition
+
+  &__wrap
+    flex: 1 1 auto
+    max-width: 100%
+    position: relative
+
+  +firefox()
+    @media print
+      display: block
+
+.container
+  &.grow-shrink-0w
+    flex-grow: 0
+    flex-shrink: 0
+
+  &.fill-height
+    align-items: center
+    display: flex
+    flex-wrap: wrap
+
+    > .row
+      flex: 1 1 100%
+      max-width: calc(100% + #{$grid-gutter})
+
+    > .layout
+      height: 100%
+      flex: 1 1 auto
+
+      &.grow-shrink-0
+        flex-grow: 0
+        flex-shrink: 0
+
+  &.grid-list
+    @each $size, $gutter in $grid-gutters
+      &-#{$size}
+        .layout
+          .flex
+            padding: divs($gutter, 2)
+
+        .layout:only-child
+          margin: divs(-$gutter, 2)
+
+        .layout:not(:only-child)
+          margin: auto (divs(-$gutter, 2))
+
+        *:not(:only-child)
+          .layout:first-child
+            margin-top: divs(-$gutter, 2)
+
+          .layout:last-child
+            margin-bottom: divs(-$gutter, 2)
+
+.layout
+  display: flex
+  flex: 1 1 auto
+  flex-wrap: nowrap
+  // https://github.com/vuetifyjs/vuetify/issues/3873
+  min-width: 0
+
+  &.reverse
+    flex-direction: row-reverse
+
+  &.column
+    flex-direction: column
+
+    &.reverse
+      flex-direction: column-reverse
+
+    > .flex
+      max-width: 100%
+
+  &.wrap
+    flex-wrap: wrap
+
+  &.grow-shrink-0
+    flex-grow: 0
+    flex-shrink: 0
+
+@each $size, $width in $grid-breakpoints
+  @media all and (min-width: #{$width})
+    $n: $grid-columns
+    @while $n > 0
+      .flex.#{$size}#{$n}
+        flex-basis: divs($n, $grid-columns) * 100%
+        flex-grow: 0
+        max-width: divs($n, $grid-columns) * 100%
+
+      .flex.order-#{$size}#{$n}
+        order: $n
+
+      $n: $n - 1
+
+    $m: $grid-columns
+    @while $m >= 0
+      .flex.offset-#{$size}#{$m}
+        //Offsets can only ever work in row layouts
+        +ltr()
+          margin-left: $m / $grid-columns * 100%
+        +rtl()
+          margin-right: $m / $grid-columns * 100%
+
+      $m: $m - 1
+
+.flex,
+.child-flex > *
+  flex: 1 1 auto
+  max-width: 100%
+
+  &.grow-shrink-0
+    flex-grow: 0
+    flex-shrink: 0
+
+.spacer
+  flex-grow: 1 !important
+
+.grow
+  flex-grow: 1 !important
+  flex-shrink: 0 !important
+
+.shrink
+  flex-grow: 0 !important
+  flex-shrink: 1 !important
+
+.fill-height
+  height: 100%
+
+.container
+  +make-container
+  +make-container-max-widths
+
+  &--fluid
+    max-width: 100%
+
+// Row
+//
+// Rows contain and clear the floats of your columns.
+.row
+  +make-row
+
+  & + .row
+    margin-top: divs($grid-gutter, 2)
+
+    &--dense
+      margin-top: divs($form-grid-gutter, 2)
+
+  &--dense
+    margin: divs(-$form-grid-gutter, 2)
+
+    > .col,
+    > [class*="col-"]
+      padding: divs($form-grid-gutter, 2)
+
+  // Remove the negative margin from default .row, then the horizontal padding
+  // from all immediate children columns (to prevent runaway style inheritance).
+  &.no-gutters
+    margin: 0
+
+    > .col,
+    > [class*="col-"]
+      padding: 0
+
+// Columns
+//
+// Common styles for small and large grid columns
++make-grid-columns

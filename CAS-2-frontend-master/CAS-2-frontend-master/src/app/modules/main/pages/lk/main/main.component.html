@@ -1,0 +1,135 @@
+<ng-container *ngIf="user">
+  <div class="form-wr form-wr--mnone">
+    <div class="lk">
+      <div class="lk__ava">
+        <a (click)="photoClick($event)" class="ava-edit" style="min-height: 134px">
+          <img alt="" src="{{getImgUser()}}">
+          <span>Изменить <br>фото</span>
+        </a>
+        <input #photoInput (change)="photoUpload($event)" accept="image/jpeg,image/png,image/gif" class="ava-edit-input"
+               type="file">
+      </div>
+      <div class="lk__info">
+        <div class="lk__name">
+          <strong>{{user.user.FullName}}</strong>
+          {{user.user.additionalFields.position}}
+        </div>
+        <span>{{user.user['phone']}}</span>
+        <span><a href="mailto:{{user.user.email}}">{{user.user.email}}</a></span>
+      </div>
+      <div class="lk__clock">
+        <div class="lk__clock-namber">
+          <ng-container
+            *ngIf="user.user && user.user.additionalFields && user.user.additionalFields.hours && user.user.additionalFields.hours.length">
+            <ng-container *ngFor="let hour of user.user.additionalFields.hours; let l = last">
+              {{hour}}<br *ngIf="!l"/>
+            </ng-container>
+          </ng-container>
+          <!--пн.&nbsp; 9:00–18:00<br>
+          ср.&nbsp; 9:00–18:00<br>
+          пт.&nbsp; 9:00–18:00<br>-->
+        </div>
+        <a [routerLink]="['change-password']">Изменить пароль</a>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="user.user.additionalFields.company" class="form-wr">
+    <div class="lk-info">
+      <div class="lk-info__head">
+        <p>Работает в</p>
+        <p>{{user.user.additionalFields.company.name}}</p>
+        <span>{{user.user.additionalFields.company.address}}<br>
+          {{user.user.additionalFields.company.phone}}
+                    </span>
+      </div>
+      <div class="lk-info__clock">
+        <ng-container
+          *ngIf="user.user && user.user.additionalFields && user.user.additionalFields.company && user.user.additionalFields.company.hours && user.user.additionalFields.company.hours.length">
+          <ng-container *ngFor="let hour of user.user.additionalFields.company.hours; let l = last">
+            {{hour}}<br *ngIf="!l"/>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="false" class="form-wr">
+    <div class="lk-info">
+      <div class="lk-info__head">
+        <p>Настройка подписок</p>
+        <span>
+                        Выберите какие сообщения Вы будете получать на почту, а какие - в систему
+                    </span>
+      </div>
+      <form action="">
+        <table class="lk-setting">
+          <tr>
+            <th>Тип сообщения</th>
+            <th>Почта</th>
+            <th>Система</th>
+          </tr>
+          <tr>
+            <td>Изменения пароля</td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-1" type="checkbox">
+                <label for="checkbox-1"></label>
+              </div>
+            </td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-10" type="checkbox">
+                <label for="checkbox-10"></label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Изменения статуса приемов</td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-2" type="checkbox">
+                <label for="checkbox-2"></label>
+              </div>
+            </td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-20" type="checkbox">
+                <label for="checkbox-20"></label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Изменения статусов оплаты</td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-3" type="checkbox">
+                <label for="checkbox-3"></label>
+              </div>
+            </td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-30" type="checkbox">
+                <label for="checkbox-30"></label>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Поступление новых отчетов</td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-4" type="checkbox">
+                <label for="checkbox-4"></label>
+              </div>
+            </td>
+            <td>
+              <div class="check-st">
+                <input checked id="checkbox-40" type="checkbox">
+                <label for="checkbox-40"></label>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+  <app-lk-main-colorpicker></app-lk-main-colorpicker>
+</ng-container>

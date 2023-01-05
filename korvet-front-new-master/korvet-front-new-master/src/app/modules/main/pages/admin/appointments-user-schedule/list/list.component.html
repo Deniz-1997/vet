@@ -1,0 +1,109 @@
+<app-list-filter-view
+  [filterFields]="filterFields"
+  [listEmptyOptions]="{
+    elementName: 'график работы врача',
+    title: 'Не найдено ни одного графика работы врача',
+    subtitle: 'Вы можете добавить график работы врача',
+    addLink: ['create']
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="График работы врачей"
+>
+  <ng-template #titleActionsTemplate>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a *ngIf="false" class="lnk-ico" href="javascript:alert('Функция в разработке')">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="create">Добавить</a>
+    <a class="lnk-add" routerLink="period-create">Добавить за период</a>
+  </ng-template>
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Дата создания</th>
+      <th>Начало периода</th>
+      <th>Конец периода</th>
+      <th>Врач</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td>{{item.createdAt}}</td>
+      <td>{{item.dateFrom}}</td>
+      <td>{{item.dateTo}}</td>
+      <td>{{getFullName(item.employee)}}</td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="6" text="Врач">
+              <ng-template #colContent>
+                {{getFullName(item.employee)}}
+              </ng-template>
+            </app-col>
+            <app-col col="6"  class="mt-2 text-right">
+              <ng-template #colContent>
+                <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                  <span class="expand-lnk"></span>
+                  <span class="expand-text"></span>
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col  titleName="id">
+                      <ng-template #colContent>
+                        <a [routerLink]="[item.id]">{{item.id}}</a>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Дата создания">
+                      <ng-template #colContent>
+                        {{item.createdAt}}
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Начало периода">
+                      <ng-template #colContent>
+                        {{item.dateFrom}}
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Конец периода">
+                      <ng-template #colContent>
+                        {{item.dateTo}}
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

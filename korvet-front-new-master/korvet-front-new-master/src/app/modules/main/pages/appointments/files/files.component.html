@@ -1,0 +1,37 @@
+<div class="form-wr container-fluid">
+    <div class="form-header">Файлы</div>
+    <div class="w-100 text-center">
+        <div *ngIf="fileLoading" class="loader"></div>
+    </div>
+    <div *ngIf="!fileLoading" class="form__table form__table--file">
+        <table>
+            <tr *ngFor="let file of (files | async); let i=index">
+                <td><a href="{{ file.uploadedFile.path === null? '/uploaded' : file.uploadedFile.path}}/{{file.uploadedFile.name}}"
+                        target="_blank">
+                        {{file.name}}
+                    </a></td>
+                <td>
+                    {{file.uploadedFile.size|fileSize}}
+                </td>
+                <td><a href="{{ file.uploadedFile.path === null? '/uploaded' : file.uploadedFile.path}}/{{file.uploadedFile.name}}"
+                        target="_blank">
+                        <app-file-type-icon [mimeType]="file.uploadedFile.mimeType"></app-file-type-icon>
+                    </a></td>
+                <td>
+                    {{file.type.name}}
+                </td>
+                <td style="text-align: right"><a (click)="removeFile(file, $event);" class="tr-close" href="#"></a></td>
+            </tr>
+        </table>
+    </div>
+  <app-row>
+    <ng-template #rowContent>
+      <app-col class="pb-2">
+        <ng-template #colContent>
+          <a (click)="addFile($event)" class="lnk-open" href="#" *ngIf="!fileLoading">Добавить файл</a>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+</div>

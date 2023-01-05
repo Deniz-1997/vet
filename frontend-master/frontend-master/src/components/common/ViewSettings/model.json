@@ -1,0 +1,19 @@
+{
+    "userId": 1,
+    "name": "Название сервиса",
+    "countPages": "20",
+    "columns": [
+        {
+            "text": "Наименование",
+            "value": "name"
+        },
+        {
+            "text": "ОГРН/ОГРНИП",
+            "value": "ogrn"
+        }
+    ],
+    "sortColumn": {
+        "text": "Наименование",
+        "value": "name"
+    }
+}

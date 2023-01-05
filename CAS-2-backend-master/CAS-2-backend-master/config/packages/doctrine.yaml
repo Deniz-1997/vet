@@ -1,0 +1,81 @@
+parameters:
+    # Adds a fallback DATABASE_URL if the env var is not set.
+    # This allows you to run cache:warmup even if your
+    # environment variables are not available yet.
+    # You should not need to change this value.
+    env(DATABASE_URL): ''
+    env(CAS_DATABASE_URL): ''
+
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                # configure these for your database server
+                driver: 'pdo_pgsql'
+                server_version: '12.0'
+                charset: utf8
+
+                # With Symfony 3.3, remove the `resolve:` prefix
+                url: '%env(resolve:DATABASE_URL)%'
+            cas:
+                # configure these for your database server
+                driver: 'pdo_pgsql'
+                server_version: '12.0'
+                charset: utf8
+
+                # With Symfony 3.3, remove the `resolve:` prefix
+                url: '%env(resolve:CAS_DATABASE_URL)%'
+        types:
+            json: App\Packages\DBAL\Types\JsonArrayType
+            App\Packages\DBAL\Types\ActionTypeEnum: App\Packages\DBAL\Types\ActionTypeEnum
+            App\Packages\DBAL\Types\LegalFormsEnum: App\Packages\DBAL\Types\LegalFormsEnum
+            App\Packages\DBAL\Types\ReportStatusEnum: App\Packages\DBAL\Types\ReportStatusEnum
+            App\Packages\DBAL\Types\VaccinationUploadStatusEnum: App\Packages\DBAL\Types\VaccinationUploadStatusEnum
+            App\Packages\DBAL\Types\AnimalGenderEnum: App\Packages\DBAL\Types\AnimalGenderEnum
+            App\Packages\DBAL\Types\TokenTypeEnum: App\Packages\DBAL\Types\TokenTypeEnum
+            App\Packages\DBAL\Types\ApiQueueStatusEnum: App\Packages\DBAL\Types\ApiQueueStatusEnum
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        entity_managers:
+            default:
+                connection: default
+                auto_mapping: true
+                naming_strategy: doctrine.orm.naming_strategy.underscore
+                mappings:
+                    Main:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
+                        alias: Main
+                dql:
+                    numeric_functions:
+                        Random: Qbbr\PgsqlDoctrineRandomFunction\DQL\RandomFunction
+                    string_functions:
+                        cast: App\Packages\DQL\CastFunction
+                        fts: App\Packages\DQL\FTS
+                        tsquery: App\Packages\DQL\TsQuery
+            cas:
+                connection: cas
+                mappings:
+                    Main:
+                        is_bundle: false
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/EntityOld'
+                        prefix: 'App\EntityOld'
+                        alias: Main
+#        mappings:
+#            App:
+#                is_bundle: false
+#                type: annotation
+#                dir: '%kernel.project_dir%/src/Entity'
+#                prefix: 'App\Entity'
+#                alias: App
+#            Cas:
+#                is_bundle: false
+#                type: annotation
+#                dir: '%kernel.project_dir%/src/Entity'
+#                prefix: 'App\Entity'
+#                alias: Cas

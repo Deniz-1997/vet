@@ -1,0 +1,46 @@
+<div class="header">
+  <div *ngIf="id === 'create'; else elseBlock" class="header__name">Создать кассовую смену</div>
+
+  <ng-template #elseBlock>
+    <div class="header__name">{{title}}</div>
+  </ng-template>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=kkm>
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('cashRegister')" [options]="referenceCashRegisterItems"
+              [type]="crudType.ReferenceCashRegister" [filter]="filter" placeholder="Укажите ККМ"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=cashier>
+          <ng-template #colContent>
+            <app-ui-autocomplete [control]="formGroup.get('cashier')" [options]="users$" [type]="crudType.User"
+              field="fullName" placeholder="Укажите кассира"></app-ui-autocomplete>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+
+    <!--<div class="form-row form-row&#45;&#45;column">-->
+    <!--<div class="form-span form-span&#45;&#45;7">-->
+    <!--<div class="form-head">ККМ</div>-->
+    <!--<div class="form-body">-->
+    <!--<app-ui-multi-select-field-->
+    <!--[(choices)]="referenceCashItems"-->
+    <!--[control]="formGroup.controls['cashRegister']"-->
+    <!--&gt;</app-ui-multi-select-field>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+  </div>
+  <app-reference-button-form [goListUrl]="goListUrl()" [id]="id" [isEdit]="isEdit()" [type]="type">
+  </app-reference-button-form>
+</form>

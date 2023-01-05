@@ -1,0 +1,29 @@
+<ng-container [ngSwitch]="type">
+  <ng-container *ngSwitchCase="'button'">
+    <button mat-button [color]="color" [disabled]="disabled">{{name}}</button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'raised'">
+    <button mat-raised-button [color]="color" [disabled]="disabled">{{name}}</button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'stroked'">
+    <button mat-stroked-button [color]="color" [disabled]="disabled">{{name}}</button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'flat'">
+    <button mat-flat-button [color]="color" [disabled]="disabled">{{name}}</button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'icon'">
+    <button mat-icon-button aria-label="">
+      <mat-icon>{{iconBtn}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'fab'">
+    <button mat-fab [color]="color" aria-label="icon">
+      <mat-icon>{{iconBtn}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'mini-fab'">
+    <button mat-mini-fab [color]="color" aria-label="Example icon button with a menu icon">
+      <mat-icon>{{iconBtn}}</mat-icon>
+    </button>
+  </ng-container>
+</ng-container>

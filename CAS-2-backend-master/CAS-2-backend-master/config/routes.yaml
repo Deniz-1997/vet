@@ -1,0 +1,32 @@
+#webslon_api:
+#    resource: "@WebslonApiBundle/Resources/config/routing.yml"
+#    prefix:   /api
+#
+#webslon_auth:
+#    resource: "@WebslonAuthBundle/Resources/config/routing.yml"
+#    prefix:   /api
+#
+#webslon_entity_history:
+#    resource: "@WebslonEntityHistoryBundle/Controller/"
+#    type: annotation
+#    prefix:   /api
+#
+fos_oauth_server_token:
+    path: /api/oauth/v2/token/
+    defaults: { _controller: fos_oauth_server.controller.token:tokenAction }
+    methods: [GET, POST]
+
+fos_oauth_server_authorize:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
+    prefix:   /api
+#
+#cashe_equipment:
+#    resource: '@WebslonCashierEquipmentBundle/Controller/'
+#    type: annotation
+#    prefix:   /api
+#
+#cms_bundle:
+#    resource: '@WebslonCMSBundle/Controller/'
+#    type: annotation
+#    prefix:   /api
+#

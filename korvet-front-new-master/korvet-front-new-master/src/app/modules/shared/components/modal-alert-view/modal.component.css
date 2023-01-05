@@ -1,0 +1,29 @@
+#popup_modal {
+  width: 50vw;
+  min-width: 768px;
+}
+
+.check-st {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.check-st .check-st__col {
+  display: inline-block;
+}
+
+.check-st .check-st__col:not(:first-child) {
+  margin-left: 15px;
+}
+
+.popup-wr__body .form-span--date {
+  max-width: 50%;
+  display: inline-block;
+}
+
+#popup_modal .popup-wr__body {
+  min-height: 30vh;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 25px;
+}

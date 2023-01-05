@@ -1,0 +1,131 @@
+<div *ngIf="!openDialog" class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+<app-row *ngIf="openDialog" class="fancybox-slide--html">
+  <ng-template #rowContent>
+    <app-col class="ml-2 pb-2">
+      <ng-template #colContent>
+        <app-title-view  [title]=title></app-title-view>
+        <app-button-close></app-button-close>
+      </ng-template>
+    </app-col>
+  </ng-template>
+</app-row>
+
+<form (submit)="submit()" *ngIf="formGroup" [class.show-error]="showError" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="name" type="text" placeholder="Введите наименование"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row class="pb-4">
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=symbolCode>
+          <ng-template #colContent>
+            <input class="inp-st" formControlName="code" type="text" placeholder="Введите символьный код"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <mat-tab-group animationDuration="0ms" dynamicHeight="true">
+    <mat-tab label="Роли">
+      <ngx-loading [show]="loading"></ngx-loading>
+      <div class="form-wr container-fluid">
+        <app-row class="d-flex p-1">
+          <ng-template #rowContent>
+                <app-col class="mr-auto p-1">
+                  <ng-template #colContent>
+                    Роли
+                  </ng-template>
+                </app-col>
+            <app-col  class="p-1 text-right">
+              <ng-template #colContent>
+                  <a (click)="onSelectAllRead()" class="mr-20">Выбрать все для чтения</a>
+              </ng-template>
+            </app-col>
+            <app-col  class="p-1 text-right">
+              <ng-template #colContent>
+                <a (click)="onSelectAll()" class="mr-20">Выбрать все</a>
+              </ng-template>
+            </app-col>
+            <app-col  class="p-1 text-right">
+              <ng-template #colContent>
+                <a (click)="onDeselectAll()">Снять все</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="d-flex p-1">
+          <ng-template #rowContent>
+            <app-col class="p-1">
+              <ng-template #colContent>
+                Выбрано
+                ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length : 0}}
+                <br/>
+                <mat-selection-list [formControlName]="'roles'">
+                  <mat-list-option *ngFor="let item of roles" [value]="item" checkboxPosition="before">
+                    {{item['name']}} [{{item['id']}}]
+                  </mat-list-option>
+                </mat-selection-list>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="d-flex p-1">
+          <ng-template #rowContent>
+            <app-col class="p-1">
+              <ng-template #colContent>
+                Выбрано ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length : 0}}<br/>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+    </mat-tab>
+    <mat-tab label="Меню">
+      <div class="form-wr form-wr--mmin">
+
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodeToggle>
+            <button disabled mat-icon-button type="button"></button>
+            <mat-checkbox (change)="toggleSelectedMenu(node);"
+                          [checked]="isSelectedMenu(node)"
+                          [disabled]="!node.roles || node.roles.length <1"
+                          class="checklist-leaf-node">{{node.item}}
+              [<span *ngFor="let role of node.roles"> {{role.id}} </span>]
+            </mat-checkbox>
+          </mat-tree-node>
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button [attr.aria-label]="'toggle ' + node.filename" mat-icon-button
+                    matTreeNodeToggle type="button">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            <mat-checkbox (change)="todoItemSelectionToggle(node)"
+                          [checked]="descendantsAllSelected(node)"
+                          [indeterminate]="descendantsPartiallySelected(node)">{{node.item}}
+              [<span *ngFor="let role of node.roles"> {{role.id}} </span>]
+            </mat-checkbox>
+          </mat-tree-node>
+        </mat-tree>
+        <div>Выбрано ролей: {{formGroup.get('roles')?.value?.length ? formGroup.get('roles')?.value?.length : 0}}</div>
+        <br/>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+    [hidden]="true"
+  ></app-reference-button-form>
+</form>

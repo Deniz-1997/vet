@@ -1,0 +1,102 @@
+<app-list-filter-view [listEmptyOptions]="{
+    elementName: 'отбор проб',
+    title: 'Не найдено ни одного исследования ',
+    subtitle: 'Вы можете добавить отбор проб',
+    addLink: ['/laboratory','probe-sampling','create']
+  }"
+  [type]="type"
+  [order]="order"
+  [filterFields]="filterFields"
+  filterPlaceholder="Поиск"
+  title="Исследования">
+  <ng-template #titleActionsTemplate>
+  </ng-template>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th>Идентификатор</th>
+      <th>Дата</th>
+      <th>Лаборатория</th>
+      <th>Исследование</th>
+      <th>Приоритет</th>
+      <th>Статус</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr>
+      <td>{{item.number}}</td>
+      <td><a [routerLink]="['/laboratory', 'research-document', item.number]">{{item.date}}</a></td>
+      <td>{{item.laboratory?.name}}</td>
+      <td>{{item.research?.name}}</td>
+      <td>{{item.researchPriority?.name}}</td>
+      <td>{{item.status?.title}}</td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="3" text="Дата">
+            <ng-template #colContent>
+              <a [routerLink]="['/laboratory', 'research-document', item.number]">{{item.date}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="3" text="Исследование">
+            <ng-template #colContent>
+              {{item.research?.name}}
+            </ng-template>
+          </app-col>
+          <app-col col="6" text="&#160;" class="text-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span >Лаборатория:&#160;</span>
+                        <strong>{{item.laboratory?.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span >Приоритет:&#160;</span>
+                        <strong>{{item.researchPriority?.name}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col>
+                      <ng-template #colContent>
+                        <span >Статус:&#160;</span>
+                        <strong>{{item.status?.title}}</strong>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

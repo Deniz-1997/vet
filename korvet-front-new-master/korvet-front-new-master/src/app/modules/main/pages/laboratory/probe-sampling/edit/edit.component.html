@@ -1,0 +1,518 @@
+<app-title-view class="d-none d-lg-block" [title]="title">
+  <ng-template #actionsTemplate>
+    <span>
+      <ng-container *ngIf="model.user?.surname"> {{model.user?.surname}} </ng-container>
+      <ng-container *ngIf="model.user?.name"> {{model.user?.name}} </ng-container>
+      <ng-container *ngIf="model.user?.patronymic"> {{model.user?.patronymic}} </ng-container>
+    </span>
+  </ng-template>
+</app-title-view>
+<div class="container-fluid d-block d-lg-none">
+  <div class="row mt-2">
+    <div class="12 col-sm-9 pb-2">
+      <h1>{{title}}</h1>
+    </div>
+    <div class="12 col-sm-3 pb-2 text-sm-right">
+          <span>
+      <ng-container *ngIf="model.user?.surname"> {{model.user?.surname}} </ng-container>
+      <ng-container *ngIf="model.user?.name"> {{model.user?.name}} </ng-container>
+      <ng-container *ngIf="model.user?.patronymic"> {{model.user?.patronymic}} </ng-container>
+    </span>
+    </div>
+  </div>
+
+</div>
+
+
+<ngx-loading [show]="loading$|async"></ngx-loading>
+
+<div class="position-relative" *ngIf="formGroup">
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <ng-container *ngIf="!model || !model.appointment || !model.appointment.id">
+      <app-row *ngIf="!lockForm()">
+        <ng-template #rowContent>
+          <app-col class="pb-2 text-right d-none d-lg-block">
+            <ng-template #colContent>
+              <button (click)="addOwner($event)" class="btn-st  btn-st--inline mr-4">Добавить владельца</button>
+              <button [disabled]="ownerId === undefined ? true : false" (click)="addPet($event)"
+                class="btn-st btn-st--inline">Добавить животное</button>
+            </ng-template>
+          </app-col>
+          <app-col class="pb-2 text-right d-block d-lg-none">
+            <ng-template #colContent>
+              <a (click)="addOwner($event)" class="btn btn-link">Добавить владельца</a>
+              <a [class.disabled]="ownerId === undefined ? true : false" (click)="addPet($event)"
+                      class="btn btn-link mr-2">Добавить животное</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="form-wr container-fluid">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" titleName="dateSampling" col="12 col-lg-2">
+              <ng-template #colContent>
+                <app-datepicker-overview [dataError]="formGroup.controls['date'].hasError('required')"
+                  formControlName="date" *ngIf="!lockForm()"></app-datepicker-overview>
+                <div class="form-body" *ngIf="lockForm()">
+                  <strong>
+                    {{ formGroup.get('date').value }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName="timeSampling" col="12 col-lg-2" class="mb-2 mb-lg-0" *ngIf="!lockForm()">
+              <ng-template #colContent>
+                <input appUiMaskTime class="inp-st time-mask" formControlName="time" type="text">
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName="owner" col="12 col-lg-4">
+              <ng-template #colContent>
+                <app-ui-autocomplete [control]="formGroup.get('owner')" [type]="crudType.Owner" [petId]="petId"
+                  *ngIf="!lockForm()" placeholder="Укажите владельца">
+                </app-ui-autocomplete>
+                <div class="form-body" *ngIf="lockForm()">
+                  <strong>
+                    {{ formGroup.get('owner').value?.surname}} {{formGroup.get('owner').value?.name}}
+                    {{formGroup.get('owner').value?.patronymic}}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" titleName="pet" col="12 col-lg-4">
+              <ng-template #colContent>
+                <app-ui-autocomplete [control]="formGroup.get('pet')" [convertReturnResult]="convertResultForPets"
+                  [fields]="fieldsPet" [ownerId]="ownerId" [type]="crudType.Pet" *ngIf="!lockForm()"
+                   placeholder="Укажите животное">
+                </app-ui-autocomplete>
+                <div class="form-body" *ngIf="lockForm()">
+                  <strong>
+                    {{ formGroup.get('pet').value.name }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="pb-3">
+          <ng-template #rowContent>
+            <app-col titleName="comments" col="12">
+              <ng-template #colContent>
+                <textarea [value]="formGroup.get('comment').value | firstLetter" class="textarea-st" cols="30"
+                  formControlName="comment" rows="6" *ngIf="!lockForm()" placeholder="Отбор пробы в рамках лечения животного"></textarea>
+                <div class="form-body" *ngIf="lockForm()">
+                  <strong>
+                    {{ formGroup.get('comment').value}}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="pb-3 d-none d-lg-block">
+          <ng-template #rowContent>
+            <app-col class="text-left pt-lg-3" col="4">
+              <ng-template #colContent>
+                <strong class="d-inline mr-1">Итого: </strong>{{getAllAmount() | price}}
+              </ng-template>
+            </app-col>
+            <app-col class="text-right mr-4" col="8" *ngIf="!model.cashReceipt">
+              <ng-template #colContent>
+                <strong class="d-inline mr-1">Способ оплаты: </strong>
+                <div class="radio-box d-inline mr-2">
+                  <input [value]="true" formControlName="paymentType" id="status-ip" type="radio">
+                  <label for="status-ip">Нал.</label>
+                </div>
+                <div class="radio-box d-inline mr-5">
+                  <input [value]="false" formControlName="paymentType" id="status-ur" type="radio">
+                  <label for="status-ur">Безнал.</label>
+                </div>
+                <button class="btn btn-primary" type="button" (click)="submit(false, true)">
+                  Создать чек
+                </button>
+              </ng-template>
+            </app-col>
+            <app-col *ngIf="model.cashReceipt" class="text-right pt-3" col="8">
+              <ng-template #colContent>
+                <a [routerLink]="['/cash/cash-receipt/', model.cashReceipt.id]" style="white-space: nowrap">
+                  Чек ККМ №{{model.cashReceipt.id}} от {{model.cashReceipt.createdAt}}
+                </a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="d-block d-lg-none">
+          <ng-template #rowContent>
+            <div class="container-fluid">
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col  col="12" *ngIf="!model.cashReceipt">
+                    <ng-template #colContent>
+                      <strong class="d-inline">Способ оплаты: </strong>
+                      <div class="radio-box d-inline mr-2">
+                        <input [value]="true" formControlName="paymentType" id="status-ip2" type="radio">
+                        <label for="status-ip2">Нал.</label>
+                      </div>
+                      <div class="radio-box d-inline">
+                        <input [value]="false" formControlName="paymentType" id="status-ur2" type="radio">
+                        <label for="status-ur2">Безнал.</label>
+                      </div>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col *ngIf="!model.cashReceipt"  col="12">
+                    <ng-template #colContent>
+                      <a class="lnk-open" type="button" (click)="submit(false, true)">
+                        Создать чек
+                      </a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col *ngIf="model.cashReceipt" col="12">
+                    <ng-template #colContent>
+                      <a [routerLink]="['/cash/cash-receipt/', model.cashReceipt.id]" style="white-space: nowrap">
+                        Чек ККМ №{{model.cashReceipt.id}} от {{model.cashReceipt.createdAt}}
+                      </a>
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+              <app-row>
+                <ng-template #rowContent>
+                  <app-col class="text-left pt-lg-3" col="12">
+                    <ng-template #colContent>
+                      <strong class="d-inline mr-1">Итого: </strong>{{getAllAmount() | price}}
+                    </ng-template>
+                  </app-col>
+                </ng-template>
+              </app-row>
+            </div>
+          </ng-template>
+        </app-row>
+      </div>
+    </ng-container>
+    <ng-container *ngFor="let probe of formGroup.get('probeItems')['controls']; let i = index;">
+      <div class="container-fluid" *ngIf="!lockForm(i)" [class.form-wr]="!isModal">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12" class="text-right">
+              <ng-template #colContent>
+                <a *ngIf="!isModal && model.appointment?.id" target="blank" class="lnk-add" href="/appointments/{{model.appointment.id}}">Открыть прием</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row class="mt-1">
+          <ng-template #rowContent>
+            <app-col col="6">
+              <ng-template #colContent>
+                <h3>Проба</h3>
+              </ng-template>
+            </app-col>
+            <app-col col="6" class="text-right" *ngIf="i != 0">
+              <ng-template #colContent>
+                <a (click)="removeProbe(i)" class="tr-close  ml-lg-3"></a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col [required]="true" col="12 col-lg-6" titleName="probeName">
+              <ng-template #colContent>
+                <app-ui-autocomplete [control]="probe.get('probe')" [required]="true" [type]="crudType.Probe"
+                  styleClass="space-normal" [fields]="probeFields"
+                  placeholder="Укажите наименование пробы"></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+            <app-col [required]="true" col="12 col-lg-6" titleName="packaging">
+              <ng-template #colContent>
+                <app-ui-autocomplete [control]="probe.get('packing')" [required]="true" [type]="crudType.Packing"
+                  styleClass="space-normal" placeholder="Укажите упаковку"></app-ui-autocomplete>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-lg-6" titleName="marking">
+              <ng-template #colContent>
+                <input [formControl]="probe.get('code')" class="inp-st" type="text" placeholder="ABC9999"/>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-2"  class="pt-3 pb-3 pt-lg-0 pb-lg-0" titleName="quantity">
+              <ng-template #colContent>
+                <input [formControl]="probe.get('quantity')" class="inp-st" type="number" />
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-2"  titleName="probeSamplingPrice">
+              <ng-template #colContent>
+                <input [formControl]="probe.get('price')" appPositiveNumber class="inp-st" type="number" />
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-lg-2" class="pt-3 pt-lg-0"  titleName="summ">
+              <ng-template #colContent>
+                <div class="form-body pt-lg-3">
+                  <strong>
+                    {{ getSumm(probe) | price }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <ng-container *ngFor="let item of probe.get('researchDocuments')['controls']; let j = index;">
+          <app-row class="mt-1">
+            <ng-template #rowContent>
+              <app-col col="6">
+                <ng-template #colContent>
+                  <h3>Исследование <span
+                      *ngIf="model && model.probeItems[i] && model.probeItems[i].researchDocuments[j] && model.probeItems[i].researchDocuments[j].status">
+                      - {{model.probeItems[i].researchDocuments[j].status.title}}</span></h3>
+                </ng-template>
+              </app-col>
+              <app-col col="6" class="text-right" *ngIf="!lockForm(i) && j != 0">
+                <ng-template #colContent>
+                  <a (click)="removeResearch(i, j)" class="tr-close ml-lg-3"></a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col [required]="true" titleName="laboratory" col="12 col-lg-9">
+                <ng-template #colContent>
+                  <app-ui-autocomplete [control]="item.get('laboratory')" [required]="true" [type]="crudType.Laboratory"
+                    styleClass="space-normal" placeholder="Укажите лабораторию"></app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+              <app-col col="12 col-lg-3" class="pt-3">
+                <ng-template #colContent>
+                  <button class="btn btn-outline-primary d-none d-lg-block" type="button" (click)="createNewLaboratory(i,j)">Добавить
+                    лабораторию
+                  </button>
+                  <a class="lnk-open d-block d-lg-none" type="button" (click)="createNewLaboratory(i,j)">+ Добавить
+                    лабораторию
+                  </a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col titleName="researchName" col="12 col-lg-9" [required]="true">
+                <ng-template #colContent>
+                  <app-ui-autocomplete [control]="item.get('research')" [required]="true" [type]="crudType.Research"
+                    styleClass="space-normal" placeholder="Укажите наименование исследования"></app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+              <app-col [required]="true" titleName="researchPrice" col="12 col-lg-3">
+                <ng-template #colContent>
+                  <input [formControl]="item.get('price')" appPositiveNumber class="inp-st" type="number"
+                  placeholder="Укажите наименование исследования"/>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row>
+            <ng-template #rowContent>
+              <app-col [required]="true" col="12 col-lg-6" titleName="researchReason">
+                <ng-template #colContent>
+                  <app-ui-autocomplete [control]="item.get('researchReason')" [required]="true"
+                    [type]="crudType.ResearchReason" styleClass="space-normal"
+                    placeholder="Укажите цену исследования"></app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+              <app-col col="12 col-lg-6" titleName="researchPriority">
+                <ng-template #colContent>
+                  <app-ui-autocomplete [control]="item.get('researchPriority')" [type]="crudType.ResearchPriority"
+                    styleClass="space-normal" placeholder="Укажите приоритет исследования"></app-ui-autocomplete>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </ng-container>
+        <app-row class="pb-3 pt-2" [class.pl-lg-3]="!isModal" *ngIf="!lockForm(i)">
+          <ng-template #rowContent>
+            <app-col>
+              <ng-template #colContent>
+                <a (click)="addResearchDocument(i)" class="form-span__lnk-btn d-none d-lg-block">Добавить исследование</a>
+                <a (click)="addResearchDocument(i)" class="lnk-open d-block d-lg-none">+ Добавить исследование</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+      </div>
+
+
+      <div class="container-fluid" *ngIf="lockForm(i)" [class.form-wr]="!isModal">
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12" class="text-right">
+              <ng-template #colContent>
+                <a *ngIf="!isModal && model.appointment && model.appointment.id" target="blank" class="lnk-add" href="/appointments/{{model.appointment.id}}">Открыть прием</a>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+
+        <app-row class="mt-1">
+          <ng-template #rowContent>
+            <app-col>
+              <ng-template #colContent>
+                <h3>Проба<span *ngIf="model.date">: дата отбора - {{model.date}}</span></h3>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <app-row>
+          <ng-template #rowContent>
+            <app-col col="12 col-md-2" titleName="probeName">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ probe.get('probe').value?.name }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-md-2" titleName="packaging">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ probe.get('packing').value?.name }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-md-2" titleName="marking">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ probe.get('code').value }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-md-2" titleName="probeSamplingPrice">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ probe.get('price').value | price }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-md-2" titleName="quantity">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ probe.get('quantity').value }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+            <app-col col="12 col-md-2" titleName="summ">
+              <ng-template #colContent>
+                <div class="form-body">
+                  <strong>
+                    {{ getSumm(probe) | price }}
+                  </strong>
+                </div>
+              </ng-template>
+            </app-col>
+          </ng-template>
+        </app-row>
+        <ng-container *ngFor="let item of probe.get('researchDocuments')['controls']; let j = index;">
+          <app-row class="pt-2">
+            <ng-template #rowContent>
+              <app-col>
+                <ng-template #colContent>
+                  <a
+                    [routerLink]="['/laboratory', 'research-document', model.probeItems[i].researchDocuments[j].number]">Исследование<span class="text-lowercase"
+                      *ngIf="model && model.probeItems[i] && model.probeItems[i].researchDocuments[j] && model.probeItems[i].researchDocuments[j].status">: {{model.probeItems[i].researchDocuments[j].status.title}}</span>
+                    <span *ngIf="model.probeItems[i]?.researchDocuments[j]?.dateEnd"> - {{model.probeItems[i]?.researchDocuments[j]?.dateEnd}}</span></a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-row class="pt-2 pb-4">
+            <ng-template #rowContent>
+              <app-col titleName="laboratory" col="12 col-md-2">
+                <ng-template #colContent>
+                  <div class="form-body">
+                    <strong>
+                      {{ item.get('laboratory').value?.name }}
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col titleName="research" col="12 col-md-2">
+                <ng-template #colContent>
+                  <div class="form-body">
+                    <strong>
+                      {{ item.get('research').value?.name }}
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col col="12 col-md-2" titleName="researchReason">
+                <ng-template #colContent>
+                  <div class="form-body">
+                    <strong>
+                      {{ item.get('researchReason').value?.name }}
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col col="12 col-md-2" titleName="researchPriority">
+                <ng-template #colContent>
+                  <div class="form-body">
+                    <strong>
+                      {{ item.get('researchPriority').value?.name }}
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+              <app-col titleName="price" col="12 col-md-2">
+                <ng-template #colContent>
+                  <div class="form-body">
+                    <strong>
+                      {{ item.get('price').value | price }}
+                    </strong>
+                  </div>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <app-research-result [model]="getResearch(model.probeItems[i], model.probeItems[i].researchDocuments[j])"
+            [formBorder]="false"></app-research-result>
+        </ng-container>
+      </div>
+    </ng-container>
+    <app-row class="pb-3 pt-lg-3" [class.pl-lg-3]="isModal">
+      <ng-template #rowContent>
+        <app-col *ngIf="!lockForm(i)">
+          <ng-template #colContent>
+            <a (click)="addProbItem(i)" class="form-span__lnk-btn d-none d-lg-block">Добавить пробу</a>
+            <a (click)="addProbItem(i)" class="lnk-open d-block d-lg-none">+ Добавить пробу</a>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </form>
+
+    <app-reference-button-form [isEdit]="model.id" [goListUrl]="goListUrl()" [showExtraButton]="!model.cashReceipt"
+      ExtraButtonName="Сохранить" saveButtonName="Отправить в лабораторию" (extraButtonClick)="submit()"
+      (buttonClick)="submit(true)" [type]="type" [removeAble]="!model.cashReceipt"
+      [showSaveButton]="!lockForm() || needToSent()" [id]="model.id">
+    </app-reference-button-form>
+
+</div>

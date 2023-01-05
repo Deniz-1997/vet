@@ -1,0 +1,54 @@
+<div class="header">
+  <div class="header__name">{{title}}</div>
+</div>
+
+<form (submit)="submit()" *ngIf="formGroup" [formGroup]="formGroup">
+  <div class="form-wr container-fluid">
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=name class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.name" class="inp-st" formControlName="name" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col titleName=numberEntryMaskFront class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.numberMaskFront" class="inp-st" formControlName="numberMaskFront" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col [required]="true" titleName=numberEntryMaskBek class="pb-2">
+          <ng-template #colContent>
+            <input [(ngModel)]="item.numberMask" class="inp-st" formControlName="numberMask" type="text"/>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+    <app-row>
+      <ng-template #rowContent>
+        <app-col>
+          <ng-template #colContent>
+              <div class="check-st">
+                <input formControlName="isDefault" id="address-residence" type="checkbox">
+                <label for="address-residence">Значение по умолчанию</label>
+              </div>
+          </ng-template>
+        </app-col>
+      </ng-template>
+    </app-row>
+  </div>
+  <app-reference-button-form
+    [goListUrl]="goListUrl()"
+    [id]="id"
+    [isEdit]="isEdit()"
+    [type]="type"
+  ></app-reference-button-form>
+</form>
+

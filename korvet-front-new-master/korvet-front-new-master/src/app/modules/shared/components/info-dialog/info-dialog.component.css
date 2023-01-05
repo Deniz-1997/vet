@@ -1,0 +1,6 @@
+:host .popup-body {
+  max-height: calc(90vh - 160px);
+  margin-right: -20px;
+  padding-right: 20px;
+  overflow-y: auto;
+}

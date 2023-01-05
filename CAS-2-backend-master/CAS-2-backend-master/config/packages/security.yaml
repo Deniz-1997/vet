@@ -1,0 +1,175 @@
+services:
+    app.oauth.storage:
+        parent: "fos_oauth_server.storage.default"
+        class: App\Packages\OAuth\Storage\OAuthStorage
+        calls:
+            - ['setUserChecker', ["@security.user_checker"]]
+            - ['setRoleManager', ['@App\Packages\Security\RoleManager']]
+
+    Symfony\Component\Security\Core\User\UserProviderInterface:
+        class: App\Packages\Security\Provider\AbstractUserProvider
+        autowire: true
+
+security:
+    providers:
+        user_provider:
+            entity: { class: App\Entity\User\User, property: username }
+
+        App\Packages\Security\Provider\AbstractUserProvider:
+            id: App\Packages\Security\Provider\AbstractUserProvider
+
+    encoders:
+        Symfony\Component\Security\Core\User\UserInterface: bcrypt
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        uploaded_files:
+            pattern: ^/api/uploaded-file/view/
+            anonymous: true
+            fos_oauth: true
+            stateless: true
+            provider: App\Packages\Security\Provider\AbstractUserProvider
+           
+#        documentation:
+#            pattern: ^/(api|api/doc.json)/?$
+#            provider: user_provider
+#            guard:
+#                authenticators:
+#                    - App/Security/Authenticator/Guard/SwaggerAuthCodeGuardAuthenticator
+#                    - App/Security/Authenticator/Guard/SwaggerPasetoGuardAuthenticator
+#                entry_point: App/src/Security/Authenticator/Guard/SwaggerAuthCodeGuardAuthenticator
+
+        public_vaccination:
+            pattern: ^/api/vaccination
+            security: false
+
+        settings:
+            pattern: ^/api/settings
+            security: false
+
+        public_vaccine:
+            pattern: ^/api/dictionary/vaccine
+            security: false
+
+        public_breed:
+            pattern: ^/api/dictionary/breed
+            security: false
+
+        public_supervisory_authority:
+            pattern: ^/api/dictionary/supervisoryAuthority
+            security: false
+        
+        public_kind:
+            pattern: ^/api/dictionary/kind
+            security: false
+
+        public_esia_auth:
+            pattern: ^/api/esia
+            security: false
+
+        simple_oauth_redirect:
+            pattern: ^/api/oauth-redirect
+            security: false
+           
+        swagger_oauth_redirect:
+            pattern: ^/api/swagger/oauth2-redirect
+            security: false
+
+        auth_code:
+            logout_on_user_change: false
+            pattern:    ^/api/oauth/v2/(auth|auth_login)
+            provider: user_provider
+            anonymous: true
+            fos_oauth: false
+            form_login:
+                check_path: app_login
+                login_path: app_login
+                csrf_token_generator: security.csrf.token_manager
+          
+        oauth_token:
+            pattern:    ^/api/oauth/v2/token
+            security:   false
+            stateless: true
+
+        password_recovery:
+            pattern: ^/api/account/(password-recovery|check-confirmation-code)/?
+            security: false
+            stateless: true
+
+        api:
+            pattern:   ^/
+            fos_oauth: true
+            stateless: true
+            anonymous: false
+            provider: App\Packages\Security\Provider\AbstractUserProvider
+            switch_user:
+                stateless: true
+                parameter: "x-switch-user"
+                role: ROLE_ROOT
+
+    role_hierarchy:
+        ROLE_ROOT:
+             # Пункты меню
+            - ROLE_MENU_ADMINISTRATION
+            - ROLE_MENU_REFERENCES
+            - ROLE_MENU_REPORT
+            - ROLE_MENU_PRINT_REPORTS
+            - ROLE_MENU_VACCINATION
+
+        ROLE_BUSINESS_ENTITY:
+            - ROLE_USER
+            - ROLE_MENU_VACCINATION
+
+        ROLE_GOVERNMENT:
+            - ROLE_USER
+            - ROLE_MENU_REFERENCES
+            - ROLE_MENU_REPORT
+            - ROLE_MENU_VACCINATION
+
+        ROLE_MANAGEMENT:
+           - ROLE_MENU_PRINT_REPORTS
+
+    access_control:
+        - { path: ^/api/oauth/v2/auth_login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/oauth/v2/auth, roles: ROLE_USER }
+        # Access creation base references
+        - { path: ^/api/client/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/client/, roles: [ROLE_ROOT], methods: [GET] }
+        - { path: ^/api/client/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/client/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/client-group/, roles: [ROLE_ROOT], methods: [GET] }
+        - { path: ^/api/client-group/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/client-group/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/client-group/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/file/, roles: [ROLE_USER], methods: [GET] }
+        - { path: ^/api/file/, roles: [ROLE_USER], methods: [POST] }
+        - { path: ^/api/file/, roles: [ROLE_USER], methods: [PATCH,PUT] }
+        - { path: ^/api/file/, roles: [ROLE_USER], methods: [DELETE] }
+        - { path: ^/api/group/, roles: [ROLE_USER], methods: [GET] }
+        - { path: ^/api/group/, roles: [ROLE_USER], methods: [POST] }
+        - { path: ^/api/group/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/group/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/user/, roles: [ROLE_USER, ROLE_MENU_PRINT_REPORTS], methods: [GET] }
+        - { path: ^/api/user/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/user/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/user/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/monitored-object/, roles: [ROLE_ROOT], methods: [GET] }
+        - { path: ^/api/monitored-object/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/monitored-object/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/monitored-object/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/reference/file-type/, roles: [ROLE_USER], methods: [GET] }
+        - { path: ^/api/reference/file-type/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/reference/file-type/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/reference/file-type/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/reference/organization/, roles: [ROLE_USER], methods: [GET] }
+        - { path: ^/api/reference/organization/, roles: [ROLE_ROOT], methods: [POST] }
+        - { path: ^/api/reference/organization/, roles: [ROLE_ROOT], methods: [PATCH,PUT] }
+        - { path: ^/api/reference/organization/, roles: [ROLE_ROOT], methods: [DELETE] }
+        - { path: ^/api/uploaded-file/, roles: [ROLE_USER], methods: [POST] }
+        - { path: ^/api/uploaded-file/, roles: [ROLE_USER], methods: [GET] }
+        - { path: ^/api/uploaded-file/, roles: [ROLE_USER], methods: [PATCH,PUT] }
+        - { path: ^/api/uploaded-file/, roles: [ROLE_USER], methods: [DELETE] }
+

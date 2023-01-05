@@ -1,0 +1,593 @@
+parameters:
+  locale: 'ru'
+  queue_entities_directory:
+    - 'src/Entity'
+  default_queue_name_crud_batch: '%kernel.environment%.korvet.entity.batch'
+  'env(MICROSERVICE_SIGNATURE)': ~
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false       # Allows optimizing the container by removing unused services; this also means
+    bind:
+      $microServiceSignature: '%env(MICROSERVICE_SIGNATURE)%'
+      $deletedFilter: '@App\Filter\DeletedFilter'
+      $filterHandlers: !tagged webslon_api.filter_handler
+      $annotationReader: '@annotations.cached_reader'
+      $entityManager: '@doctrine.orm.entity_manager'
+      $sendNotificationsService: '@App\Service\SendNotificationsService'
+
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/*'
+    exclude: '../src/{Webslon,DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+  # controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  App\Controller\:
+    resource: '../src/Controller'
+    tags: [ 'controller.service_arguments' ]
+
+  OAuth2\OAuth2:
+    alias: 'fos_oauth_server.server'
+
+  fos_oauth_server.controller.token:
+    class: App\Controller\TokenController
+    tags: [ 'controller.service_arguments' ]
+
+  fos_oauth_server.security.authentication.provider:
+    class: App\Packages\Security\Authentication\OAuthProvider
+    public: false
+    calls:
+      - [ 'setAccessTokenRepository', [ '@App\Repository\OAuth\AccessTokenRepository', '@App\Packages\Security\RoleManager' ] ]
+    arguments:
+      - '@App\Packages\Security\Provider\AbstractUserProvider'
+      - '@OAuth2\OAuth2'
+      - '@Symfony\Component\Security\Core\User\UserCheckerInterface'
+
+  App\Packages\Security\Provider\AbstractUserProvider:
+    public: true
+
+  App\Filter\:
+    resource: '../src/Filter/*.php'
+    autowire: true
+    autoconfigure: true
+    public: true
+    tags:
+      - { name: webslon_api.filter_handler }
+
+  App\Filter\Type\:
+    resource: '../src/Filter/Type/*'
+    public: true
+    exclude: '../src/Filter/Type/FullNameNestedFilter.php'
+    tags:
+      - { name: webslon_api.type_filter }
+
+  jms_serializer.camel_case_naming_strategy:
+    class: 'JMS\Serializer\Naming\IdenticalPropertyNamingStrategy'
+
+  #  App\Service\CRUD:
+  #    public: true
+  #    arguments: [ '@request_stack' ]
+  #    calls:
+  #      - [ setContainer, [ '@service_container' ] ]
+
+  App\Service\CRUD\:
+    resource: '../src/Service/CRUD/*'
+    public: true
+    autowire: true
+
+  App\Service\EventDispatcher\HistoryEntityListener:
+    arguments:
+      - "@security.token_storage"
+      - "@event_dispatcher"
+      - '@App\Service\EntityResolver'
+      - "@translator.default"
+      - "@monolog.logger"
+    tags:
+      - { name: doctrine.event_subscriber, connection: default }
+    calls:
+      - [ setAnnotationReader, [ "@annotations.reader" ] ]
+
+  App\Service\CRUD\EnumService:
+    public: true
+    autoconfigure: true
+    autowire: true
+    arguments:
+      - [ '%kernel.root_dir%/Packages/DBAL/Types',
+          '%kernel.root_dir%/Enum',
+      ]
+      - '@annotations.reader'
+      - '@translator.default'
+      - '%kernel.root_dir%'
+
+  App\Service\CRUD\GetListService:
+    public: true
+    autowire: true
+
+  App\Service\EntityResolver:
+    public: false
+    arguments:
+      - '@annotations.reader'
+      - '@doctrine.orm.entity_manager'
+
+  App\Filter\FilterHistoryEntity:
+    public: true
+    autowire: true
+    arguments:
+      - '@request_stack'
+      - '@App\Service\EntityResolver'
+    tags:
+      - { name: webslon_api.filter_handler }
+
+  App\Packages\Security\Authenticator\ApiKeyAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      - '@serializer'
+
+  App\Packages\Security\Authenticator\OAuthTokenAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      - '@serializer'
+
+  App\Packages\Security\Authenticator\EncodedHeaderUserAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      - '@App\Packages\Security\Encryptor'
+
+  App\Packages\Security\Authenticator\OAuthUsernamePasswordUserAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      - '@App\Packages\Client\OAuthClient'
+      - '@App\Packages\Client\AccountClient'
+
+  App\Packages\Security\Authenticator\CombineAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      - '@App\Packages\Security\Authenticator\EncodedHeaderUserAuthenticator'
+      - '@App\Packages\Security\Authenticator\ApiKeyAuthenticator'
+      - '@App\Packages\Security\Authenticator\OAuthTokenAuthenticator'
+
+  App\Packages\Security\Authenticator\Guard\SwaggerAuthCodeGuardAuthenticator:
+    public: true
+    autowire: true
+    arguments:
+      $router: '@router'
+
+  App\Packages\Security\Authenticator\Guard\SwaggerPasetoGuardAuthenticator:
+    public: true
+    autowire: true
+
+  App\Packages\Security\Voter\DefaultSecurityVoter:
+    tags:
+      - { name: security.voter }
+
+  App\Packages\Security\Voter\RoleVoter:
+    tags:
+      - { name: security.voter, priority: 255 }
+
+  App\Packages\Client\OAuthGuzzleClient:
+    public: true
+    arguments:
+      - '%webslon_auth.oauth_server%'
+      - '%kernel.environment%'
+      - 1000
+
+  App\Packages\Client\OAuthClient:
+    public: true
+    arguments:
+      - '@App\Packages\Client\OAuthGuzzleClient'
+      - '%webslon_auth.client_id%'
+      - '%webslon_auth.client_secret%'
+      - '%webslon_auth.scope%'
+      - '@translator'
+    calls:
+      - [ 'setLogger', [ '@logger' ] ]
+
+  App\Packages\Client\AccountClient:
+    public: true
+    arguments:
+      - '@serializer'
+      - '%webslon_auth.oauth_server%'
+
+  App\Packages\Security\Provider\OAuthTokenProvider:
+    public: true
+    arguments:
+      - '@App\Packages\Client\AccountClient'
+      - '@request_stack'
+      - '%webslon_auth.oauth_server%'
+
+  App\Packages\Security\Provider\HttpBasicAuthProvider:
+    public: true
+
+  App\Packages\Security\Encryptor:
+    public: true
+    autowire: true
+
+  App\Packages\Security\SecretStorageProvider:
+    public: true
+    autowire: true
+
+  App\Packages\Security\SecurityManager:
+    public: true
+    autowire: true
+
+  App\Packages\EventSubscriber\DoctrineEventSubscriber:
+    arguments:
+      - "@annotations.reader"
+      - 'App\Entity\Security\Role'
+    tags:
+      - { name: doctrine.event_subscriber, connection: default }
+
+  Symfony\Component\Serializer\Normalizer\ArrayDenormalizer:
+    public: true
+    autowire: true
+
+  App\Packages\Security\Voter\:
+    resource: '../src/Packages/Security/Voter/*'
+    public: true
+    autowire: true
+    tags: [ 'security.voter' ]
+
+  App\Packages\Handler\:
+    resource: '../src/Packages/Handler/*'
+    public: true
+    autowire: true
+    tags: [ 'webslon_cashier_equipment.cash_register_handler' ]
+
+  App\Packages\EventSubscriber\:
+    resource: '../src/Packages/EventSubscriber/*'
+    exclude: '../src/Packages/EventSubscriber/DoctrineEventSubscriber.php'
+    public: false
+    autowire: true
+    tags: [ 'kernel.event_subscriber' ]
+
+  Symfony\Component\Routing\RouteCollection:
+    public: true
+
+  Nelmio\ApiDocBundle\Util\ControllerReflector:
+    public: true
+    autowire: true
+
+  Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser:
+    public: true
+    autowire: true
+
+  App\Packages\Security\ApiKeyAuthenticator:
+    public: true
+    autowire: true
+
+  App\Packages\Security\ApiKeyUserProvider:
+    public: true
+    autowire: true
+
+  App\Service\ExceptionListener:
+    autowire: true
+    arguments:
+      $basePath: '%nelmio_api_doc.areas%'
+      $env: '%env(APP_ENV)%'
+      $translator: '@translator'
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception }
+
+  App\Controller\MessageController:
+    autowire: true
+    autoconfigure: true
+    tags: [ 'controller.service_arguments' ]
+
+  App\Controller\OAuthRedirectController:
+    tags: [ 'controller.service_arguments' ]
+
+  App\Service\DeserializeService:
+    public: true
+    autowire: true
+    arguments:
+      $normalizers:
+        - '@GBProd\UuidNormalizer\UuidNormalizer'
+        - '@GBProd\UuidNormalizer\UuidDenormalizer'
+      $eventDispatcher: '@event_dispatcher'
+      $annotationReader: '@annotations.cached_reader'
+
+  GBProd\UuidNormalizer\UuidNormalizer:
+    tags: [ 'webslon.normalizer' ]
+
+  GBProd\UuidNormalizer\UuidDenormalizer:
+    tags: [ 'webslon.normalizer' ]
+
+  App\Service\SerializeService:
+    public: true
+    autowire: true
+    arguments:
+      $translator: '@translator.default'
+      $normalizers: !tagged 'webslon.normalizer'
+      $requestStack: '@request_stack'
+
+  App\Service\EventDispatcher\SubscriberSerializer:
+    public: false
+    arguments:
+      - '@App\Service\ValidationService'
+    tags:
+      - { name: kernel.event_subscriber, event: 'onExceptionSerializer' }
+
+  App\Service\ValidationService:
+    public: true
+    autowire: true
+
+  App\Service\DependenciesService:
+    autowire: true
+    autoconfigure: true
+    public: false
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@doctrine.orm.cas_entity_manager'
+      - '@serializer'
+      - '@App\Packages\Response\BaseResponse'
+      - '@App\Service\ValidationService'
+      - '@Symfony\Component\EventDispatcher\EventDispatcherInterface'
+      - '@request_stack'
+      - '@logger'
+      - '@translator.default'
+      - '@App\Packages\DTO\DTOFactory'
+
+  App\Service\SerializationContextFetcher:
+    autowire: true
+    arguments:
+      - '@security.role_hierarchy'
+      - '@security.token_storage'
+      - '@annotations.cached_reader'
+      - '%security.role_hierarchy.roles%'
+
+  App\Service\DependenciesInterface:
+    '@App\Service\DependenciesService'
+
+  App\Packages\EventSubscriber\TraceRequestSubscriber:
+    public: false
+    tags: [ 'kernel.event_subscriber' ]
+
+  App\Packages\EventSubscriber\NotificationsSubscriber:
+    public: false
+    arguments:
+      - '@logger'
+    tags:
+      - { name: kernel.event_subscriber }
+      - { name: monolog.logger, channel: php.request_logging }
+
+  App\Packages\Monolog\RecordProcessor:
+    public: true
+    tags:
+      - { name: monolog.processor }
+
+  App\Packages\Monolog\GuzzleProcessor:
+    public: true
+    tags:
+      - { name: monolog.processor }
+
+  Fluent\Logger\FluentLogger:
+    public: false
+
+  App\Packages\ArgumentResolvers\RequestResolver:
+    autowire: true
+    tags:
+      - { name: controller.argument_value_resolver, priority: 50 }
+
+  App\Service\Logger\File:
+    autoconfigure: true
+    autowire: true
+    arguments:
+      - '%kernel.logs_dir%'
+
+  App\Validator\UniqueEntityValidator:
+    public: true
+    arguments:
+      - '@doctrine'
+    tags:
+      - { name: validator.constraint_validator }
+
+  App\Packages\DTO\DTOFactory:
+    public: true
+    autowire: true
+    autoconfigure: true
+
+  App\Packages\Utils\CircularReferenceHandler:
+    public: true
+    autowire: true
+
+  App\Packages\AMQP\Router\RouterCollection:
+    public: true
+    arguments:
+      - [ ]
+
+  App\Packages\AMQP\PlaceholderResolver:
+    public: true
+    autoconfigure: true
+    autowire: true
+
+  App\Packages\AMQP\AMQPConnection:
+    public: true
+    autowire: true
+    arguments:
+      - '%env(RABBITMQ_HOST)%'
+      - '%env(RABBITMQ_PORT)%'
+      - '%env(RABBITMQ_USERNAME)%'
+      - '%env(RABBITMQ_PASSWORD)%'
+      - '%env(RABBITMQ_VHOST)%'
+
+  App\Packages\AMQP\RabbitRestClient:
+    public: true
+    autowire: true
+    arguments:
+      - '%env(RABBITMQ_HOST)%'
+      - '%env(RABBITMQ_VHOST)%'
+      - '%env(RABBITMQ_HTTP_PROTOCOL)%'
+      - '%env(RABBITMQ_HTTP_PORT)%'
+      - '%env(RABBITMQ_USERNAME)%'
+      - '%env(RABBITMQ_PASSWORD)%'
+
+  App\Packages\AMQP\Producer:
+    public: true
+    autowire: true
+    autoconfigure: true
+    calls:
+      - [ 'setResponseQueueCallback', [ '%webslon_api.rabbitmq.rpc_response_queue%' ] ]
+      - [ 'setLifetimeCallbackRpcQueue', [ '%env(int:RABBITMQ_LIFETIME_CALLBACK_RPC_QUEUE)%' ] ]
+
+  App\Packages\Response\Async\AsyncResponseSender:
+    public: true
+    autowire: true
+    autoconfigure: true
+    calls:
+      - [ 'setResponseQueueCallback', [ '%webslon_api.rabbitmq.rpc_response_queue%' ] ]
+      - [ 'setLifetimeCallbackRpcQueue', [ '%env(int:RABBITMQ_LIFETIME_CALLBACK_RPC_QUEUE)%' ] ]
+
+  App\Packages\AMQP\RPC\RpcManager:
+    public: true
+    autowire: true
+    bind:
+      $prefixResponseCallbackQueueName: '%webslon_api.rabbitmq.rpc_response_frontend_queue_prefix%'
+      $lifetimeCallbackRpcQueue: '%webslon_api.rabbitmq.lifetime_callback_rpc_queue%'
+
+  App\Packages\AMQP\EventManager:
+    public: true
+    autowire: true
+    autoconfigure: true
+
+  App\Packages\EventSubscriber\CrudProduceEntitySubscriber:
+    autowire: true
+    public: true
+    tags:
+      - { name: 'doctrine.event_listener', event: postPersist }
+      - { name: 'doctrine.event_listener', event: preRemove }
+      - { name: 'doctrine.event_listener', event: postRemove }
+      - { name: 'doctrine.event_listener', event: postUpdate }
+
+  App\Packages\Client\ElasticSearchClient:
+    autowire: true
+    public: true
+
+  App\Service\CRUD\CrudBatchService:
+    public: false
+    autowire: true
+    arguments:
+      - '@annotations.reader'
+      - '@App\Packages\AMQP\Producer'
+
+  App\Service\Solution\SolutionConsumerCollection:
+    public: false
+    autowire: true
+    autoconfigure: true
+    arguments:
+      - !tagged webslon.solution_consumer
+
+  App\Service\ResourcePathService:
+    arguments: [ '%webslon_email.resources.theme%', '%webslon_email.resources.template%' ]
+
+  App\Repository\EmailThemeRepository:
+    public: true
+    factory: [ '@Doctrine\ORM\EntityManagerInterface', getRepository ]
+    arguments: [ 'App\Entity\Theme' ]
+
+  App\Repository\EmailTemplateRepository:
+    public: true
+    factory: [ '@Doctrine\ORM\EntityManagerInterface', getRepository ]
+    arguments: [ 'App\Entity\Template' ]
+
+  App\Repository\EmailRepository:
+    public: true
+    factory: [ '@Doctrine\ORM\EntityManagerInterface', getRepository ]
+    arguments: [ 'App\Entity\Email' ]
+
+  App\Service\ResourceService:
+    autowire: false
+
+  webslon.send_email:
+    class: App\Service\SendEmailService
+    arguments: [ '@Doctrine\ORM\EntityManagerInterface',
+                 'App/ValueObject/EmailThemeRepositories',
+                 '@twig',
+                 '@swiftmailer.mailer.default',
+                 'App/Service/ResourcePathService'
+    ]
+    public: true
+    autowire: true
+
+  App\Packages\Fetcher\EntityFetcher:
+    public: true
+    autoconfigure: true
+    autowire: true
+
+  App\Packages\Normalizer\IconNormalizer:
+    tags:
+      - { name: 'webslon.normalizer', priority: 256 }
+      - { name: 'webslon.denormalizer', priority: 256 }
+      - { name: 'serializer.normalizer', priority: 256 }
+
+  App\Packages\Describer\ModeRouterDescriber:
+    tags: [ 'nelmio_api_doc.route_describer' ]
+
+
+  App\Packages\Response\BaseResponse:
+    public: true
+    autowire: true
+
+  App\Packages\Response\BinaryFileResponse:
+    public: true
+    autowire: true
+
+  App\Packages\Client\GatewayClient:
+    public: true
+    autowire: true
+
+  App\Packages\Client\AbstractClient:
+    abstract: true
+    public: false
+    autowire: true
+
+  App\Packages\Handler\FluentdHandler:
+    public: false
+    arguments:
+      - '@App\Packages\Monolog\FluentLogger'
+
+  App\Controller\EnumController:
+    public: true
+    autoconfigure: true
+    autowire: true
+    arguments:
+      - '@App\Service\CRUD\EnumService'
+    tags: [ 'controller.service_arguments' ]
+
+  App\Packages\Response\Async\AsyncResponse:
+    public: true
+    autoconfigure: true
+    autowire: true
+
+  App\Packages\AMQP\RPC\ResponseStorageInterface:
+    alias: App\Packages\AMQP\RPC\FileSystemResponseStorage
+    public: true
+
+#  App\Service\CRUD:
+#      public: true
+#      arguments: ['@request_stack']
+#      calls:
+#        - [ setContainer, [ '@service_container' ]]
+
+  App\Packages\Client\SentryClient:
+      public: true
+
+  App\Packages\Response\Async\AsyncResultResponse:
+      public: true
+      autoconfigure: true
+      autowire: true
+
+  App\Interfaces\CAS\CasAuthInterface: '@App\Service\CAS\CasAuthService'
+  App\Interfaces\CAS\CasExcelUploadInterface: '@App\Service\CasApi\CasExcelUploadService'
+  App\Interfaces\ESIA\ESIAInterface: '@App\Service\ESIA\ESIAService'
+  App\Service\UploadFile\UploadFileServiceInterface: '@App\Service\UploadFile\UploadFileService'
+  App\Interfaces\CAS\CasApiAuthInterface: '@App\Service\CasApi\ApiAuthService'

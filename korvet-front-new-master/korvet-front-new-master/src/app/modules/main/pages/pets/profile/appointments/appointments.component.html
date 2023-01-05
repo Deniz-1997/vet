@@ -1,0 +1,57 @@
+<div class="body-header">
+  <div class="body-header__name">История обращений</div>
+  <div *ngIf="(items$ | async)?.length===0" class="box-empty">
+    <h3>
+      Нет ни одного обращения.
+      <span>Вы можете добавить запись на прием</span>
+    </h3>
+    <div class="box-empty__btn"><a class="btn-st btn-st--inline btn-st--plus"
+                                   routerLink="/pets/{{(pet$|async)?.id}}/add-appointment">Записаться на прием</a></div>
+  </div>
+  <div *ngIf="(items$ | async)?.length>0" class="body-header__setting">
+    <a class="lnk-ico" href="">
+      <app-icon-print></app-icon-print>
+    </a>
+    <a class="lnk-ico" href="">
+      <app-icon-download></app-icon-download>
+    </a>
+    <a class="lnk-add" routerLink="/pets/{{(pet$|async)?.id}}/add-appointment">Добавить</a>
+  </div>
+</div>
+<div *ngIf="(items$ | async)?.length>0" class="table-info">
+  <table class="table-info-st">
+    <tr>
+      <th>Дата</th>
+      <th style="width:150px">Владелец</th>
+      <th>Обращение</th>
+      <th>Специалист</th>
+      <th>Статус</th>
+      <th style="width:15px"></th>
+    </tr>
+    <ng-container *ngFor="let item of items$ | async let i=index">
+      <tr *ngIf="(limit === 0 || i<limit) && item && item.pet">
+        <td>{{getDate(item.date)}} <span>{{getTime(item.date)}}</span></td>
+        <td>{{getOwner(item.owner)}}</td>
+        <td>{{item.name}}</td>
+        <td>{{getUser(item.user)}}</td>
+        <td>
+          <app-dropdown-select
+            (outChoose)="changeStatus($event, item)"
+            [color]="item.status && item.status.color"
+            [head]="getStatus(item.status)"
+            [options]="appointmentStatuses$|async"
+          ></app-dropdown-select>
+        </td>
+        <td>
+          <div *ngIf="false" class="tooltip">
+            ₽
+            <div class="tooltip-message"><span>Долг</span></div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+</div>
+<a (click)="showAll($event)" *ngIf="limit >0 && limit < (items$|async).length" class="btn-show-add" href="">Показать
+  все {{(items$|async).length}}
+  записей</a>

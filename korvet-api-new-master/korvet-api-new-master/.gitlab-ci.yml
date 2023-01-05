@@ -1,0 +1,159 @@
+image: node:latest
+
+stages:
+  - deploy
+  - notify
+
+deploy-prod:
+  only:
+  - master
+  stage: deploy
+  except:
+  - tags
+  tags: [ prod ]
+  script:
+  - /home/dev/build.sh
+
+deploy-dev:
+  only:
+  - dev
+  stage: deploy
+  environment:
+    name: api.dev.kor-vet.ru
+    url: https://api.dev.kor-vet.ru
+  variables:
+    FOLDER: /srv/korvet/api.dev.kor-vet.ru/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && composer install
+    - cd ${FOLDER} && composer update && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+deploy-dev2:
+  only:
+  - dev2
+  stage: deploy
+  environment:
+    name: api.dev2.kor-vet.ru
+    url: https://api.dev2.kor-vet.ru
+  variables:
+    FOLDER: /srv/korvet/api.dev2.kor-vet.ru/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && composer update && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+deploy-dev3:
+  only:
+  - dev3
+  stage: deploy
+  environment:
+    name: api.dev3.kor-vet.ru
+    url: https://api.dev3.kor-vet.ru
+  variables:
+    FOLDER: /srv/korvet/api.dev3.kor-vet.ru/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && composer update && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+deploy-dev4:
+  only:
+  - dev4
+  stage: deploy
+  environment:
+    name: api.dev4.kor-vet.ru
+    url: https://api.dev4.kor-vet.ru
+  variables:
+    FOLDER: /srv/korvet/api.dev4.kor-vet.ru/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && composer update && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+deploy-dev5:
+  only:
+  - dev5
+  stage: deploy
+  environment:
+    name: api.dev5.kor-vet.ru
+    url: https://api.dev5.kor-vet.ru
+  variables:
+    FOLDER: /srv/korvet/api.dev5.kor-vet.ru/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && composer update && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+deploy-demo:
+  only:
+    - demo
+  stage: deploy
+  environment:
+    name: api.demo.kor.vet
+    url: https://api.demo.kor.vet
+  variables:
+    FOLDER: /srv/korvet/api.demo.kor.vet/www
+  except:
+    - tags
+  tags: [ dev ]
+  script:
+    - cd ${FOLDER} && git reset --hard HEAD && git checkout ${CI_COMMIT_REF_NAME} && git pull
+    - cd ${FOLDER} && bin/console d:m:m && bin/console cache:clear --env=prod --no-warmup && composer dump-autoload -o
+
+
+success_dev:
+  stage: notify
+  tags: [ dev ]
+  only:
+    - dev
+    - dev2
+    - dev3
+    - dev4
+    - dev5
+    - dev6
+    - demo
+  script:
+    - sh ./ci/.notify.sh ✅
+
+error_dev:
+  stage: notify
+  tags: [ dev ]
+  only:
+    - dev
+    - dev2
+    - dev3
+    - dev4
+    - dev5
+    - dev6
+    - demo
+  script:
+    - sh ./ci/.notify.sh ❌
+  when: on_failure #deploy fail
+
+success:
+  stage: notify
+  tags: [ prod ]
+  only:
+    - master
+  script:
+    - sh ./ci/.notify.sh ✅
+
+error:
+  stage: notify
+  tags: [ prod ]
+  only:
+    - master
+  script:
+    - sh ./ci/.notify.sh ❌
+  when: on_failure #deploy fail

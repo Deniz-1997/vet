@@ -1,0 +1,65 @@
+@import '@/assets/styles/_variables.scss';
+@import '@/assets/styles/_mixins.scss';
+@import '@/assets/styles/_global.scss';
+@import '@/assets/styles/_grid.scss';
+@import '@/assets/styles/_typography.scss';
+@import '@/assets/styles/_buttons.scss';
+@import '@/assets/styles/_form_elements.scss';
+@import '@/assets/styles/_colors.scss';
+@import '~vue-select/dist/vue-select';
+
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+.section {
+  position: relative;
+  &--full-width {
+    width: 100%;
+  }
+}
+
+.main-part {
+  display: flex;
+  min-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+body {
+  overflow: hidden;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  height: 13px;
+
+  @include respond-to('medium') {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $webkit-color;
+  border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $webkit-color;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}

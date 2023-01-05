@@ -1,0 +1,194 @@
+<div class="position-relative">
+  <form (submit)="submit()" [class.show-error]="showError" [formGroup]="formGroup" appFormFocus>
+    <div class="form-wr form-wr--mmin">
+      <app-row>
+        <ng-template #rowContent formGroupName="fullName">
+          <app-col [required]="true" titleName=lastName class="pb-2" >
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="lastName" type="text">
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=firstName class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="name" type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=middleName class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="middleName" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=phone class="pb-2">
+            <ng-template #colContent>
+              <input appUiMaskPhone class="inp-st" formControlName="phone" type="text">
+            </ng-template>
+          </app-col>
+          <app-col [required]="true" titleName=email class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="email" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=individualEntrepreneurName class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="name" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col [required]="true" titleName=inn class="pb-2">
+            <ng-template #colContent>
+              <input (change)="getMatches.emit(formGroup.value)" class="inp-st" data-max="10" data-min="0"
+                     formControlName="inn"
+                     type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=egrip class="pb-2" formGroupName="entrepreneur">
+            <ng-template #colContent>
+              <input [maskNumberMax]="10" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                     formControlName="egrip"
+                     type="text">
+            </ng-template>
+          </app-col>
+          <app-col  titleName=ogrnip class="pb-2" formGroupName="entrepreneur">
+            <ng-template #colContent>
+              <input [maskNumberMax]="15" [maskNumberMin]="0" appUiMaskNumber class="inp-st inp-namber"
+                     formControlName="ogrnip"
+                     type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent formGroupName="address">
+          <app-col  titleName=address class="pb-2">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st inp-address" formControlName="full" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-ya-maps-field
+        [coordinatesControl]="formGroup.controls['address']['controls']['coordinates']"></app-ya-maps-field>
+      <app-row>
+        <ng-template #rowContent formGroupName="individualPerson">
+          <app-col  titleName=householdAddress col="7" class="pb-2">
+            <ng-template #colContent>
+              <input appYaMapsSuggestion class="inp-st" formControlName="householdAddress" type="text">
+            </ng-template>
+          </app-col>
+          <app-col  text="&#160;" class="pt-3">
+            <ng-template #colContent>
+              <div class="check-st">
+                <input [dependControl]="formGroup.controls['individualPerson']['controls']['householdAddress']"
+                       [mainControl]="formGroup.controls['address']['controls']['full']" appSameField
+                       formControlName="householdAddressIsPersonAddress"
+                       id="address-residence"
+                       type="checkbox">
+                <label for="address-residence">Совпадает с адресом проживания</label>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <div class="form-header">Контактные лица</div>
+      <ng-container *ngFor="let person of formGroup.controls['contactPersons']['controls']; let i = index;"
+        formArrayName="contactPersons">
+        <fieldset [formGroupName]="i">
+          <app-row formGroupName="person">
+            <ng-template #rowContent>
+              <app-col titleName=lastName col="4" formGroupName="fullName">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="lastName" type="text">
+                </ng-template>
+              </app-col>
+              <app-col titleName=firstName col="4" formGroupName="fullName">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="name" type="text">
+                </ng-template>
+              </app-col>
+              <app-col titleName=patronymic col="3" formGroupName="fullName">
+                <ng-template #colContent>
+                  <input class="inp-st" formControlName="middleName" type="text">
+                </ng-template>
+              </app-col>
+              <app-col col="1">
+                <ng-template #colContent>
+                  <a (click)="removeContactPerson(i);" class="tr-close" style="opacity: 1; margin-top: 30px;"></a>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+        </fieldset>
+      </ng-container>
+      <app-row class="mb-4">
+        <ng-template #rowContent>
+          <app-col col="12">
+            <ng-template #colContent>
+              <a (click)="addContactPerson()" class="form-span__lnk-btn">Добавить сотрудника</a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col titleName="Выбрать виды деятельности" col="8">
+            <ng-template #colContent>
+              <app-ui-multi-select-field [(choices)]="choicesActivities" [control]="formGroup.get('activity')"
+                [searchInput]="true"></app-ui-multi-select-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName="Указать свои виды деятельности" col="4">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="customActivities" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col  titleName=selectActivities  col="7" class="pb-2">
+            <ng-template #colContent>
+              <app-ui-multi-select-field
+                [(choices)]="choicesActivities"
+                [control]="formGroup.get('activity')"
+                [searchInput]="true"
+              ></app-ui-multi-select-field>
+            </ng-template>
+          </app-col>
+          <app-col titleName=specifyYourActivities class="pb-2">
+            <ng-template #colContent>
+              <input class="inp-st" formControlName="customActivities" type="text">
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+    <app-owner-file-view *ngIf="formGroup.value['id']"
+                         [fileTypes$]="fileTypes$"
+                         [files]="files$|async"
+                         [owner]="model">
+    </app-owner-file-view>
+    <div class="form-footer">
+      <button (click)="submit()" [class.btn-loader]="getLoading$ | async" class="btn-st btn-st--right"
+              type="button">
+        {{formGroup.value['id'] ? 'Сохранить владельца' : 'Добавить владельца'}}
+      </button>
+      <button (click)="cancelForm.emit()" [hidden]="true" class="btn-st btn-st--right btn-st--gray" type="button">Назад</button>
+      <a (click)="onDelete()" [hidden]="true"
+         *ngIf="formGroup.value['id']"
+         class="btn-st btn-st--left btn-st--tr-red btn-st--uppercase btn-st--bold">
+        Удалить владельца
+      </a>
+    </div>
+  </form>
+</div>

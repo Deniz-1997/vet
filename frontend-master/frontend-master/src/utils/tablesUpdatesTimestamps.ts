@@ -1,0 +1,8 @@
+export const TABLES_UPDATES_TIMESTAMPS = {
+  sdiz: 1664522128166,
+  sdiz_gpb: 1664522128166,
+  sdiz_elevator: 1664522128166,
+  sdiz_agent_list: 1663333635360,
+};
+
+export const GLOBAL_TABLES_UPDATE_TIMESTAMP = 1661848406246;

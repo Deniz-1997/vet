@@ -1,0 +1,3 @@
+authorize:
+    accept: Разрешить
+    reject: Запретить

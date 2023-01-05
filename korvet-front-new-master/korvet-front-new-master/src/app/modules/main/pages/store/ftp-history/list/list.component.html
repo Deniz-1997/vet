@@ -1,0 +1,137 @@
+<app-list-filter-view
+  [listEmptyOptions]="{
+    title: 'Не найдено ни одной истории импорта/экспорта отчетов 1С'
+  }"
+  [type]="type"
+  filterPlaceholder="Поиск по каталогу"
+  title="История импорта/экспорта отчетов 1С"
+>
+
+  <ng-template #listHeadTemplate>
+    <tr>
+      <th width="100">Идентификатор</th>
+      <th>Дата</th>
+      <th>Тип</th>
+      <th>Текст</th>
+      <th>Файл</th>
+      <th>Количество позиций</th>
+    </tr>
+  </ng-template>
+
+  <ng-template #listItemTemplate let-item="item">
+    <tr [ngClass]="{'b-error':hasError(item)}">
+      <td><a [routerLink]="[item.id]">{{item.id}}</a></td>
+      <td><a [routerLink]="[item.id]">{{item.date ? item.date : item.fileName}}</a></td>
+      <td>
+        <ng-container *ngIf="item.operationType">
+          {{item.operationType.title}}
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="hasError(item)">
+          <div class="c-error">{{item.report.errors[0].type}}</div>
+        </ng-container>
+      </td>
+      <td>
+        <ng-container *ngIf="item.uploadImportExportFile && item.uploadImportExportFile.uploadedFile.name">
+          <a href="/uploaded/{{item.uploadImportExportFile.uploadedFile.name}}" target="_blank">
+            <app-file-type-icon [mimeType]="item.uploadImportExportFile.uploadedFile.mimeType"></app-file-type-icon>
+          </a>
+        </ng-container>
+      </td>
+      <td>
+        <div *ngIf="checkReport(item.report)">
+          <span class="c-sumCount">{{item.report.totalCount + item.report.errorCount}}</span>&nbsp;
+          (<span class="c-totalCount">{{item.report.totalCount}}</span> /
+          <span [ngClass]="{'c-errorCount': item.report.errorCount !== 0}">{{item.report.errorCount}}</span>)
+        </div>
+        <span *ngIf="!checkReport(item.report)">-</span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #listItemTemplateGrid let-item="item">
+    <div [ngClass]="{'b-error':hasError(item)}" class="form-wr form-wr--adaptive container-fluid">
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="6 col-md-4" titleName="id">
+            <ng-template #colContent>
+              <a [routerLink]="[item.id]">{{item.id}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="6 col-md-4" text="Дата">
+            <ng-template #colContent>
+              <a [routerLink]="[item.id]">{{item.date ? item.date : item.fileName}}</a>
+            </ng-template>
+          </app-col>
+          <app-col col="12 col-md-4 pt-2 pt-md-0"  class="text-left text-md-right">
+            <ng-template #colContent>
+              <a  data-toggle="collapse" [attr.data-target]="c + d + item?.id"  data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" class="accordion-toggle collapsed ">
+                <span class="expand-lnk"></span>
+                <span class="expand-text"></span>
+              </a>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+      <app-row>
+        <ng-template #rowContent>
+          <app-col col="12" class="pb-1">
+            <ng-template #colContent>
+              <div class="collapse"  [attr.id]="d + item?.id" id="collapseExample2">
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col titleName="type">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.operationType">
+                          <strong>{{item.operationType.title}}</strong>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Текст">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="hasError(item)">
+                          <div class="c-error">{{item.report.errors[0].type}}</div>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Файл">
+                      <ng-template #colContent>
+                        <ng-container *ngIf="item.uploadImportExportFile && item.uploadImportExportFile.uploadedFile.name">
+                          <a href="/uploaded/{{item.uploadImportExportFile.uploadedFile.name}}" target="_blank">
+                            <app-file-type-icon [mimeType]="item.uploadImportExportFile.uploadedFile.mimeType"></app-file-type-icon>
+                          </a>
+                        </ng-container>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+                <app-row>
+                  <ng-template #rowContent>
+                    <app-col text="Количество позиций">
+                      <ng-template #colContent>
+                        <div *ngIf="checkReport(item.report)">
+                          <span class="c-sumCount">{{item.report.totalCount + item.report.errorCount}}</span>&nbsp;
+                          (<span class="c-totalCount">{{item.report.totalCount}}</span> /
+                          <span [ngClass]="{'c-errorCount': item.report.errorCount !== 0}">{{item.report.errorCount}}</span>)
+                        </div>
+                        <span *ngIf="!checkReport(item.report)">-</span>
+                      </ng-template>
+                    </app-col>
+                  </ng-template>
+                </app-row>
+              </div>
+            </ng-template>
+          </app-col>
+        </ng-template>
+      </app-row>
+    </div>
+  </ng-template>
+</app-list-filter-view>

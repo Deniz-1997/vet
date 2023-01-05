@@ -1,0 +1,72 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<k-row class="mt-3">
+  <ng-template #row>
+    <k-col cols="12" *ngIf="dataArray.length  else elseBlock">
+      <ng-template #col>
+        <mat-table [dataSource]="dataArray" class="table-filer-report">
+
+          <ng-container matColumnDef="month">
+            <mat-header-cell *matHeaderCellDef fxFlex="25">Отчетный период</mat-header-cell>
+            <mat-cell *matCellDef="let element" fxFlex="25"> {{element.month}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="station">
+            <mat-header-cell *matHeaderCellDef>Подразделение</mat-header-cell>
+            <mat-cell *matCellDef="let element "> {{element.station ? element.station.name :
+              element.supervisedObjects.name}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="supervisedObjects">
+            <mat-header-cell *matHeaderCellDef>Поднадзорный объект</mat-header-cell>
+            <mat-cell *matCellDef="let element " class="d-block text-left">
+              <p class="mb-0">{{element.businessEntity?.name}}</p>
+              <strong>{{element.supervisedObjects?.address}}</strong>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="statusId">
+            <mat-header-cell *matHeaderCellDef fxFlex="25">Статус</mat-header-cell>
+            <mat-cell *matCellDef="let element" [style.color]="element.textColor" fxFlex="25"> {{element.status?.title}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="history">
+            <mat-header-cell *matHeaderCellDef fxFlex="25" class="margin-header">История изменений</mat-header-cell>
+            <mat-cell *matCellDef="let element" fxFlex="25">
+              <ng-container *ngIf="element.id  !== 0">
+                <k-button color="primary" type="button" (click)="openHistory(element.id)" name="История изменений"></k-button>
+              </ng-container>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef fxFlex="25"> Действия</mat-header-cell>
+            <mat-cell *matCellDef="let element" fxFlex="25">
+              <button mat-raised-button color="primary" [disabled]="element.buttonDisabled"
+                      (click)="dataReport(element)">{{element.buttonName}}</button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="field" fxLayout="row"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: field;" fxLayout="row"></mat-row>
+        </mat-table>
+        <app-show-more-button *ngIf="totalCount > offset + limit && userType !== 'ROLE_BUSINESS_ENTITY'"
+                              class="text-center" [limit]="limit"
+                              [offset]="offset"
+                              [items]="dataArray"
+                              [appendLoading]="loading$|async"
+                              [totalCount]="totalCount"
+                              (outAppend)="appendList($event)">
+        </app-show-more-button>
+      </ng-template>
+    </k-col>
+    <ng-template #elseBlock>
+      <k-col *ngIf="!dataArray.length">
+        <ng-template #col>
+          <div class="box-empty">
+            <h3>{{dataArrayText || 'Выберите фильтр по станциям или отчетному периоду'}}</h3>
+          </div>
+        </ng-template>
+      </k-col>
+    </ng-template>
+  </ng-template>
+</k-row>

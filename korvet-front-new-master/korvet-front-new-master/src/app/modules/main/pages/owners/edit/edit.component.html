@@ -1,0 +1,100 @@
+<div *ngIf="openDialog"  class="row fancybox-slide--html">
+  <div class="col ml-2">
+    <app-title-view  title='Добавить владельца'>
+    </app-title-view>
+    <app-button-close></app-button-close>
+  </div>
+</div>
+<app-title-view  *ngIf="!openDialog" title='Добавить владельца'>
+</app-title-view>
+<form [formGroup]="typeFormGroup" appFormFocus>
+  <div class="form-wr form-wr--mmin form-wr--radio">
+    <div class="radio-box">
+      <input [value]="personType.INDIVIDUAL_PERSON" formControlName="type" id="status-fiz" type="radio">
+      <label for="status-fiz">Физ. лицо</label>
+    </div>
+    <div class="radio-box">
+      <input [value]="personType.ENTREPRENEUR" formControlName="type" id="status-ip" type="radio">
+      <label for="status-ip">ИП</label>
+    </div>
+    <div class="radio-box">
+      <input [value]="personType.FARM" formControlName="type" id="status-kfh" type="radio">
+      <label for="status-kfh">КФХ</label>
+    </div>
+    <div class="radio-box">
+      <input [value]="personType.LEGAL_ENTITY" formControlName="type" id="status-ur" type="radio">
+      <label for="status-ur">Юр. лицо</label>
+    </div>
+    <div class="check-st d-inline" *ngIf="petId">
+      <input id="primary-owner" type="checkbox" formControlName="mainOwner">
+      <label for="primary-owner">Основной владелец</label>
+    </div>
+  </div>
+</form>
+<div class="position-relative">
+  <ngx-loading [show]="loading$|async"></ngx-loading>
+</div>
+<div *ngIf="!(loading$|async)" [ngSwitch]="typeFormGroup.value['type']">
+  <app-owner-individual-form (cancelForm)="cancel()"
+                             [backButton]="backButton"
+                             (getMatches)="getMatches($event)"
+                             (submitForm)="submit($event)"
+                             *ngSwitchCase="personType.INDIVIDUAL_PERSON"
+                             [DocumentTypeEnum]="DocumentTypeEnum"
+                             [choicesActivities]="ownerActivities$|async"
+                             [loading]="loading$|async"
+                             [model]="owner$|async"
+                             [petId]="petId"
+                             [isDisabled]="isDisabled"
+                             [isModal]="openDialog"
+                             (ownerSelected)="closeDialog($event)"
+  ></app-owner-individual-form>
+  <app-owner-legal-form (cancelForm)="cancel()"
+                        (getMatches)="getMatches($event)"
+                        [backButton]="backButton"
+                        (submitForm)="submit($event)"
+                        *ngSwitchCase="personType.LEGAL_ENTITY"
+                        [appointments]="appointments$|async"
+                        [choicesActivities]="ownerActivities$|async"
+                        [fileTypes$]="fileTypes$"
+                        [files]="files$|async"
+                        [legalForms$]="ownerLegalForms$"
+                        [model]="owner$|async"
+  ></app-owner-legal-form>
+  <app-owner-entrepreneur-form (cancelForm)="cancel()"
+                               (getMatches)="getMatches($event)"
+                               [backButton]="backButton"
+                               (submitForm)="submit($event)"
+                               *ngSwitchCase="personType.ENTREPRENEUR"
+                               [appointments]="appointments$|async"
+                               [choicesActivities]="ownerActivities$|async"
+                               [fileTypes$]="fileTypes$"
+                               [files]="files$|async"
+                               [model]="owner$|async"
+  ></app-owner-entrepreneur-form>
+  <app-owner-farm-form (cancelForm)="cancel()"
+                       (getMatches)="getMatches($event)"
+                       [backButton]="backButton"
+                       (submitForm)="submit($event)"
+                       *ngSwitchCase="personType.FARM"
+                       [appointments]="appointments$|async"
+                       [choicesActivities]="ownerActivities$|async"
+                       [fileTypes$]="fileTypes$"
+                       [files]="files$|async"
+                       [model]="owner$|async"
+  ></app-owner-farm-form>
+</div>
+
+<app-matches-list-view *ngIf="id" [type]="type">
+  <ng-template #itemTemplate let-item>
+    <div class="matches-item">
+      <div (click)="pickMatch(item)" class="user-name">{{item.name}}</div>
+      <div class="user-address">{{item.address && item.address.full}}</div>
+      <div class="user-contacts">
+        <a href="tel:{{item.phone}}">{{item.phone}}</a>
+        <a href="mailto:{{item.email}}">{{item.email}}</a>
+      </div>
+      <div class="matches-item__add"><a [routerLink]="['/owners' , item.id]" class="btn-st">Открыть владельца</a></div>
+    </div>
+  </ng-template>
+</app-matches-list-view>

@@ -1,0 +1,139 @@
+<form [formGroup]="formGroup">
+  <k-container fluid="fluid">
+    <ng-template #templateRef>
+      <k-row>
+        <ng-template #row>
+          <k-col>
+            <ng-template #col>
+              <k-header>{{title}}</k-header>
+              <k-subheader>{{formGroup.controls['station'].value?.name}} {{getPeriod()}}</k-subheader>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <k-row class="mt-4" *ngIf="showStation">
+        <ng-template #row>
+          <k-col cols="12" md="6">
+            <ng-template #col>
+              <mat-form-field (click)="openPanel()" appearance="fill">
+                <mat-label>Подразделение</mat-label>
+                <mat-select formControlName="station">
+                  <ng-container>
+                    <mat-form-field class="search" appearance="outline">
+                      <input #search autocomplete="off" placeholder="Введите название" [formControl]="searchTextBoxControl" type="text" matInput>
+                      <mat-icon matPrefix >search</mat-icon>
+                    </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngFor="let station of stationList">
+                    <mat-option  class="pre-wrap" [value]="station">
+                      <p [ngStyle]="station?.padding">{{station.name}}</p>
+                    </mat-option>
+                    <hr class="mt-1 mb-1" *ngIf="station.class === 'pl-2'">
+                  </ng-container>
+                </mat-select>
+                <button *ngIf="formGroup.controls.station.value" matSuffix mat-icon-button type="button"
+                  aria-label="Clear" (click)="clearSelect('station', $event)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="12" md="6">
+            <ng-template #col>
+              <app-ui-autocomplete
+                label="Объекты"
+                [control]="formGroup.get('stationSupervisedObjects')"
+                field="address"
+                [addFilter]="stationFilter"
+                [type]="crudType.ReferenceSupervisedObject"
+                [fields]="stationSupervisedFields"></app-ui-autocomplete>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <k-row class="mt-4">
+        <ng-template #row>
+          <k-col *ngIf="showSupervised" cols="12" md="6">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Объекты</mat-label>
+                <mat-select  formControlName="supervisedObjects">
+                  <ng-container *ngFor="let supervised of supervisedList">
+                    <mat-option class="pre-wrap" [value]="supervised">
+                      <p>{{supervised.address + ' ' + supervised?.name}}</p>
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+                <button *ngIf="formGroup.controls.supervisedObjects.value" matSuffix mat-icon-button type="button"
+                  aria-label="Clear" (click)="clearSelect('supervisedObjects', $event)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="6" md="3">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Год</mat-label>
+                <mat-select formControlName="year">
+                  <mat-option *ngFor="let date of date" [value]="date">
+                    {{date}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="6" md="3" *ngIf="showStation">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Отчетный период</mat-label>
+                <mat-select formControlName="month">
+                  <mat-option *ngFor="let month of months" [value]="month">
+                    {{month.name}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup.controls.month.value" matSuffix mat-icon-button type="button"
+                  aria-label="Clear" (click)="clearSelect('month', $event)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="6" md="3" *ngIf="showStation">
+            <ng-template #col>
+              <mat-form-field appearance="fill">
+                <mat-label>Статус</mat-label>
+                <mat-select formControlName="reportStatus">
+                  <mat-option *ngFor="let status of reportStatus" [value]="status">
+                    {{status.name}}
+                  </mat-option>
+                </mat-select>
+                <button *ngIf="formGroup.controls.reportStatus.value" matSuffix mat-icon-button type="button"
+                  aria-label="Clear" (click)="clearSelect('reportStatus', $event)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </ng-template>
+          </k-col>
+          <k-col cols="6" md="3">
+            <ng-template #col>
+              <k-button color="primary" type="button" name="Очистить фильтры" (click)="clearFilters()"></k-button>
+            </ng-template>
+          </k-col>
+        </ng-template>
+      </k-row>
+      <app-table
+        [station]="formGroup.get('station')?.value"
+        [year]="formGroup.get('year')?.value"
+        [month]="formGroup.get('month')?.value?.monthNumber"
+        [status]="formGroup.get('reportStatus')?.value"
+        [reportId]="reportId"
+        [businessEntity]="formGroup.get('businessEntity')?.value"
+        [supervisedObject]="formGroup.get('supervisedObjects')?.value ? formGroup.get('supervisedObjects')?.value : formGroup.get('stationSupervisedObjects')?.value"
+        [lockUpdate]="lockTableUpdate"
+        >
+      </app-table>
+    </ng-template>
+  </k-container>
+</form>
+

@@ -1,0 +1,46 @@
+<ngx-loading [show]="loading$|async"></ngx-loading>
+<k-container fluid>
+  <ng-template #templateRef>
+    <k-row>
+      <ng-template #row>
+        <k-col cols="12">
+          <ng-template #col>
+            <app-universal-mat-table [dataSource]="excelFiles"
+                                     [displayedColumns]="displayedColumns"
+                                     [fields]="fields"
+                                     [type]="type"
+                                     [isEmptyInformation]="isEmptyInformation"
+                                     [order]="order">
+              <ng-template #headerTable>
+                <div class="mb-2">
+                  <div class="text-left text-h5" fxFlex="50">
+                    Импорт вакцинаций
+                  </div>
+                  <div class="text-right" fxFlex="50">
+                    <k-button color="primary"  type="button" name="Загрузить файл" (click)="uploadFile()"></k-button>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef fxFlex="10">Дата загрузки</th>
+                <td mat-cell *matCellDef="let element" fxFlex="10"><a [routerLink]="[element.id]">{{element.uploadedAt}}</a> </td>
+              </ng-container>
+              <ng-container matColumnDef="file">
+                <th mat-header-cell *matHeaderCellDef fxFlex="30">Файл</th>
+                <td mat-cell *matCellDef="let element" fxFlex="30"> <a [routerLink]="[element.id]">{{element.sourceName}}</a> </td>
+              </ng-container>
+              <ng-container matColumnDef="station">
+                <th mat-header-cell *matHeaderCellDef fxFlex="35">Станция</th>
+                <td mat-cell *matCellDef="let element" fxFlex="35"> {{element.station?.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="state">
+                <th mat-header-cell *matHeaderCellDef fxFlex="25">Состояние</th>
+                <td mat-cell *matCellDef="let element" fxFlex="25"> {{element.statusMsg}} </td>
+              </ng-container>
+            </app-universal-mat-table>
+          </ng-template>
+        </k-col>
+      </ng-template>
+    </k-row>
+  </ng-template>
+</k-container>

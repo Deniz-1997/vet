@@ -1,0 +1,55 @@
+@import './_variables'
+
+// Theme
++theme(krv-breadcrumbs) using ($material)
+  .krv-breadcrumbs__divider, .krv-breadcrumbs__item--disabled
+    color: map-deep-get($material, 'text', 'disabled')
+
+// Block
+.krv-breadcrumbs
+  align-items: center
+  display: flex
+  flex-wrap: wrap
+  flex: $breadcrumbs-flex
+  list-style-type: none
+  margin: $breadcrumbs-margin
+  padding: $breadcrumbs-padding
+
+  li
+    align-items: center
+    display: inline-flex
+    font-size: $breadcrumbs-item-font-size
+
+    .krv-icon
+      font-size: $breadcrumbs-item-large-font-size
+
+    &:nth-child(even)
+      padding: $breadcrumbs-even-child-padding
+
+// Element TODO исправить значения на переменные
+.krv-breadcrumbs__item
+  align-items: center
+  display: inline-flex
+  text-decoration: none
+  transition: $primary-transition
+  padding: 0 22px
+  color: $primary-color
+  font-size: 12px
+  line-height: 40px
+  height: 40px
+  background: #fff
+  -webkit-border-radius: 4px
+  border-radius: 4px
+  -webkit-box-shadow: 0 2px 10px -10px #a7a7a7
+  box-shadow: 0 2px 10px -10px #a7a7a7
+
+  &--disabled
+    pointer-events: none
+
+// Modifier
+.krv-breadcrumbs--large
+  li
+    font-size: $breadcrumbs-item-large-font-size
+
+    .krv-icon
+      font-size: $breadcrumbs-item-large-font-size

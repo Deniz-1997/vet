@@ -1,0 +1,25 @@
+.min-select-width {
+  min-width: 164px;
+}
+
+.search-type {
+  width: 164px;
+  position: absolute;
+  top: 6.8px;
+  right: 84px;
+}
+
+.main-search::placeholder {
+  color: grey;
+  transition: all 0.3s;
+}
+
+.main-search:focus::placeholder {
+  color: transparent;
+}
+
+@media screen and (max-width: 767px) {
+  .search-type {
+    width: 40px;
+  }
+}

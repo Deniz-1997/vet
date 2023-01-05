@@ -1,0 +1,27 @@
+<div *ngIf="appointment.appointmentFormTemplate !== undefined">
+  <div *ngIf="appointment.appointmentFormTemplate.length > 0">
+    <ng-container *ngIf="appointment.appointmentFormTemplate">
+      <div *ngFor="let formTemplate of appointment.appointmentFormTemplate;" class="form-wr container-fluid">
+        <div class="form-header">{{ formTemplate.formTemplate.name }}</div>
+        <div class="form-body">
+          <app-row *ngFor="let formFieldValue of formTemplate.formFieldValues; let i = index">
+            <ng-template #rowContent>
+              <app-col col="12 col-lg-6 font-weight-bold" [innerHTML]="getInnerHTML(formTemplate.formTemplate)[i]" text="{{formFieldValue['fieldValue']}}">
+                <ng-template #colContent>
+                <span *ngFor="let property of formFieldValue.formField.formTemplateField.properties">
+                  <span *ngIf="property.formFieldProperty.code === 'data_time'"
+                        style="margin-left: 5px">{{property.value}}</span>
+                </span>
+                </ng-template>
+              </app-col>
+            </ng-template>
+          </app-row>
+          <pre [innerHTML]="getInnerHTML(formTemplate.formTemplate)[getInnerHTML(formTemplate.formTemplate).length - 1]"
+               class="inline"></pre>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+

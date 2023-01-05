@@ -1,0 +1,779 @@
+<div>
+  <!--      Breed-->
+  <app-row *ngIf="type == crudType.ReferenceBreed" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="viewAnimal">
+        <ng-template #colContent>
+          <strong>{{item.id}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pb-2 pb-md-2 pt-md-0 pb-lg-2 pt-lg-0" titleName="viewAnimal">
+        <ng-template #colContent>
+          <strong>{{item.type.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceOwnerActivity" class="pt-2">
+    <ng-template #rowContent>
+      <app-col  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+
+  <app-row *ngIf="type == crudType.ReferenceAppointmentStatus" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pb-md-2 pt-md-0 pb-2 pb-lg-2 pt-lg-0" titleName="color">
+        <ng-template #colContent>
+          <strong>{{item.color}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="code">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceOwnerLegalForm" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceEventType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceEventStatus" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6 col-lg-6"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6 col-lg-6" class="pt-2 pt-md-0 pt-lg-0" titleName="color">
+        <ng-template #colContent>
+          <strong>{{item.color}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetIdentifierType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceFileType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6" titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-md-0" titleName="icon">
+        <ng-template #colContent>
+          <app-icon-animal  [type]="item.icon.code"></app-icon-animal>
+          <strong class="pl-2">{{item.icon.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.PrintForms" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  class="pt-2 pb-2 pb-md-2 pt-md-0 pb-lg-2 pt-lg-0" text="Активность">
+        <ng-template #colContent>
+          <strong *ngIf="item.enabled">Да</strong><stong *ngIf="!item.enabled">Нет</stong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"   titleName="type">
+        <ng-template #colContent>
+          <strong>{{item.type}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceAnimalDeath" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceProfession" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ActionGroup" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"   titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pb-2 pt-md-0 pb-md-2 pb-lg-2 pt-lg-0" titleName="parent">
+        <ng-template #colContent>
+          <ng-container *ngIf="item.parent">
+            {{item.parent.name}}
+          </ng-container>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="textId">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+
+  <app-row *ngIf="type == crudType.Action" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  class="pt-2 pb-2 pt-md-0 pb-md-2 pb-lg-2 pt-lg-0" titleName="textId">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="description">
+        <ng-template #colContent>
+          <strong>{{item.description}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row *ngIf="type == crudType.Action" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4" text="Родитель / Группы">
+        <ng-template #colContent>
+          <ng-container
+            *ngIf="item.parent">
+            <b>{{item.parent.name}}</b>
+          </ng-container>
+          <ng-container
+            *ngIf="!item.parent"> -
+          </ng-container>
+          <ng-container *ngFor="let group of item.groups">
+            <div>{{group.name}}</div>
+          </ng-container>
+          <ng-container
+            *ngIf="!item.groups.length"> -
+          </ng-container>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  class="pt-2 pb-2 pt-md-0 pb-md-2 pb-lg-2 pt-lg-0" titleName="sort">
+        <ng-template #colContent>
+          <strong>{{item.sort}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2  pt-lg-0" titleName="url">
+        <ng-template #colContent>
+          <strong>{{item.url}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceUnit" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12  col-md-4 col-lg-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pb-2 pt-md-0 pb-md-2 pb-lg-2 pt-lg-0" titleName="fullName">
+        <ng-template #colContent>
+          <strong>{{item.full_name|defaultValue}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4"  titleName="address">
+        <ng-template #colContent>
+          <strong>{{item.address|defaultValue}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row *ngIf="type == crudType.ReferenceUnit" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4 col-lg-4"    titleName="phone">
+        <ng-template #colContent>
+          <strong>{{item.phone|defaultValue}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12  col-md-4  col-lg-4"  text="E-mail">
+        <ng-template #colContent>
+          <strong>{{item.email|defaultValue}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pb-2 pt-md-0 pb-md-2 pb-lg-2 pt-lg-0" titleName="websiteUrl">
+        <ng-template #colContent>
+          <strong>{{item.website_url|defaultValue}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4 col-lg-4" class="pt-2 pt-md-0"  text="Работает круглосуточно">
+        <ng-template #colContent>
+          <strong>{{item.is_around_clock ? 'Да' : 'Нет'}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.Role" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-lg-0" titleName="symbolCode">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceIcon" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-3"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-3"  titleName="textId">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-3" class="pt-2 pb-2 pb-md-2 pt-md-0"  titleName="class">
+        <ng-template #colContent>
+          <strong>{{item.class}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-3"  text="Подкласс">
+        <ng-template #colContent>
+          <strong *ngIf="item.subclass === 'ANIMAL'">Иконки животных</strong>
+          <strong *ngIf="item.subclass === 'NOANIMAL'">Остальные иконки</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceContractor" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="type">
+        <ng-template #colContent>
+          <strong>{{item.legalForm?.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  text="Адрес и телефон">
+        <ng-template #colContent>
+          <strong *ngIf="item.address">{{item.address.full}}</strong>
+          <strong *ngIf="item.phone">{{item.phone}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceSterilizationType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceVaccinationType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceShelter" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceTagColor" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceTagForm" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceStock" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="clinic">
+        <ng-template #colContent>
+          <strong *ngIf="item.unit !== null">{{item.unit.name}}</strong>
+          <strong *ngIf="item.unit === null">Не относится к клинике</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="externalIdentifier">
+        <ng-template #colContent>
+          <strong>{{item.externalId}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetLear" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="viewAnimal">
+        <ng-template #colContent>
+          <strong>{{item.breed.type.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="breed">
+        <ng-template #colContent>
+          <strong>{{item.breed.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.TemplateReference" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetAggressiveType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-md-0" titleName="levelAggression">
+        <ng-template #colContent>
+          <strong>{{item.level | aggressive_count_transform}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetReasonRetiringType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferencePetReasonRetiringType" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceLeavingStatus" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="color">
+        <ng-template #colContent>
+          <strong>{{item.color}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="code">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceReasonForLeaving" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceMeasurementUnits" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="measurementUnits">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceCountries" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="country">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceReleaseForm" class="pt-2">
+    <ng-template #rowContent>
+      <app-col titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceManufacturer" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6"  titleName="manufacturer">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-md-0" titleName="country">
+        <ng-template #colContent>
+          <strong>{{item.countries?.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ShopSettings" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  text="Имя настройки">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="stock">
+        <ng-template #colContent>
+          <strong>{{item.data.stock.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" titleName="clinic">
+        <ng-template #colContent>
+          <strong>{{item.unit.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.Settings" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{settingsService.tr(item.key)}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="key">
+        <ng-template #colContent>
+          <strong>{{item.key}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"   titleName="value">
+        <ng-template #colContent>
+          <strong>{{item.value}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.AppointmentTemplate" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" text="Продукты">
+        <ng-template #colContent>
+          <strong>{{lengthProducts(item)}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="clinic">
+        <ng-template #colContent>
+          <strong><ng-container *ngIf="item.unit">
+            {{item.unit|implode:'name'}}
+          </ng-container></strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.FormTemplate" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" text="Кол-во приемов">
+        <ng-template #colContent>
+          <strong>{{item.appointmentCount}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  text="Архив">
+        <ng-template #colContent>
+          <strong>{{ !item.active ? 'Да' : 'Нет' }}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.Group" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-md-0" titleName="symbolCode">
+        <ng-template #colContent>
+          <strong>{{item.code}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.Notifications" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-6"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.data?.header ? item.data.header : item.type.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-6" class="pt-2 pt-md-0" titleName="date">
+        <ng-template #colContent>
+          <strong>{{item.data?.date ? item.data.date : null}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceOrganization" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col  col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="inn">
+        <ng-template #colContent>
+          <strong>{{item.inn}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="taxationType">
+        <ng-template #colContent>
+          <strong>
+            <ng-container *ngIf="item.taxationType && item.taxationType.code">
+            {{item.taxationType.title}}
+          </ng-container>
+          </strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceCashRegisterServer" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-4"  titleName="id">
+        <ng-template #colContent>
+          <strong>{{item.id}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-4"  titleName="division">
+        <ng-template #colContent>
+          <strong>{{item.unit.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceCashRegister" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-5"  titleName="id">
+        <ng-template #colContent>
+          <strong>{{item.id}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col  col="12 col-md-5" class="pt-2 pb-2 pb-md-2 pt-md-0" titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-2 "  class="pt-2 pt-md-0 text-md-right d-none d-md-block" text="Действия">
+        <ng-template #colContent>
+          <a [matMenuTriggerFor]="menu" mat-icon-button>
+            <app-icon-menu></app-icon-menu>
+          </a>
+          <mat-menu #menu="matMenu">
+            <a (click)="onInfo(item.id)" mat-menu-item>Запрос параметров регистрации ККМ</a>
+            <a (click)="onStatus(item.id)" mat-menu-item>Отчет о текущем состоянии расчетов</a>
+          </mat-menu>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+  <app-row *ngIf="type == crudType.ReferenceCashRegister" class="pt-2">
+    <ng-template #rowContent>
+      <app-col col="12 col-md-5"  titleName="organization">
+        <ng-template #colContent>
+          <strong>{{item.organization.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-5"  titleName="cashRegisterServer">
+        <ng-template #colContent>
+          <strong>{{item.cashRegisterServer.name}}</strong>
+        </ng-template>
+      </app-col>
+      <app-col col="12 col-md-2"  class="pt-2 pt-md-0 text-md-right d-block d-md-none">
+        <ng-template #colContent>
+          <a [matMenuTriggerFor]="menu" mat-icon-button class="lnk-icon">
+            Действия
+          </a>
+          <mat-menu #menu="matMenu">
+            <a (click)="onInfo(item.id)" mat-menu-item>Запрос параметров регистрации ККМ</a>
+            <a (click)="onStatus(item.id)" mat-menu-item>Отчет о текущем состоянии расчетов</a>
+          </mat-menu>
+        </ng-template>
+      </app-col>
+
+    </ng-template>
+  </app-row>
+
+  <app-row *ngIf="type == crudType.ReferenceDisease" class="pt-2">
+    <ng-template #rowContent>
+      <app-col  titleName="name">
+        <ng-template #colContent>
+          <strong>{{item.name}}</strong>
+        </ng-template>
+      </app-col>
+    </ng-template>
+  </app-row>
+
+</div>
+
+
+
+
+

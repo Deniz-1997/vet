@@ -1,0 +1,38 @@
+<div *ngIf="user" class="tab-box">
+  <a class="info-edit" routerLink="../edit">
+    <app-icon-edit></app-icon-edit>
+  </a>
+  <div class="info-tr">
+    <div class="info-th">Логин</div>
+    <div class="info-td">{{user.username}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Статус</div>
+    <div class="info-td">
+      <ng-container *ngIf="user.status">Активный</ng-container>
+      <ng-container *ngIf="!user.status">Неактивный</ng-container>
+    </div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Список групп</div>
+    <div class="info-td">
+      <ng-container *ngIf="user.groups">
+        <div *ngFor="let group of user.groups">{{group.name}}</div>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="user.phoneNumber" class="info-tr">
+    <div class="info-th">Телефон</div>
+    <div class="info-td">{{user.phoneNumber}}</div>
+  </div>
+  <div class="info-tr">
+    <div class="info-th">Электронная почта</div>
+    <div class="info-td"><a href="mailto:Info@ilyaeremeev.ru">{{user.email}}</a></div>
+  </div>
+
+  <div class="info-lnk info-lnk--left info-lnk--padding0">
+    <a *ngIf="false" href="javascript:alert('Функция в разработке')">
+      ИСТОРИЯ ПРОФИЛЯ
+    </a>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div *ngIf="pet">
+  <div class="body-header">
+    <div class="body-header__name">Владельцы</div>
+    <div class="body-header__setting">
+      <a *ngIf="pet.owners?.length>0" class="lnk-add" routerLink="/owners/create/{{pet.id}}">Добавить</a>
+    </div>
+  </div>
+  <div *ngIf="pet.owners?.length===0" class="box-empty">
+    <h3>
+      Нет ни одного владельца.
+      <span>Вы можете добавить владельца</span>
+    </h3>
+    <div class="box-empty__btn"><a class="btn-st btn-st--inline btn-st--plus" routerLink="/owners/create/{{pet.id}}">Добавить
+      владельца</a></div>
+  </div>
+  <div *ngIf="pet.owners?.length>0" class="owners-list">
+    <div *ngFor="let item of pet.owners | mainOwner:['mainOwner']:'-1'" class="owners-item">
+      <a (click)="setDeleteOwner(item);" class="owners-item__close" data-fancybox href="#close-owner"></a>
+      <div class="owners-item__name">
+        <a class="header__name-lnk" routerLink="/owners/{{item.owner.id}}/profile">{{item.owner.name}}</a>
+      </div>
+      <div *ngIf="item.mainOwner === true" class="owners-item__info">Основной владелец</div>
+      <div *ngIf="item.mainOwner === false" class="owners-item__info"><a (click)="setOwnerAsMain(item);"
+                                                                         href="javascript:void(0)">Сделать
+        основным</a></div>
+      <div class="info-tr-list">
+        <div *ngIf="item.owner.address?.full" class="info-tr">
+          <div class="info-th">Адрес</div>
+          <div class="info-td">{{item.owner.address.full}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Телефон</div>
+          <div class="info-td">{{item.owner.phone}}</div>
+        </div>
+        <div class="info-tr">
+          <div class="info-th">Почта</div>
+          <div class="info-td"><a routerLink="mailto:{{item.owner.email}}">{{item.owner.email}}</a></div>
+        </div>
+        <div *ngIf="item.owner.status?.name" class="info-tr">
+          <div class="info-th">Статус</div>
+          <div class="info-td color-{{item.owner.status.color}}">{{item.owner.status.name}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-pets-view-events [pet$]="pet"></app-pets-view-events>
+</div>
+<div class="popup-hide">
+  <div class="popup-close-id popup-wr" id="close-owner">
+    <ngx-loading [config]="{fullScreenBackdrop: true,  primaryColour: '#000000', secondaryColour: '#000000'}"
+                 [show]="loadingRemove$|async"></ngx-loading>
+    <div class="popup-wr__head">
+      Вы точно хотите удалить
+      владельца у животного?
+      <div class="popup-wr__head-comment">Владелец удалиться только у животного, профиль владельца останется не
+        низменным
+      </div>
+    </div>
+    <div class="popup-wr__footer">
+      <a class="btn-st btn-st--left btn-st--gray" data-fancybox-close href="">Отмена</a>
+      <a (click)="deleteOwner($event)" class="btn-st btn-st--right btn-st--red" href="">Удалить</a>
+    </div>
+  </div>
+</div>

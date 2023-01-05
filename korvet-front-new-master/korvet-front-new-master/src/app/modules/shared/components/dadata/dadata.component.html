@@ -1,0 +1,14 @@
+<mat-form-field appearance="outline">
+  <div class="autocomplete-search-icon"><app-icon-search></app-icon-search></div>
+  <input type="text" class="autocomplete-input" matInput [placeholder]="placeholder" [formControl]="control" [matAutocomplete]="auto"
+          (focus)="onFocus()" [required]="required" [disabled]="disabled"/>
+  <div class="icon-container" *ngIf="loading">
+    <i class="loader"></i>
+  </div>
+  <mat-autocomplete #auto="matAutocomplete" >
+    <div class="mat-option-loading" *ngIf="loading"></div>
+    <mat-option *ngFor="let option of filteredOptions" [value]="option" (click)="onSelected()">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

@@ -1,0 +1,18 @@
+<ngx-loading [show]="appendLoading$|async"></ngx-loading>
+<div *ngIf="headerTable">
+  <ng-container [ngTemplateOutlet]="headerTable"></ng-container>
+</div>
+<table mat-table [style.visibility]="dataSource.length > 0 ? 'visible' : 'hidden'" [dataSource]="dataSource" class="text-left">
+  <ng-content></ng-content>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+</table>
+<ng-container *ngIf="!dataSource.length">
+  <div  class="text-h4 text-center textInformation mt-10">
+    {{isEmptyInformation}}
+  </div>
+</ng-container>
+<app-show-more-button *ngIf="(totalCount$ | async) > limit + offset" class="text-center" [limit]="limit" [offset]="offset" [type]="type" [items]="items$|async"
+                      [appendLoading]="appendLoading$|async" [totalCount]="totalCount$|async" (outAppend)="appendList($event)">
+</app-show-more-button>
+

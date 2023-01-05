@@ -1,0 +1,250 @@
+// Imports
+@import './_variables.scss'
+
+// Theme
+.krv-btn:not(.krv-btn--outlined)
+  &.primary,
+  &.secondary,
+  &.accent,
+  &.success,
+  &.error,
+  &.warning,
+  &.info
+    color: map-deep-get($material-dark, 'text', 'primary')
+
++theme(krv-btn) using($material)
+  color: map-deep-get($material, 'text', 'primary')
+
+  &.krv-btn--disabled
+    color: map-deep-get($material, 'buttons', 'disabled') !important
+
+    .krv-icon,
+    .krv-btn__loading
+      color: map-deep-get($material, 'buttons', 'disabled') !important
+
+    &.krv-btn--has-bg
+      background-color: map-deep-get($material, 'buttons', 'focused') !important
+
+  &.krv-btn--has-bg
+    background-color: map-get($material, 'app-bar')
+
+  &.krv-btn--outlined.krv-btn--text
+    border-color: map-get($material, 'dividers')
+
+  &.krv-btn--icon
+    color: map-deep-get($material, 'icons', 'active')
+
+  +states(map-deep-merge($material, $btn-states))
+
+// Block
+.krv-btn
+  align-items: center
+  border-radius: $btn-border-radius
+  display: inline-flex
+  flex: 0 0 auto
+  font-weight: $btn-font-weight
+  letter-spacing: $btn-letter-spacing
+  justify-content: center
+  outline: 0
+  position: relative
+  text-decoration: none
+  text-indent: $btn-letter-spacing
+  text-transform: $btn-text-transform
+  transition-duration: $btn-transition-duration
+  transition-property: box-shadow, transform, opacity
+  transition-timing-function: $btn-transition-fn
+  user-select: none
+  vertical-align: middle
+  white-space: nowrap
+
+  @each $name, $size in $btn-font-sizes
+    &.krv-size--#{$name}
+      font-size: $size
+
+  &:before
+    background-color: currentColor
+    border-radius: inherit
+    bottom: 0
+    color: inherit
+    content: ''
+    left: 0
+    opacity: 0
+    pointer-events: none
+    position: absolute
+    right: 0
+    top: 0
+    transition: $btn-transition
+
+  &:not(.krv-btn--round)
+    @each $name, $size in $btn-sizes
+      &.krv-size--#{$name}
+        height: #{$size}px
+        min-width: #{round($size * 1.777777777777778)}px
+        // default ratio
+        padding: 0 #{divs($size, 2.25)}px
+
+  > .krv-btn__content .krv-icon
+    color: inherit
+
+// Elements
+.krv-btn__content
+  align-items: center
+  color: inherit
+  display: flex
+  // https://github.com/vuetifyjs/vuetify/issues/7580
+  flex: 1 0 auto
+  justify-content: inherit
+  line-height: normal
+  // Fixes bug where IE11 moves
+  // button content when clicked
+  // https://stackoverflow.com/questions/10305658/prevent-button-from-shifting-during-click-in-ie
+  position: relative
+  transition: inherit
+  transition-property: opacity
+
+  // Increased specificity to overwrite in VIcon.sass
+  // iconfont css interference
+  .krv-icon.krv-icon--left,
+  .krv-icon.krv-icon--right
+    font-size: $btn-icon-font-size
+    height: $btn-icon-font-size
+    width: $btn-icon-font-size
+
+  .krv-icon--left
+    +ltr()
+      margin-left: -4px
+      margin-right: 8px
+
+    +rtl()
+      margin-left: 8px
+      margin-right: -4px
+
+  .krv-icon--right
+    +ltr()
+      margin-left: 8px
+      margin-right: -4px
+
+    +rtl()
+      margin-left: -4px
+      margin-right: 8px
+
+.krv-btn__loader
+  align-items: center
+  display: flex
+  height: 100%
+  justify-content: center
+  left: 0
+  position: absolute
+  top: 0
+  width: 100%
+
+// Modifiers
+.krv-btn--absolute,
+.krv-btn--fixed
+  &.krv-btn--right
+    right: map-get($grid-gutters, 'lg')
+
+  &.krv-btn--left
+    left: map-get($grid-gutters, 'lg')
+
+  &.krv-btn--top
+    top: map-get($grid-gutters, 'lg')
+
+  &.krv-btn--bottom
+    bottom: map-get($grid-gutters, 'lg')
+
+.krv-btn--absolute
+  position: absolute
+
+.krv-btn--fixed
+  position: fixed
+
+.krv-btn--block
+  display: flex
+  flex: 1 0 auto
+  min-width: 100% !important
+  max-width: auto
+
+.krv-btn--is-elevated
+  +elevation(2)
+
+  &:after
+    +elevation(4)
+
+  &:active
+    +elevation(8)
+
+  &.krv-btn--fab
+    +elevation(6)
+
+    &:after
+      +elevation(8)
+
+    &:active
+      +elevation(12)
+
+.krv-btn--disabled
+  pointer-events: none
+
+.krv-btn--icon,
+.krv-btn--fab
+  min-height: 0
+  min-width: 0
+  padding: 0
+
+  @each $name, $size in $fab-icon-sizes
+    &.krv-size--#{$name}
+      .krv-icon
+        height: #{$size}px
+        font-size: #{$size}px
+        width: #{$size}px
+
+.krv-btn--icon
+  @each $name, $size in $btn-sizes
+    &.krv-size--#{$name}
+      height: #{$size}px
+      width: #{$size}px
+
+.krv-btn--fab
+  &.krv-btn--absolute,
+  &.krv-btn--fixed
+    z-index: 4
+
+  @each $name, $size in $fab-sizes
+    &.krv-size--#{$name}
+      height: #{$size}px
+      width: #{$size}px
+
+      &.krv-btn--absolute
+        &.krv-btn--bottom
+          bottom: -#{divs($size, 2)}px
+
+        &.krv-btn--top
+          top: -#{divs($size, 2)}px
+
+.krv-btn--loading
+  pointer-events: none
+  transition: none
+
+  .krv-btn__content
+    opacity: 0
+
+.krv-btn--outlined
+  border: $btn-outline-border-width solid currentColor
+
+.krv-btn--plain
+  &::before
+    display: none
+
+  &:not(.krv-btn--active):not(.krv-btn--loading):not(:focus):not(:hover)
+    .krv-btn__content
+      opacity: .62
+
+.krv-btn--round
+  +radius($btn-round-border-radius)
+
+.krv-btn--rounded
+  +radius($btn-rounded-border-radius)
+
+.krv-btn--tile
+  +radius($btn-tile-border-radius)
